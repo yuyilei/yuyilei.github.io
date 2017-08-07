@@ -570,7 +570,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/06/auth/" itemprop="url">Auth的验证机制</a></h1>
+                <a class="post-title-link" href="/2017/08/06/auth/" itemprop="url">Auth统一验证服务</a></h1>
         
 
         <div class="post-meta">
@@ -622,11 +622,30 @@
       
         
           
-            <h2 id="auth和share"><a href="#auth和share" class="headerlink" title="auth和share"></a>auth和share</h2><p>现在内网分成3个服务，share，blog，auth。share是分享，blog是博客，那么auth就是用户身份验证系统，主要功能是注册，登录，保存用户信息，查看用户信息。下面来讲讲它们是如何工作的。（以share和auth为例）<br>auth作为用户身份验证，它是验证的中心，它是唯一保存的密码的地方的，所以注册和登录应该调用auth的api。但是share中也有登录和注册的api，这是为了让auth中的用户能和share中用户对接，保持一致。当用户在希望注册之后发分享时，首先需要在share中调用注册api注册，显示为分享的发送者，而auth是用户身份验证的中心，保存着所有用户，自然也要为该用户注册，保存该用户的密码。所以当用户点击注册时，实际上，调用了2个api，share中注册api和auth中的注册api。<br>同理，用户点击登录时，同样调用了2个api ,share中登录api和auth中登录api。首先调用auth的登录api，auth保存了用户的密码，用来验证用户身份，一旦验证成功，就表明登录成功，再调用share的登录api，获取token，如果token没有过期，后续则一直使用token作为用户发送分享，发表评论的身份凭证。<br>这样做的主要目的是统一代码的逻辑，把注册登录的代码都保存于auth，把分享相关的代码放在share中，把博客相关的代码放在blog中，有利于代码维护，逻辑更清晰。 </p>
-<h2 id="解决跨域"><a href="#解决跨域" class="headerlink" title="解决跨域"></a>解决跨域</h2><p>注册和登录时都要调用2个api，以注册为例，分别是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auth.muxixyz.test:5499/signup/    </div><div class="line">share.muxixyz.test:5488/api/v2.0/signup/</div></pre></td></tr></table></figure></p>
-<p>只要协议、域名、端口有任何一个不同，都被当作是不同的域。这两个api的域不一样，不能在同一个页面访问，怎么办呢？<br>以木犀通行证为例，木犀通行证是首页是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> https://user.muxixyz.com/?landing=gs.muxiyxz.com </div><div class="line">``` </div><div class="line">当点击登录时，登录成功后，跳转为：</div></pre></td></tr></table></figure></p>
-<p><a href="https://gs.muxiyxz.com/?email=xxxx@qq.com" target="_blank" rel="external">https://gs.muxiyxz.com/?email=xxxx@qq.com</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">xxxx@qq.com时刚才输入的用来登录的email，可以看出这里的user.muxixyz.com 和gs.muxixyz.com是不同的域，但是却可以在同一个页面内访问，所以，通过这种方式可以解决跨域的问题。</div><div class="line"></div><div class="line">同理：</div></pre></td></tr></table></figure></p>
-<p>auth.muxixyz.test:5499/signup/?landing=share.muxixyz.test:5488/api/v2.0/signup／<br>```<br>点击注册，跳到auth.muxixyz.test:5499/signup/ , 调用 auth的注册api ，在 auth中注册，然后跳转到share.muxixyz.test:5488/api/v2.0/signup/，调用share的注册api， 利用从auth获得的username，email，password在share注册。</p>
+            <h2 id="统一验证"><a href="#统一验证" class="headerlink" title="统一验证"></a>统一验证</h2><p> <a href="https://github.com/Muxi-X/Auth" target="_blank" rel="external">Auth</a>是一个统一验证的微服务，具有完整的用户系统，具有注册，登录，个人信息等功能。这次，Auth将用于木犀内网和木犀内外app，作为其身份验证的中心，统一保存和验证用户身份和密码，为木犀分享和木犀博客服务。把Auth从原有的用户系统中分出来，可以实现代码复用，其它服务都可以使用Auth作为身份验证，且细分各个服务，使代码适得其所，有利于代码维护，逻辑更清晰。</p>
+<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><p>Auth的核心作用就是保存用户和密码，与其它服务对接，为其它服务提供用户身份信息。实现流程是这样的： </p>
+<ul>
+<li><p><strong>用户注册</strong> ：<br>  1  在Auth中注册用户<br>  2  在Auth中注册成功后，在其它服务中查询该用户（其它服务也有完整的用户系统)，若没有该用户，则在其它服务中注册该用户，至此，Auth服务与其它服务的用户系系统保持一致 </p>
+</li>
+<li><p><strong>用户登录</strong> ：<br>  1  在Auth中使用 用户名和密码 登录，若密码正确，则登录成功<br>  2  在Auth中登录成功之后，用在Auth中获取的用户名，在其它服务中登录，获取后续操作所需的身份凭证（一般是token），由于在Auth中已经保证用户密码正确，验证过用户身份，所以无需在其它服务登录时使用密码。</p>
+</li>
+</ul>
+<h2 id="具体案例"><a href="#具体案例" class="headerlink" title="具体案例"></a>具体案例</h2><p>以木犀内网的share服务和Auth为例。share本来使用自己的用户验证系统，现在，其验证以Auth为中心。</p>
+<ul>
+<li><p>当点击share页的注册时，实际上触发了2个事件，调用了2个api，分别是Auth中的注册 api和share中的 注册api 。</p>
+</li>
+<li><p>当点击share页的登录时，同样调用了2个api，分别是Auth中的登录api和share中的登录api 。在Auth中登录时，验证用户密码是否正确，登录成功后，使用用户名在share中登录，获取token。在share中登录本身是不需要密码的，因为Auth作为验证的中心，只有Auth才保存用户密码，但是为了和share原有的用户系统相协调，登录时需要使用密码。这里，可以使用一个固定的字符串在share中注册时作为密码，在share中登录时，使用这个固定字符串登录。 </p>
+</li>
+</ul>
+<h2 id="解决跨域"><a href="#解决跨域" class="headerlink" title="解决跨域"></a>解决跨域</h2><p>只要协议、域名、端口有任何一个不同，都被当作是不同的域。而Auth和其它服务的二级域名不同，是不同的域，不能在同一个页面访问，怎么办呢？<br>以木犀通行证为例，木犀通行证是首页是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://user.muxixyz.com/?landing=gs.muxiyxz.com</div></pre></td></tr></table></figure>
+<p>当点击登录时，登录成功后，跳转为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://gs.muxiyxz.com/?email=xxxx@qq.com</div></pre></td></tr></table></figure>
+<p>通过这种方式可以解决跨域的问题。<br>在注册需要调用2个api,分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auth.muxixyz.test:5499/signup/    </div><div class="line">share.muxixyz.test:5488/api/v2.0/signup/</div></pre></td></tr></table></figure>
+<p>同理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">auth.muxixyz.test:5499/signup/?landing=share.muxixyz.test:5488/api/v2.0/signup／</div></pre></td></tr></table></figure>
+<p>点击注册，先调用 auth的注册api ，在auth中注册，然后跳转到share.muxixyz.test:5488/api/v2.0/signup/，调用share的注册api， 利用从auth获得的username在share注册。  </p>
 
           
         
