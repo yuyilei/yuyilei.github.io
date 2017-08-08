@@ -250,6 +250,150 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/08/docker1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/下载.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/08/docker1/" itemprop="url">用docker启动mysql</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-08T23:46:20+08:00">
+                2017-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。 </p>
+<h1 id="step1-拉取mysql镜像"><a href="#step1-拉取mysql镜像" class="headerlink" title="step1 拉取mysql镜像"></a>step1 拉取mysql镜像</h1><pre><code>docker run --detach --name=&lt;mysql-name&gt; --env=&quot;MYSQL_ROOT_PASSWORD=mypassword&quot; --publish 6603:3306 mysql 
+</code></pre><p>docker run 会启动一个mysql容器，这个容器在后台运行，并设置其名字，把相应的参数设为mypassword，这个参数用于登录这个mysql容器，mysql容器默认开放3306端口，3306时容器对主机的端口，6603是主机对外界的端口，设置这个参数可以直接通过外界访问到mysql容器的内部。</p>
+<h1 id="step2-在mysql容器中创建数据库"><a href="#step2-在mysql容器中创建数据库" class="headerlink" title="step2  在mysql容器中创建数据库"></a>step2  在mysql容器中创建数据库</h1><pre><code>docker inspect test-mysql | grep IPAddress 
+</code></pre><p>获取主机中mysql容器的地址 </p>
+<pre><code>mysql -uroot -pmypassword -h IPAddress -P 3306  
+</code></pre><p>进入容器</p>
+<pre><code>create database &lt;database-name&gt;; 
+</code></pre><h1 id="step3-配置docker-compose-yml-和-env-文件"><a href="#step3-配置docker-compose-yml-和-env-文件" class="headerlink" title="step3 配置docker-compose.yml 和 .env  文件"></a>step3 配置docker-compose.yml 和 .env  文件</h1><p>在docker-compose.yml文件中加入</p>
+<pre><code>external_links: 
+    - &lt;mysql-name&gt;:mysql 
+</code></pre><p>意为外连一个名为<mysql-name>的mysql容器</mysql-name></p>
+<p>在.env 文件中设置数据库的URL，使用刚才在mysql容器中创建的数据库 ，形如： </p>
+<pre><code>WEBSITE_SQL=mysql://root:mypassword@mysql:3306/&lt;database-name&gt; 
+</code></pre><h1 id="step4-初始话数据库"><a href="#step4-初始话数据库" class="headerlink" title="step4 初始话数据库"></a>step4 初始话数据库</h1><p>使用<br>    docker exec <container-id> + 命令<br>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作，注意这里容器不是mysql容器，而是具体某一服务的容器</container-id></p>
+<pre><code>docker exec &lt;container-id&gt; python manage.py db init
+docker exec &lt;container-id&gt; python manage.py db migrate
+docker exec &lt;container-id&gt; python manage.py db upgrade
+docker exec &lt;container-id&gt; python manage.py test 
+</code></pre><p> 后续如果数据库中的模型有所变更，应使用如下命令迁移数据库，</p>
+<pre><code>docker exec &lt;container-id&gt; python manage.py db migrate
+docker exec &lt;container-id&gt; python manage.py db upgrade
+</code></pre><h1 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h1><p>在这个过程中，我碰到了一些问题，关于migrations文件。运行</p>
+<pre><code>docker exec &lt;container-id&gt; python manage.py db migrate
+</code></pre><p>生成migrations迁移文件，然后过了一段时间后，我发现migrations文件不见了。导致迁移数据库的时候，找不到migrations，无法迁移，为什么它会不见了呢？？？存疑</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/06/task1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -727,7 +871,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
