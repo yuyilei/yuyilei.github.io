@@ -101,10 +101,13 @@
 <meta property="og:site_name" content="YYL&#39;s blog">
 <meta property="og:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 拉取mysql镜像docker run --detach --name=&amp;lt;mysql-name&amp;gt; --env=&amp;quot;MYSQL_ROOT_PASSWORD=mypassword&amp;quot; --publis">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-08T16:31:26.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.11.00.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.22.59.png">
+<meta property="og:updated_time" content="2017-08-09T03:39:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用docker启动mysql">
 <meta name="twitter:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 拉取mysql镜像docker run --detach --name=&amp;lt;mysql-name&amp;gt; --env=&amp;quot;MYSQL_ROOT_PASSWORD=mypassword&amp;quot; --publis">
+<meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.11.00.png">
 
 
 
@@ -342,8 +345,8 @@ docker exec &lt;container-id&gt; python manage.py test
 <pre><code>docker exec &lt;container-id&gt; python manage.py db migrate
 docker exec &lt;container-id&gt; python manage.py db upgrade
 </code></pre><h1 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h1><p>在这个过程中，我碰到了一些问题，关于migrations文件。运行</p>
-<pre><code>docker exec &lt;container-id&gt; python manage.py db migrate
-</code></pre><p>生成migrations迁移文件，然后过了一段时间后，我发现migrations文件不见了。导致迁移数据库的时候，找不到migrations，无法迁移，为什么它会不见了呢？？？存疑</p>
+<pre><code>docker exec &lt;container-id&gt; python manage.py db init 
+</code></pre><p>有时候会生成migrations，有时候又没有，导致迁移数据库的时候，找不到migrations，无法迁移。<br>比如这样,根据提示信息，它确实生成了migrations，但是为什么没有呢？<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""><br> 这样是正常情况<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>到底什么情况下会生成migrations呢？ </p>
 
       
     </div>
