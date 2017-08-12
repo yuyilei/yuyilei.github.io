@@ -102,13 +102,13 @@
 <meta property="og:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2013.11.35.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.11.00.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.22.59.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2014.01.33.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.21.05.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.04.55.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.05.03.png">
-<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.11.00.png">
-<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.22.59.png">
-<meta property="og:updated_time" content="2017-08-12T07:45:29.000Z">
+<meta property="og:updated_time" content="2017-08-12T09:49:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用docker启动mysql">
 <meta name="twitter:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
@@ -355,23 +355,21 @@
 <p>注意这里要使用IPAddress，IPAddress是mysql容器的IP地址，否则它会提示找不到localhost，之后会出现无法迁移数据库的情况。 </p>
 <h1 id="step4-初始化数据库"><a href="#step4-初始化数据库" class="headerlink" title="step4 初始化数据库"></a>step4 初始化数据库</h1><p>使用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; + 命令</div></pre></td></tr></table></figure>
-<p>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作，注意这里容器不是mysql容器，而是具体某一服务的容器</p>
+<p>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db init</div><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div><div class="line">docker exec &lt;container-id&gt; python manage.py test</div></pre></td></tr></table></figure>
+<p>在这个过程中，我碰到了一些问题，关于migrations文件。运行docker exec <container-id> python manage.py db init 有时候会在本机生成migrations，有时候又没有。<br>比如这样：<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""> 和<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>按理来说migrations不应该在本机生成，而是应该在容器内。虽然生不生成migrations不影响数据库迁移，但是这很奇怪。</container-id></p>
 <p> 后续如果数据库中的模型有所变更，应使用如下命令迁移数据库： </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div></pre></td></tr></table></figure>
 <h1 id="step5-解决中文字符"><a href="#step5-解决中文字符" class="headerlink" title="step5 解决中文字符"></a>step5 解决中文字符</h1><p>如果直接使用官方的mysql docker image，则无法支持中文字符，要修改mysql容器的字符设置，利用以下命令进入mysql容器：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec -ti &lt;container-id&gt; /bin/bash</div></pre></td></tr></table></figure>
 <p>进入mysql容器之后，登录mysql:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -pmypassword</div></pre></td></tr></table></figure>
-<p>查看当前mysql字符集情况 可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 14.01.33.png" alt=""><br>database和service的字符集设定是Latin1，不支持中文，如果要支持中文，就要把要数据库编码修改为utf8mb4。 </p>
+<p>查看当前mysql字符集情况 可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 14.01.33.png" alt=""><br>database和service的字符集设定是Latin1，不支持中文，如果要支持中文，就要把要数据库编码修改为utf8mb4，但是我把这个mysql的配置和数据库的配置称utf8mb4，依旧不支持中文（这就很气<br>所以这是一个未解之谜，以后再解决吧。</p>
 <h1 id="step6-数据库迁移"><a href="#step6-数据库迁移" class="headerlink" title="step6 数据库迁移"></a>step6 数据库迁移</h1><p>之前我迁移数据库，由于各种原因不成功的时候，总是非常任性地直接进到服务的容器里面，直接把migrations删了重新，重新建一个。然而，运行到 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div></pre></td></tr></table></figure>
 <p>的时候，总是有一个报错：<br><img src="/uploads/屏幕快照 2017-08-12 15.21.05.png" alt=""><br>这是因为Alembic在数据库里保存了版本记录，虽然migrations已经删掉了，但是alembic_version还保留着它的版本，所以要把它删掉。<br>进入mysql容器，登录mysql，查找创建的数据库，果然发现里面有一个alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.04.55.png" alt=""><br>查看alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.05.03.png" alt=""><br>把alembic_version删除 ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">drop table alembic_version;</div></pre></td></tr></table></figure>
-<p>这样就不会报错了</p>
-<h1 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h1><p>在这个过程中，我碰到了一些问题，关于migrations文件。运行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db init</div></pre></td></tr></table></figure>
-<p>有时候会生成migrations，有时候又没有。<br>比如这样,根据提示信息，它确实生成了migrations，但是为什么没有呢？<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""><br> 这样是正常情况<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>到底什么情况下会生成migrations呢？ </p>
+<p>这样就不会报错了。</p>
 
       
     </div>
@@ -537,7 +535,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#step1-制作mysql镜像"><span class="nav-number">1.</span> <span class="nav-text">step1 制作mysql镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step2-在mysql容器中创建数据库"><span class="nav-number">2.</span> <span class="nav-text">step2  在mysql容器中创建数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step3-配置docker-compose-yml-和-env-文件"><span class="nav-number">3.</span> <span class="nav-text">step3 配置docker-compose.yml 和 .env  文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step4-初始化数据库"><span class="nav-number">4.</span> <span class="nav-text">step4 初始化数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step5-解决中文字符"><span class="nav-number">5.</span> <span class="nav-text">step5 解决中文字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step6-数据库迁移"><span class="nav-number">6.</span> <span class="nav-text">step6 数据库迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#疑问"><span class="nav-number">7.</span> <span class="nav-text">疑问</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#step1-制作mysql镜像"><span class="nav-number">1.</span> <span class="nav-text">step1 制作mysql镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step2-在mysql容器中创建数据库"><span class="nav-number">2.</span> <span class="nav-text">step2  在mysql容器中创建数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step3-配置docker-compose-yml-和-env-文件"><span class="nav-number">3.</span> <span class="nav-text">step3 配置docker-compose.yml 和 .env  文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step4-初始化数据库"><span class="nav-number">4.</span> <span class="nav-text">step4 初始化数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step5-解决中文字符"><span class="nav-number">5.</span> <span class="nav-text">step5 解决中文字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step6-数据库迁移"><span class="nav-number">6.</span> <span class="nav-text">step6 数据库迁移</span></a></li></ol></div>
             
 
           </div>
