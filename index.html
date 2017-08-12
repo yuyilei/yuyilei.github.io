@@ -473,7 +473,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; + 命令</div></pre></td></tr></table></figure>
 <p>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db init</div><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div><div class="line">docker exec &lt;container-id&gt; python manage.py test</div></pre></td></tr></table></figure>
-<p>在这个过程中，我碰到了一些问题，关于migrations文件。运行docker exec <container-id> python manage.py db init 有时候会在本机生成migrations，有时候又没有。<br>比如这样：<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""> 和<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>按理来说migrations不应该在本机生成，而是应该在容器内。虽然生不生成migrations不影响数据库迁移，但是这很奇怪。</container-id></p>
+<p>在这个过程中，我碰到了一些问题，关于migrations文件。运行docker exec <container-id> python manage.py db init 有时候会在本机生成migrations，有时候又没有，并且两者的docker-compose.yml和Dockerfile文件并无差别。<br>比如这样：<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""> 和<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>按理来说migrations不应该在本机生成。虽然生不生成migrations不影响数据库迁移，但是这很奇怪。</container-id></p>
 <p> 后续如果数据库中的模型有所变更，应使用如下命令迁移数据库： </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div></pre></td></tr></table></figure>
 <h1 id="step5-解决中文字符"><a href="#step5-解决中文字符" class="headerlink" title="step5 解决中文字符"></a>step5 解决中文字符</h1><p>如果直接使用官方的mysql docker image，则无法支持中文字符，要修改mysql容器的字符设置，利用以下命令进入mysql容器：</p>
@@ -481,11 +481,12 @@
 <p>进入mysql容器之后，登录mysql:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -pmypassword</div></pre></td></tr></table></figure>
 <p>查看当前mysql字符集情况 可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 14.01.33.png" alt=""><br>database和service的字符集设定是Latin1，不支持中文，如果要支持中文，就要把要数据库编码修改为utf8mb4，但是我把这个mysql的配置和数据库的配置称utf8mb4，依旧不支持中文（这就很气<br>所以这是一个未解之谜，以后再解决吧。</p>
-<h1 id="step6-数据库迁移"><a href="#step6-数据库迁移" class="headerlink" title="step6 数据库迁移"></a>step6 数据库迁移</h1><p>之前我迁移数据库，由于各种原因不成功的时候，总是非常任性地直接进到服务的容器里面，直接把migrations删了重新，重新建一个。然而，运行到 </p>
+<h1 id="step6-数据库迁移"><a href="#step6-数据库迁移" class="headerlink" title="step6 数据库迁移"></a>step6 数据库迁移</h1><p>之前我迁移数据库，由于各种原因不成功的时候，总是非常粗暴地直接进到服务的容器里面，直接把migrations删了重新，重新建一个。然而，运行到 </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div></pre></td></tr></table></figure>
 <p>的时候，总是有一个报错：<br><img src="/uploads/屏幕快照 2017-08-12 15.21.05.png" alt=""><br>这是因为Alembic在数据库里保存了版本记录，虽然migrations已经删掉了，但是alembic_version还保留着它的版本，所以要把它删掉。<br>进入mysql容器，登录mysql，查找创建的数据库，果然发现里面有一个alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.04.55.png" alt=""><br>查看alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.05.03.png" alt=""><br>把alembic_version删除 ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">drop table alembic_version;</div></pre></td></tr></table></figure>
 <p>这样就不会报错了。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>还是有很多很奇怪的地方，但好在问题都有了解决办法，，所以先不管它.</p>
 
           
         
