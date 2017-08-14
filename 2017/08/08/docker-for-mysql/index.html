@@ -108,7 +108,7 @@
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.21.05.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.04.55.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.05.03.png">
-<meta property="og:updated_time" content="2017-08-12T10:25:19.000Z">
+<meta property="og:updated_time" content="2017-08-12T12:05:14.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用docker启动mysql">
 <meta name="twitter:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
@@ -370,7 +370,7 @@
 <p>的时候，总是有一个报错：<br><img src="/uploads/屏幕快照 2017-08-12 15.21.05.png" alt=""><br>这是因为Alembic在数据库里保存了版本记录，虽然migrations已经删掉了，但是alembic_version还保留着它的版本，所以要把它删掉。<br>进入mysql容器，登录mysql，查找创建的数据库，果然发现里面有一个alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.04.55.png" alt=""><br>查看alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.05.03.png" alt=""><br>把alembic_version删除 ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">drop table alembic_version;</div></pre></td></tr></table></figure>
 <p>这样就不会报错了。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>还是有很多很奇怪的地方，但好在问题都有了解决办法，，所以先不管它.</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>还是有很多很奇怪的地方，但好在问题都有了解决办法，，所以先不管它。</p>
 
       
     </div>
@@ -484,7 +484,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
