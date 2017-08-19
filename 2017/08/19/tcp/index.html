@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="TCP/IP协议TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。1234应用层 ： http, talnet , Email等协议 传输层 ： TCP和UDP 网络层 ： IP，ICMP，ARP等协议 链路层 ： 处理物理接口细节 IP位于网络层位，是无连接的通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可靠的TCP">
+<meta property="og:url" content="http://yoursite.com/2017/08/19/tcp/index.html">
+<meta property="og:site_name" content="YYL&#39;s blog">
+<meta property="og:description" content="TCP/IP协议TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。1234应用层 ： http, talnet , Email等协议 传输层 ： TCP和UDP 网络层 ： IP，ICMP，ARP等协议 链路层 ： 处理物理接口细节 IP位于网络层位，是无连接的通">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.blog.csdn.net/20160809094108622">
+<meta property="og:image" content="http://img.blog.csdn.net/20160809094125476">
+<meta property="og:image" content="https://technet.microsoft.com/cc162519.fig01%28zh-cn%29.gif?_=4332652">
+<meta property="og:image" content="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95961/image003.jpg">
+<meta property="og:image" content="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95924/image002.jpg">
+<meta property="og:updated_time" content="2017-08-19T08:25:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="可靠的TCP">
+<meta name="twitter:description" content="TCP/IP协议TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。1234应用层 ： http, talnet , Email等协议 传输层 ： TCP和UDP 网络层 ： IP，ICMP，ARP等协议 链路层 ： 处理物理接口细节 IP位于网络层位，是无连接的通">
+<meta name="twitter:image" content="http://img.blog.csdn.net/20160809094108622">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/19/tcp/"/>
+
+
+
+
+
+  <title>可靠的TCP | YYL's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YYL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/19/tcp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/下载.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">可靠的TCP</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-19T11:10:00+08:00">
+                2017-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="TCP-IP协议"><a href="#TCP-IP协议" class="headerlink" title="TCP/IP协议"></a>TCP/IP协议</h1><p>TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">应用层 ： http, talnet , Email等协议 </div><div class="line">传输层 ： TCP和UDP </div><div class="line">网络层 ： IP，ICMP，ARP等协议 </div><div class="line">链路层 ： 处理物理接口细节</div></pre></td></tr></table></figure></p>
+<p>IP位于网络层位，是无连接的通信协议，连接两个计算机，它不会占用两个正在通信的计算机之间的通信线路。这样，IP 就降低了对网络线路的需求。每条线可以同时满足许多不同的计算机之间的通信需要，因此，就降低了可靠性，失败了不会重发。<br>TCP协议位于传输层，Transmission Control Protocol （传输控制协议）是一种面向连接的、可靠的、基于字节流的传输层通信协议，速度慢，可靠性高。<br>UDP协议也位于传输层，User Datagram Protocol（用户数据报协议），是一种无连接的传输层协议，提供面向事务的简单不可靠信息传送服务，速度快，可靠性低。<br>那么TCP协议到底可靠在哪里？</p>
+<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>TCP协议通过三次握手，建立可靠的连接。<br>首先，客户端像服务器端发送要求连接的请求，然后，服务器端向客户端发送响应，表示能够与服务器端建立连接，最后，客户端接受到响应之后，向服务器发送信息，确认能和服务器够建立可靠的连接。这就是3次握手的大概过程。<br>第一次握手：确保客户端的发送信息能力和服务器端的接受信息能力。<br>第二次握手：确保客户端的接受信息能力和服务器端的发送信息能力。<br>第三次握手：向服务器发送响应，使服务器，确保双方的发信收信能力都是好的。<br>这样连接的就建立起来了，后续就可以开始传输数据了。可以看出，这样的连接并不是真实存在的，是虚拟的，连接建立的信息并不会在路上保存，相反，连接的状态是在服务器和客户端这两端维持。<br>连接实现的过程如图：<br><img src="http://img.blog.csdn.net/20160809094108622" alt=""><br> a. 第一次握手：客户端将标志位SYN置为1，随机产生一个值seq=J，并将该数据包发送给服务器端，客户端进入SYN_SENT状态，等待服务器确认。</p>
+<p> b.第二次握手：服务器端收到数据包后由标志位SYN=1知道客户端请求建立连接，客户端将标志位SYN和ACK都置为1，Ack=J+1，随机产生一个值seq=K，并将该数据包发送给客户端以确认连接请求，服务器端进入SYN_RCVD状态。</p>
+<p> c. 第三次握手：客户端收到确认后，检查Ack是否为J+1，ACK是否为1，如果正确则将标志位ACK置为1，Ack=K+1，并将该数据包发送给服务器端，服务器端检查Ack是否为K+1，ACK是否为1，如果正确则连接建立成功，客户端和服务器端进入ESTABLISHED状态，完成三次握手。</p>
+<p>三次握手是为了建立可靠连接，并把连接的状态保存到两端。<br>那么TCP如何中断连接呢？</p>
+<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1><p>TCP通过四次挥手来中断连接，由于客户端和服务器端的连接是双全工的，因此每个方向都需要中断连接。<br>当一方停止了传输数据之后，就会向另一方发送FIN来终止这一方向的连接，表示这一方向上不再接受数据，但是TCP连接任然能传输数据，直到另一方发送了FIN。<br>具体是这样实现的：<br><img src="http://img.blog.csdn.net/20160809094125476" alt=""></p>
+<p> a. 第一次挥手：客户端发送一个FIN，用来关闭客户端到服务器端的数据传送，客户端进入FIN_WAIT_1状态。</p>
+<p> b. 第二次挥手：服务器端收到FIN后，发送一个ACK给客户端，确认序号为收到序号+1，服务器端进入CLOSE_WAIT状态。</p>
+<p> c. 第三次挥手：服务器端发送一个FIN，用来关闭服务器端到客户端的数据传送，服务器端进入LAST_ACK状态。</p>
+<p> d. 第四次挥手：客户端收到FIN后，客户端进入TIME_WAIT状态，接着发送一个ACK给服务器端，确认序号为收到序号+1，服务器端进入CLOSED状态，完成四次挥手。</p>
+<p>这样TCP连接就终止了，TCP连接本身就是虚拟的，不存在的，因此，TCP连接中断实质是客户端和服务器两端原本的连接状态的终止。<br>值得注意的是，TCP连接一般是由客户端引发的，TCP中断连接是由服务器和客户端中任意一端引起的。<br>有一个经典的问题，为什么握手是3次，挥手是4次呢？<br>可以看出，之所以挥手是4次，是因为在中挥手中，服务器向客户端发送的ACK和FIN是分开2次发送的，这就造成了握手比挥手多一次。我的理解是，当服务器端收到FIN时，表示客户端不再向自己发送数据，但是客户端还能接受数据，有可能服务器端依然有数据要向客户端发送，所以，先向客户端发送ACK，表示自己接收到了来自的FIN，继续向客户端传输数据，完成中断连接的准备工作后，再向客户端发送FIN，表示服务器端不在向客户端发送数据。客户端接受到后，再向服务器端发送ACK，中断连接状态。 </p>
+<h1 id="重传与确认机制"><a href="#重传与确认机制" class="headerlink" title="重传与确认机制"></a>重传与确认机制</h1><p>经过三次握手，建立起了可靠的连接，就可以传输数据了。TCP的主要任务是打包和传输数据，当要传输的数据太大时，必须将数据分割成片段进行分段发送，这样就有一个问题？当其中的一个片段在传输的过程中丢失怎么办？如果将所有的数据全部重传，会网络资源。有什么办法能够选择性的重传那些丢失的片段呢？</p>
+<h2 id="TCP滑动窗口确认机制"><a href="#TCP滑动窗口确认机制" class="headerlink" title="TCP滑动窗口确认机制"></a>TCP滑动窗口确认机制</h2><p>TCP将独立的字节数据当作流来处理，当发送方需要传输一长串的字节流时，接受方无法一次全部接收，接受方限制发送方每次传输的字节流数量，为了限制任一时刻可发送的数据量，并为接受方提供流量控制，TCP 使用窗口实现这些目的。如图，该窗口是接受方允许发送端发送的字节流的数据范围。发送方只能发送位于窗口内的字节流中的字节。该窗口随着发送方的出站字节流和接收端的入站字节流而滑动。<br><img src="https://technet.microsoft.com/cc162519.fig01%28zh-cn%29.gif?_=4332652" alt=""><br>任何时期TCP 缓冲区中的数据都能分为如下四个状态：<br> a. 已发送已确认,数据流中最早的字节已经发送并得到确认。这些是站在发送方的角度来看的。</p>
+<p> b. 已发送但尚未确认,已发送但尚未得到确认的字节。发送方在确认之前，不认为这些数据已经被处理。</p>
+<p> c. 未发送而接收方ready,设备尚未将数据发出，但接收方根据最近一次关于发送方一次要发送多少字节确认自己有足够空间。发送方会立即尝试发送。</p>
+<p> d. 未发送而接收方not Ready,由于接收方not ready，还不允许发送方将这部分数据发出。<br>四种状态如图所示：<br><img src="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95961/image003.jpg" alt=""><br>那么，TCP如何确定数据是否已经被接受，是否被丢失呢？</p>
+<h2 id="选择性重传"><a href="#选择性重传" class="headerlink" title="选择性重传"></a>选择性重传</h2><p>TCP重传的基本原理是每一次发送一个片段，就开启一个重传计时器。计时器有一个初始值并随时间递减。如果在片段接收到确认之前计时器超时，就重传片段。TCP一次传输多个片段，何如高效的，在合适的时机重传则需要更复杂的机制。 </p>
+<p> a. TCP开始传输数据时，每个片段一经发送，就开启该片段的重传计时器，将该片段拷贝到一个重传队列中（一个数据结构）。</p>
+<p> b. 如果在计时器结束之前受到确认信息，就将该片段从重传队列中删除。</p>
+<p> c. 在计时器结束时候仍未收到确认信息，就将该片段重传，如果重传的片段依旧失败，该片段就是继续重传，如果一直失败，重传就会一直下去，这是我们不愿意看到的结构，所以应该限定TCP重传的次数。</p>
+<p>那么如何确定片段时候已经被接受到呢？<br>TCP确认机制是基于序列号累积的。<br>一个简单的例子，这里有3个片段：<br>片段1 序列号是1片段长度80。所以片段1中最后一个序列号是80。<br>片段2 序列号是81片段长度是120。片段2中最后一个序列号是200。<br>片段3 序列号是201片段长度是160。片段3中最后一个序列号是360。 </p>
+<p>假设客户端接收到第一个片段，它会发回一条确认消息确认号为81。从而告知服务器前第一个片段已经被客户端成功接收了，服务器发送窗口右移80字节，将片段1从重传队列中移除，在接收到确认号81或更高的片段之前，片段2会保留在重传队列中；片段3需要确认号201或更高。<br>假设传输过程中片段2丢失了，但片段3被接收到了。客户端将片段3保存在接收buffer中，但是不需要确认，因为TCP是累积确认机制——确认片段4表示片段3也接收到了，但实际上并没有。因此，客户端需要等待片段2。实际上，服务器端片段2的重传计时器会超时，服务器之后重传片段2。之后客户端收到，然后发送片段2和3确认信息给服务器。</p>
+<p>工作流程如图：<br><img src="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95924/image002.jpg" alt=""><br>最后，通过确认和重传，所以的数据片段都将会传输到接受方。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>TCP连接非常可靠，我认为主要通过建立可靠的连接和确保片段传输机制的功劳。<br>首先。通过，3次握手客户端和服务器端建立可靠的连接（这里的连接是虚拟连接）<br>然后，通过滑动窗口确认机制和选择性重传，将分成一个个片段的数据安全地传输到目的地。<br>最后，通过4次挥手断开TCP连接。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/https/" rel="next" title="Https加密">
+                <i class="fa fa-chevron-left"></i> Https加密
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/下载.jpeg"
+               alt="yuyilei" />
+          <p class="site-author-name" itemprop="name">yuyilei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuyilei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#TCP-IP协议"><span class="nav-number">1.</span> <span class="nav-text">TCP/IP协议</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三次握手"><span class="nav-number">2.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四次挥手"><span class="nav-number">3.</span> <span class="nav-text">四次挥手</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#重传与确认机制"><span class="nav-number">4.</span> <span class="nav-text">重传与确认机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP滑动窗口确认机制"><span class="nav-number">4.1.</span> <span class="nav-text">TCP滑动窗口确认机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择性重传"><span class="nav-number">4.2.</span> <span class="nav-text">选择性重传</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuyilei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
