@@ -106,7 +106,7 @@
 <meta property="og:image" content="https://technet.microsoft.com/cc162519.fig01%28zh-cn%29.gif?_=4332652">
 <meta property="og:image" content="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95961/image003.jpg">
 <meta property="og:image" content="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95924/image002.jpg">
-<meta property="og:updated_time" content="2017-08-19T08:33:30.000Z">
+<meta property="og:updated_time" content="2017-08-19T09:20:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="可靠的TCP">
 <meta name="twitter:description" content="TCP/IP协议TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。1234应用层 ： http, talnet , Email等协议 传输层 ： TCP和UDP 网络层 ： IP，ICMP，ARP等协议 链路层 ： 处理物理接口细节 IP位于网络层位，是无连接的通">
@@ -327,7 +327,7 @@
       
         <h1 id="TCP-IP协议"><a href="#TCP-IP协议" class="headerlink" title="TCP/IP协议"></a>TCP/IP协议</h1><p>TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">应用层 ： http, talnet , Email等协议 </div><div class="line">传输层 ： TCP和UDP </div><div class="line">网络层 ： IP，ICMP，ARP等协议 </div><div class="line">链路层 ： 处理物理接口细节</div></pre></td></tr></table></figure></p>
 <p>IP位于网络层位，是无连接的通信协议，连接两个计算机，它不会占用两个正在通信的计算机之间的通信线路。这样，IP 就降低了对网络线路的需求。每条线可以同时满足许多不同的计算机之间的通信需要，因此，就降低了可靠性，失败了不会重发。<br>TCP协议位于传输层，Transmission Control Protocol （传输控制协议）是一种面向连接的、可靠的、基于字节流的传输层通信协议，速度慢，可靠性高。<br>UDP协议也位于传输层，User Datagram Protocol（用户数据报协议），是一种无连接的传输层协议，提供面向事务的简单不可靠信息传送服务，速度快，可靠性低。<br>那么TCP协议到底可靠在哪里？</p>
-<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>TCP协议通过三次握手，建立可靠的连接。<br>首先，客户端像服务器端发送要求连接的请求，然后，服务器端向客户端发送响应，表示能够与服务器端建立连接，最后，客户端接受到响应之后，向服务器发送信息，确认能和服务器够建立可靠的连接。这就是3次握手的大概过程。<br>第一次握手：确保客户端的发送信息能力和服务器端的接受信息能力。<br>第二次握手：确保客户端的接受信息能力和服务器端的发送信息能力。<br>第三次握手：向服务器发送响应，使服务器，确保双方的发信收信能力都是好的。<br>这样连接的就建立起来了，后续就可以开始传输数据了。可以看出，这样的连接并不是真实存在的，是虚拟的，连接建立的信息并不会在路上保存，相反，连接的状态是在服务器和客户端这两端维持。<br>连接实现的过程如图：<br><img src="http://img.blog.csdn.net/20160809094108622" alt=""><br> a. 第一次握手：客户端将标志位SYN置为1，随机产生一个值seq=J，并将该数据包发送给服务器端，客户端进入SYN_SENT状态，等待服务器确认。</p>
+<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>TCP协议通过三次握手，建立可靠的连接。<br>首先，客户端像服务器端发送要求连接的请求，然后，服务器端向客户端发送响应，表示能够与服务器端建立连接，最后，客户端接受到响应之后，向服务器发送信息，确认能和服务器够建立可靠的连接。这就是3次握手的大概过程。<br>第一次握手：确保客户端的发送信息能力和服务器端的接受信息能力。<br>第二次握手：确保客户端的接受信息能力和服务器端的发送信息能力。<br>第三次握手：向服务器发送响应，使服务器，确保双方的发信收信能力都是好的。<br>这样连接就建立起来了，后续就可以开始传输数据了。可以看出，这样的连接并不是真实存在的，是虚拟的，连接建立的信息并不会在路上保存，相反，连接的状态是在服务器和客户端这两端维持。<br>连接实现的过程如图：<br><img src="http://img.blog.csdn.net/20160809094108622" alt=""><br> a. 第一次握手：客户端将标志位SYN置为1，随机产生一个值seq=J，并将该数据包发送给服务器端，客户端进入SYN_SENT状态，等待服务器确认。</p>
 <p> b.第二次握手：服务器端收到数据包后由标志位SYN=1知道客户端请求建立连接，客户端将标志位SYN和ACK都置为1，Ack=J+1，随机产生一个值seq=K，并将该数据包发送给客户端以确认连接请求，服务器端进入SYN_RCVD状态。</p>
 <p> c. 第三次握手：客户端收到确认后，检查Ack是否为J+1，ACK是否为1，如果正确则将标志位ACK置为1，Ack=K+1，并将该数据包发送给服务器端，服务器端检查Ack是否为K+1，ACK是否为1，如果正确则连接建立成功，客户端和服务器端进入ESTABLISHED状态，完成三次握手。</p>
 <p>三次握手是为了建立可靠连接，并把连接的状态保存到两端。<br>那么TCP如何中断连接呢？</p>
@@ -342,7 +342,7 @@
 <p> b. 已发送但尚未确认,已发送但尚未得到确认的字节。发送方在确认之前，不认为这些数据已经被处理。</p>
 <p> c. 未发送而接收方ready,设备尚未将数据发出，但接收方根据最近一次关于发送方一次要发送多少字节确认自己有足够空间。发送方会立即尝试发送。</p>
 <p> d. 未发送而接收方not Ready,由于接收方not ready，还不允许发送方将这部分数据发出。<br>四种状态如图所示：<br><img src="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95961/image003.jpg" alt=""><br>那么，TCP如何确定数据是否已经被接受，是否被丢失呢？</p>
-<h2 id="选择性重传"><a href="#选择性重传" class="headerlink" title="选择性重传"></a>选择性重传</h2><p>TCP重传的基本原理是每一次发送一个片段，就开启一个重传计时器。计时器有一个初始值并随时间递减。如果在片段接收到确认之前计时器超时，就重传片段。TCP一次传输多个片段，何如高效的，在合适的时机重传则需要更复杂的机制。 </p>
+<h2 id="选择性重传"><a href="#选择性重传" class="headerlink" title="选择性重传"></a>选择性重传</h2><p>TCP重传的基本原理是每一次发送一个片段，就开启一个重传计时器。计时器有一个初始值并随时间递减。如果在片段接收到确认之前计时器超时，就重传片段。TCP一次传输多个片段，如何高效地，在合适的时机重传则需要更复杂的机制。 </p>
 <p> a. TCP开始传输数据时，每个片段一经发送，就开启该片段的重传计时器，将该片段拷贝到一个重传队列中（一个数据结构）。</p>
 <p> b. 如果在计时器结束之前受到确认信息，就将该片段从重传队列中删除。</p>
 <p> c. 在计时器结束时候仍未收到确认信息，就将该片段重传，如果重传的片段依旧失败，该片段就是继续重传，如果一直失败，重传就会一直下去，这是我们不愿意看到的结构，所以应该限定TCP重传的次数。</p>
