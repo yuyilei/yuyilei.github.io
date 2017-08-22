@@ -250,6 +250,148 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/22/network-work1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/下载.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/22/network-work1/" itemprop="url">How do  Networks Work?   ——网络是如何连接的 (一)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-22T16:26:59+08:00">
+                2017-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？</p>
+<h1 id="浏览器生成消息"><a href="#浏览器生成消息" class="headerlink" title="浏览器生成消息"></a>浏览器生成消息</h1><h2 id="解析URL"><a href="#解析URL" class="headerlink" title="解析URL"></a>解析URL</h2><p>在在浏览器中输入一个URL（统一资源定位符）如 <a href="http://www.balabala.com/dir/file.html/" target="_blank" rel="external">http://www.balabala.com/dir/file.html/</a> (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，// 后面的www.balabala.com表示服务器域名，dir表示文件目录，file.html表示所求文件名。这样就能准确定位一个资源。<br>有些URL，比如<a href="http://www.baidu.com" target="_blank" rel="external">http://www.baidu.com</a>  ，可以看到并没有文件目录和文件名，说明它们是可以省略的，省略时，访问的是服务器根目录上事先设置好的默认文件。<br>URL有不同的写法，但是URL开头的文字一般表示浏览器当前使用的协议（其实叫访问方法更为合适，因为file: 没用使用协议），包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http:  （HTTP）HyperText Transfer Protocol , 超文本传输协议，应用最为广泛。  </div><div class="line">file:  访问时不需要网络，访问本机文件，所以它不是协议。</div><div class="line">mailto:  Mailto Protocol, 电子邮件协议， 用于发送电子邮件 </div><div class="line">ftp:  (FTP) File Transfer Protocol ，文件传输协议，一般用于文件的上传和下载</div></pre></td></tr></table></figure></p>
+<p>通过解析URL之后，浏览器获得了想要获取的服务器名和文件名。</p>
+<h2 id="生成HTTP请求消息"><a href="#生成HTTP请求消息" class="headerlink" title="生成HTTP请求消息"></a>生成HTTP请求消息</h2><p>以HTTP为例，浏览器将根据规定生成请求消息，消息分为消息头，消息行，消息体。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;方法&gt;&lt;空格&gt;&lt;URI&gt;&lt;空格&gt;&lt;HTTP版本&gt;</div><div class="line">&lt;字段名&gt;：&lt;字段值&gt; </div><div class="line">  .</div><div class="line">  .</div><div class="line">  .</div><div class="line">&lt;空行&gt;</div><div class="line">&lt;消息体&gt;</div></pre></td></tr></table></figure></p>
+<p>请求消息的一行是消息头。<br>方法有GET，POST，PUT，DELETE，HEAD，OPTIONS等，但是一般情况下GET和POST就够用了。GET意为获取服务器端数据，POST意为想服务端发送数据。<br>URI（Uniform Resource Identifier) 统一资源标识符，一般来说，是一个存放网页数据的文件名（如前文的 ／dir/file.html ) 或一个存放CGI程序的文件名（浏览器可以调用该CGI程序）<br>HTTP版本号现在一般是 1.1  </p>
+<p>消息头下面是消息行，最有由一个空行结尾。<br>消息行的消息以键值对的形式规定了许多额外的消息，如日期(Date)，客户端支持的数据类型(Content-Type),语言(Accpet-Language)    等 </p>
+<p>消息行之后就是消息体，包含客户端向服务器端发送的数据，如POST方法中向服务器传输的表单数据。 </p>
+<h1 id="向DNS服务器查询Web服务器的IP地址"><a href="#向DNS服务器查询Web服务器的IP地址" class="headerlink" title="向DNS服务器查询Web服务器的IP地址"></a>向DNS服务器查询Web服务器的IP地址</h1><h2 id="DNS域名解析"><a href="#DNS域名解析" class="headerlink" title="DNS域名解析"></a>DNS域名解析</h2><p>浏览器虽然能够生成请求信息，但是不具备发送信息的功能。将信息发送到网络中需要操作系统的帮助。在此之前，还需要根据服务器域名获取服务器的IP地址。<br>首先了解一下IP地址。<br>IP地址是一般是一串32位的数字，8比特一位分为4组，表示计算机在网络中的地址，TCP／IP网络是通过IP地址获取通信对象的，如果没有IP地址，就没有办法通信。 像www.baidu.com 这样的不是IP而是域名。相比数字，一串有意义的英文字符更容易记忆，所以，一般访问网站时使用域名。但是如果通过域名来确定通信对象的话，一是，域名没有确定的长度，且域名最一般最短也也有几十字节，这样增加了路由器的负担，降低了网络请求发送和接受的效率。所以，解决方法就是，让人使用域名，再通过域名解析获取相应的IP地址。</p>
+<p>前文说到路由器，何为路由器？就像快递传送途中的各个站点，通过这些站点，能将快递送到目的地，将整个快递传输系统连成一个网。<br>学校和家里的局域网，可以看成一个子网，子网是通过路由器连接起来的，连接了这个子网的计算机，通过这个路由器与外界的网络联系。</p>
+<h2 id="通过解析器向DNS服务器发出请求获取IP地址"><a href="#通过解析器向DNS服务器发出请求获取IP地址" class="headerlink" title="通过解析器向DNS服务器发出请求获取IP地址"></a>通过解析器向DNS服务器发出请求获取IP地址</h2><p>如何获取域名对映的IP地址呢？<br>世界上有许多DNS服务器，上面储存的IP地址与域名解析之间的映射关系（这其实是简化的理解，并不是简单的映射关系），要获取IP地址，可以向DNS服务器发起请求查询IP地址。原理很简单，只要向DNS服务器询问www.baidu.com的IP地址就可以了。<br>向DNS服务器发起请求，这就要求本机上要有DNS客户端相应DNS服务器的相应消息，这个DNS客户端就是解析器，其本质就是一段程序（或说函数），位于Socket库中。Socket库中的函数能让应用程序调用操作系统的网络功能（因为浏览器不能发网络请求，就必须通过操作系统，Socket库中封装的函数，能让浏览器等应用程序调用，实现网络请求）。<br>假设这是一段浏览器中的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;函数名&gt; (&lt;参数&gt;) &#123; </div><div class="line">.</div><div class="line">.</div><div class="line">&lt;内存地址&gt; = gethostbyname(&quot;www.baidu.com&quot;) </div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;发送Http请求&gt;</div><div class="line">.</div><div class="line">.</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>函数gethostbyname就是解析器。程序运行到这里时，原本浏览器中正在运行的代码暂停，调用解析器，控制流程转移到操作系统，解析器生成请求信息，再通过调用操作系统内部的网络控制软件（其实和浏览器一样，解析器本身也不能发送网络请求，必须通过其他函数。其实很多功能的实现都是通过调用现有模块，现有函数，代码复用可以减少工作量，也能时程序更标准化）发送查询IP地址的请求，获取响应，响应中包括所求的IP地址，解析器取出IP地址，将其存入浏览器指定的内存区域，这样就获取了通信对象的IP地址。</p>
+<h2 id="DNS服务器大接力"><a href="#DNS服务器大接力" class="headerlink" title="DNS服务器大接力"></a>DNS服务器大接力</h2><p>其实有个现实问题，全世界的计算机不计其数，不可能将全世界所有的IP和域名的映射关系存到同一个DNS服务器中。必须通过各个DNS服务器之间的接力配合才能获取查询的IP地址。</p>
+<h3 id="域名的层次结构"><a href="#域名的层次结构" class="headerlink" title="域名的层次结构"></a>域名的层次结构</h3><p>观察域名 www.baidu.com 发送它被.分隔，具有层次结构。在域名中，越靠右，层次越高，处于同一个层次的个体属于同一个域，可以把每个域看作一个整体。将一个域的信息存入同一个DNS解析器中，于是，DNS服务器也有了像域名一样的层次结构，每一个域的信息都放在相应层级的DNS服务器中，上一级DNS服务器中存放着下一级DNS解析器的信息，一级一级顺藤摸瓜，可以获取最终的IP地址。</p>
+<h3 id="根域"><a href="#根域" class="headerlink" title="根域"></a>根域</h3><p>根域就是最顶级的域，根域就是一个点（.) 。 其中存着 com , jp 等次级域的信息。分配给根域的DNS服务器的IP地址在全世界只有13个，因此，全世界所有的DNS服务器中，都存着这13个服务器的信息，因此，访问任何一个DNS服务器，都可以获取根域的信息，再一级一级往下找。</p>
+<h3 id="具体流程"><a href="#具体流程" class="headerlink" title="具体流程"></a>具体流程</h3><p>以 www.balabala.hahaha.com为例。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">客户端访问最近的一台DNS服务器</div><div class="line">最近的一台DNS服务器查询根域服务器的IP地址，返回给客户端</div><div class="line">客户端访问根域服务器</div><div class="line">根域服务器查询com域的DNS服务器IP地址，返回给客户端 </div><div class="line">客户端访问com域的DNS服务器</div><div class="line">com域的DNS服务器查询hahaha.com域的IP地址，返回给客户端 </div><div class="line">客户端访问hahaha.com域</div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">客户端访问www.balabala.hahaha.com 成功</div></pre></td></tr></table></figure></p>
+<p>如此，浏览器获得了通信对象的IP地址，存储在对应的内存地址。</p>
+<h1 id="socket：连接，通信与断开"><a href="#socket：连接，通信与断开" class="headerlink" title="socket：连接，通信与断开"></a>socket：连接，通信与断开</h1><h2 id="什么是socket？"><a href="#什么是socket？" class="headerlink" title="什么是socket？"></a>什么是socket？</h2><p>socket是什么？这个问题困扰了我很久。socket的中文翻译是套接字，emmmmmm非常难以描述。就说一下自己的理解吧。<br>Unix/Linux里有个思想是“一切皆文件”，可以把socket看成一个文件，它可以打开（connect），读（read），写（write），关闭（close）。但是socket是一个特殊的文件，特殊之处在于socket中的信息是可以从它连接的两端读出，写入，实现通信的功能。<br>socket”打开—读/写—关闭”模式的实现，以使用TCP协议通讯的socket为例，其交互流程大概是这样子:<br><img src="/uploads/05232335-fb19fc7527e944d4845ef40831da4ec2-2.png" alt=""><br>socket其实没有实体，只是一个概念，如果一定要说实体，内存中有一块区域，储存着控制通信操作的信息，如通信对象的IP地址，端口号，通信操作的进行状态等信息，这些内存区域就是socket的实体。通过对象的IP地址和端口号，可以确定通信对象，在通信的过程中，通信操作的进行状态也被储存下来（如通信对象是否收到响应），用于后续的通信。</p>
+<h2 id="调用socket的操作"><a href="#调用socket的操作" class="headerlink" title="调用socket的操作"></a>调用socket的操作</h2><p>Socket库中有很多操作socket的函数，在应用程序中调用，创建socket，连接，通信，断开，都是在应用程序中调用的。<br>假设这是一段浏览器中的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;函数名&gt; (&lt;参数&gt;) &#123; </div><div class="line">.</div><div class="line">.</div><div class="line">&lt;内存地址&gt; = gethostbyname(&quot;www.baidu.com&quot;)  // 获取IP地址</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;描述符&gt; = socket(&lt;使用IPv4&gt;,&lt;使用TCP&gt;....)  // 创建socket</div><div class="line">.</div><div class="line">.</div><div class="line">connect(...)  // 连接</div><div class="line">.</div><div class="line">.</div><div class="line">write(...) // 给通信对象发送信息</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;接受数据长度&gt; = read(...)  // 接受通信对象的信息</div><div class="line">.</div><div class="line">.</div><div class="line">close(&lt;描述符&gt;) //  关闭socket </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段伪代码和上面那段很像，但是把&lt;发送http请求&gt; 换成了socket的一系列操作。其实&lt;发送http请求&gt;是一个笼统的说法，它的实现需要很多“精细”的操作，socket的创建，连接，通信，关闭，就是其中之一（或说是实现&lt;发送http请求&gt;的方法）。<br>图中浏览器调用socket方法时，声明遵守TCP协议，接下来的说明时关于TCP的。</p>
+<h3 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h3><p>socket的实体是一段内存空间，创建socket就是操作系统为其分配所需的内存空间，初始化其状态信息（写入初始状态，通信对象的IP地址和端口号），返回socket的描述符，这个描述符相当于socket的编号，后续可以使用描述符来确定相应的socket，获取通信所用的信息。</p>
+<h3 id="连接服务器"><a href="#连接服务器" class="headerlink" title="连接服务器"></a>连接服务器</h3><p>其实在服务器端也创建了监听socket（该socket的IP地址和端口号就是客户端socket中储存的IP地址和端口号），用于等待客户端socket的连接请求（监听socket中没有通信对象的IP地址和端口号）。当客户端发起连接请求时，就会告知服务器端客户端socket的IP地址和端口号。<br>实际上，“连接”服务器的说法不是很准确，因为并没有真正的像管道一样的东西连接了客户端和服务器端，而它们的“连接”状态以通信控制信息的形式储存在各自的socket和头部（主要是TCP头部）中。在这个“连接”的过程中，客户端向服务器端传达了通信请求，双方交换了通信所需的控制信息（比如，监听socket创建时，并没有通信对象的IP地址和端口号），创建了临时收发数据所需的内存空间（缓冲区），所以，与其说是“连接”服务器，“准备”更为恰当。<br>关于通信过程中的控制信息，大概包括两方面。<br>一，socket中储存的信息（通信对象的IP地址和端口号，通信状态等）<br>二，头部中保存的信息。有些信息不仅在客户端和服务器端连接时需要，在整个通信过程都需要，所以将信息储存在头部。这里的头部包括TCP头部，IP头部，以太网头部（这里只介绍TCP头部）。<br>其结构如图：<br><img src="/uploads/2012111621050639.jpg" alt=""><br>这里强调一点，在TCP层面，TCP头部包装的用户数据（也就是HTML等应用层数据）其实只是普通的二进制数据流（虽然HTML可以渲染出页面，但是TCP层只是把它看作普通数据），在IP层层面，整个TCP段（TCP头部和用户数据）是普通的二进制数据流，用IP头部进行包装。以此类推，每一层都将其上一层作为普通数据进行封装。当接受方收到数据时，在一层一层揭开，得到用户数据。<br>TCP头部中的信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">发送方端口号</div><div class="line">接收方端口号</div><div class="line">序号 （发送方用于告知接受方已经发送了几个字节，其实就是发送方已经发送的字节数</div><div class="line">ACK号 （接收方用于告知发送方已经接受了几个字节，其实就是接受方已经接受的字节数）</div><div class="line">数据偏移量 头部的长度 </div><div class="line">控制位  常用的有ACK（1表示接收方已经收到），SYN（表示连接）和FIN（表示断开）</div><div class="line">窗口 接收方告知发送发窗口大小（无需等待就可以一起发送的最大数据量） </div><div class="line">校验和 用于检查是否出错</div></pre></td></tr></table></figure></p>
+<p>关于TCP连接，可见另一篇博客 –&gt; <a href="https://yuyilei.github.io/2017/08/19/tcp/" target="_blank" rel="external">可靠的TCP</a>。<br>众所周知，TCP连接三次握手，四次挥手，它的实现也是通过socket实现的，如图：<br><img src="/uploads/05234946-b80841921eae4d2ab983f26ed9023768.png" alt=""></p>
+<h3 id="收发数据"><a href="#收发数据" class="headerlink" title="收发数据"></a>收发数据</h3><p>经过千辛万苦，终于使客户端和服务器建立起了“连接”，终于可以收发数据了！！ 但是！！<br>欲知后事如何，且听下回分解。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/20/workflow/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1447,7 +1589,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
