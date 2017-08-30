@@ -94,19 +94,17 @@
 
 
 
-<meta name="description" content="这是开发的大概流程： 测试驱动开发测试驱动开发的基本思想就是在开发功能代码之前，先编写测试代码。也就是说在明确要开发某个功能后，首先思考如何对这个功能进行测试，并完成测试代码的编写，然后编写相关的代码满足这些测试用例。然后循环进行添加其他功能，直到完全部功能的开发,所以就提出一个测试驱动开发的概念。 –&amp;gt; 这是一篇博客大概的流程是这样的： a. 编写API文档 : 后端根据需求进行数据库的设">
+<meta name="description" content="Web Server 和 App Server 有什么区别？ 简单来说就是Web Server 处理HTTP 请求， App Server （application server）处理业务逻辑。  The Web Server Web Server  处理HTTP协议。当Web Server 收到一个http请求时，返回一个http响应。比如静态的http，图片，一个重定向，或者运行一个CGI脚">
 <meta property="og:type" content="article">
-<meta property="og:title" content="YYL&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/2017/08/20/workflow/index.html">
+<meta property="og:title" content="Web Server and App Server -- What is the difference?">
+<meta property="og:url" content="http://yoursite.com/2017/08/28/web-or-app/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
-<meta property="og:description" content="这是开发的大概流程： 测试驱动开发测试驱动开发的基本思想就是在开发功能代码之前，先编写测试代码。也就是说在明确要开发某个功能后，首先思考如何对这个功能进行测试，并完成测试代码的编写，然后编写相关的代码满足这些测试用例。然后循环进行添加其他功能，直到完全部功能的开发,所以就提出一个测试驱动开发的概念。 –&amp;gt; 这是一篇博客大概的流程是这样的： a. 编写API文档 : 后端根据需求进行数据库的设">
+<meta property="og:description" content="Web Server 和 App Server 有什么区别？ 简单来说就是Web Server 处理HTTP 请求， App Server （application server）处理业务逻辑。  The Web Server Web Server  处理HTTP协议。当Web Server 收到一个http请求时，返回一个http响应。比如静态的http，图片，一个重定向，或者运行一个CGI脚">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/uploads/82235AE97CEC94A2E00A6DAE31C0DFBF.png">
-<meta property="og:updated_time" content="2017-08-30T11:24:06.000Z">
+<meta property="og:updated_time" content="2017-08-28T09:24:22.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YYL&#39;s blog">
-<meta name="twitter:description" content="这是开发的大概流程： 测试驱动开发测试驱动开发的基本思想就是在开发功能代码之前，先编写测试代码。也就是说在明确要开发某个功能后，首先思考如何对这个功能进行测试，并完成测试代码的编写，然后编写相关的代码满足这些测试用例。然后循环进行添加其他功能，直到完全部功能的开发,所以就提出一个测试驱动开发的概念。 –&amp;gt; 这是一篇博客大概的流程是这样的： a. 编写API文档 : 后端根据需求进行数据库的设">
-<meta name="twitter:image" content="http://yoursite.com/uploads/82235AE97CEC94A2E00A6DAE31C0DFBF.png">
+<meta name="twitter:title" content="Web Server and App Server -- What is the difference?">
+<meta name="twitter:description" content="Web Server 和 App Server 有什么区别？ 简单来说就是Web Server 处理HTTP 请求， App Server （application server）处理业务逻辑。  The Web Server Web Server  处理HTTP协议。当Web Server 收到一个http请求时，返回一个http响应。比如静态的http，图片，一个重定向，或者运行一个CGI脚">
 
 
 
@@ -135,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/20/workflow/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/28/web-or-app/"/>
 
 
 
 
 
-  <title> | YYL's blog</title>
+  <title>Web Server and App Server -- What is the difference? | YYL's blog</title>
   
 
 
@@ -254,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/20/workflow/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/28/web-or-app/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
@@ -271,7 +269,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Web Server and App Server -- What is the difference?</h1>
         
 
         <div class="post-meta">
@@ -283,8 +281,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-20T14:32:37+08:00">
-                2017-08-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-28T17:09:49+08:00">
+                2017-08-28
               </time>
             
 
@@ -321,19 +319,8 @@
       
 
       
-        <p>这是开发的大概流程：<br><img src="/uploads/82235AE97CEC94A2E00A6DAE31C0DFBF.png" alt=""></p>
-<h1 id="测试驱动开发"><a href="#测试驱动开发" class="headerlink" title="测试驱动开发"></a>测试驱动开发</h1><p>测试驱动开发的基本思想就是在开发功能代码之前，先编写测试代码。也就是说在明确要开发某个功能后，首先思考如何对这个功能进行测试，并完成测试代码的编写，然后编写相关的代码满足这些测试用例。然后循环进行添加其他功能，直到完全部功能的开发,所以就提出一个测试驱动开发的概念。 –&gt; <a href="https://humbertzhang.github.io/2017/08/11/测试驱动开发流程-md/" target="_blank" rel="external">这是一篇博客</a><br>大概的流程是这样的：</p>
-<p>a. 编写API文档 : 后端根据需求进行数据库的设计，API功能的确定以及API文档的编写。编写完API文档之后，应与一起开发的前端人员一起确定API文档中的各个API，反复修改直到达成约定。 </p>
-<p>b. 编写项目骨架 : 根据之前设计的数据库等，编写相应的models.py以及其他必不可少的组成部分. </p>
-<p>c. 测试驱动开发API : 根据测试开发的过程，编写测试以及API .</p>
-<p>在API编写之前先设计单元测试，毫无疑问，每个API，每个测试都会报错，所以在完成每一个API之后，就跑一遍测试，如果能看到相关的测试通过了，就代表该API初步编写完成。 而且，编写单元测试，也有利于在合并分支的时候，ci测试API，保证API的正确性。<br>同理，如果要编写一个新的API或者开发新的功能也应当先写单元测试，再写API。</p>
-<h1 id="测试环境和生产环境"><a href="#测试环境和生产环境" class="headerlink" title="测试环境和生产环境"></a>测试环境和生产环境</h1><p>如果产品正在开发阶段，就部署在测试环境上，等到开发完成，就由专门的运行人员部署到生产环境上。什么是生产环境和测试环境？ </p>
-<p>a. 测试环境: 木犀有一片测试集群，也是一片阿里云学生机。在开发阶段，由本项目的开发人员部署到测试环境上（使用docker）。注意，测试环境是每个开发人员都可以接触，都有相应的权限，是自己接手的，有利于项目的开发和优化。 </p>
-<p>b. 开发完成后，由专门的运维人员部署到生产环境上。生产环境由运维人员维护，开发人员没有权限。最后，上线的产品就是跑在生产环境上。</p>
-<h1 id="分支与版本"><a href="#分支与版本" class="headerlink" title="分支与版本"></a>分支与版本</h1><p>多人开发，后期维护和优化代码，升级产品版本都是需要合理维护各个分支，给每个版本打好标签。所以，在开发的过程中要有分支和版本的概念。<br>仓库主要分为2个分支，master和dev分支。master分支上正是当前生产环境上正在跑的代码的版本，dev分支是当前正在开发的版本。<br>开发人员完成一个阶段的开发之后，通过了本地的单元测试后，就由自己的仓库向主仓库的dev分支发pr，通过了ci了之后，就可以合并上去（注意，ci和单元测试配合测试API），再由开发人员把dev分支的代码部署到测试环境上。<br>当开发完成，由专门的运维人员将dev分支合并到master，这就代表该产品的一个版本开发完成，那么上一个版本怎么办呢？<br>是这样的，每当一个版本开发完成之后， 就从master分支分出一个分支，名为 release-<xxx> (xxx可以是版本名) 的分支，用来记录每个版本。<br>总结起来就是这样： </xxx></p>
-<p>a. master为主分支，保存当前版本<br>b. dev分支为开发分支，最后向master分支发pr合并。<br>c. release-<xxx> 分支由master分支得到，保存每个曾经的版本。 </xxx></p>
-<h1 id="镜像管理"><a href="#镜像管理" class="headerlink" title="镜像管理"></a>镜像管理</h1><p>现在无论是前端还是后端普遍采用docker部署。说到docker，就要build镜像。<br>前文说到dev分支和master分支。简单的说就是，生产环境上的镜像是由master分支build得到，测试环境上的镜像是由dev分支build得到。镜像在阿里云上build，储存在阿里云的镜像仓库里，并通过团队的kubernetes部署。关于测试环境的数据库，也可以使用docker启动mysql–&gt; <a href="https://yuyilei.github.io/2017/08/08/docker-for-mysql/" target="_blank" rel="external">这又是一篇博客</a> 。 </p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这个工作流程的核心就是权限的概念。将开发和运维分开，将测试环境和生产环境分开，将master分支和dev分支分开。这样能够各司其职，提高开发效率，有利于后期的代码维护和优化，新版本的开发。</p>
+        <p> Web Server 和 App Server 有什么区别？<br> 简单来说就是Web Server 处理HTTP 请求， App Server （application server）处理业务逻辑。 </p>
+<h1 id="The-Web-Server"><a href="#The-Web-Server" class="headerlink" title="The Web Server"></a>The Web Server</h1><p> Web Server  处理HTTP协议。当Web Server 收到一个http请求时，返回一个http响应。比如静态的http，图片，一个重定向，或者运行一个CGI脚本（动态）。可以这样理解，当收到一个请求时， </p>
 
       
     </div>
@@ -358,8 +345,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/19/tcp/" rel="next" title="可靠的TCP">
-                <i class="fa fa-chevron-left"></i> 可靠的TCP
+              <a href="/2017/08/22/network-work1/" rel="next" title="How do  Networks Work?   ——网络是如何连接的 (一)">
+                <i class="fa fa-chevron-left"></i> How do  Networks Work?   ——网络是如何连接的 (一)
               </a>
             
           </div>
@@ -367,10 +354,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/22/network-work1/" rel="prev" title="How do  Networks Work?   ——网络是如何连接的 (一)">
-                How do  Networks Work?   ——网络是如何连接的 (一) <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -499,7 +482,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#测试驱动开发"><span class="nav-number">1.</span> <span class="nav-text">测试驱动开发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试环境和生产环境"><span class="nav-number">2.</span> <span class="nav-text">测试环境和生产环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分支与版本"><span class="nav-number">3.</span> <span class="nav-text">分支与版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#镜像管理"><span class="nav-number">4.</span> <span class="nav-text">镜像管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#The-Web-Server"><span class="nav-number">1.</span> <span class="nav-text">The Web Server</span></a></li></ol></div>
             
 
           </div>
