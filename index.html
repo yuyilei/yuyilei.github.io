@@ -250,6 +250,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/31/note-for-docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/下载.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/31/note-for-docker/" itemprop="url">Docker in action读书笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T09:51:08+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="一些常用的Docker命令"><a href="#一些常用的Docker命令" class="headerlink" title="一些常用的Docker命令"></a>一些常用的Docker命令</h1><pre><code>docker help +[command] 
+</code></pre><p>这个命令可以查看所有docker的命令和它的参数，非常实用 </p>
+<h2 id="关于容器管理的命令"><a href="#关于容器管理的命令" class="headerlink" title="关于容器管理的命令"></a>关于容器管理的命令</h2><h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h3><pre><code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+</code></pre><p>这个命令会启动一个docker容器(Run a command in a new container) ，如果本地没有这个镜像，会从Dockerhub(默认）上下载运行。有几个option比较常用:<br><code>--name &lt;name&gt;</code>给容器命名<br><code>--env &lt;key&gt;=&lt;value&gt;</code> 或<code>-e &lt;key&gt;=&lt;value&gt;</code> 设置环境变量<br><code>--volume &lt;path&gt;</code> 或 <code>-v &lt;path&gt;</code> 将主机该目录下的文件挂载到容器中<br><code>--volume &lt;h-path&gt;:&lt;c-path&gt;</code> 或 <code>-v &lt;h-path&gt;:&lt;c-path&gt;</code> 容器上挂载指定的主机目录<br><code>--rm</code> 关闭容器之后自动清除容器<br><code>--volumes-from &lt;another-container&gt;</code> 访问另一个容器的volume（数据共享）<br><code>--iteractive</code>或<code>-i</code> 显示（获得容器中的输出）<br><code>--tty</code>或<code>-t</code>允许向容器内部发送信号（经常和-i一起使用，来与容器交互）<br><code>--detach</code>或<code>-d</code>在后台运行<br><code>-p &lt;port&gt;:&lt;port&gt;</code> 将主机的端口映射到容器的端口<br><code>--link</code>与另外一个容器连接  </p>
+<p>其中<code>--restart</code>是容器的重启机制，有4中类型<br>1.<code>no</code> ，当容器关闭时，从不自动重启，这是默认状态。<br>2.<code>on-failure[:max-retries]</code>,只有在容器以非零状态关闭时重启，可以设置最大尝试重启的次数<br>3.<code>always</code> ,无论任何情况都会重启，而且当docker daemon启动时，容器也会自动启动<br>4.<code>unless-stopped</code>,无论容器以什么状态停止都会重启，但是docker daemon启动，如果容器事先是停止状态，就不会重启（这里书上和文档上讲的不一样，以文档为准）</p>
+<p>docker run的option非常多，因为它运行一个容器的同时，可以添加参数修改build镜像时的默认设置，使用时，有需要用<code>docker help</code>查询 </p>
+<h3 id="docker-create"><a href="#docker-create" class="headerlink" title="docker create"></a>docker create</h3><pre><code>docker create [OPTIONS] IMAGE [COMMAND] [ARG...] 
+</code></pre><p>创建容器（Create a new container），这个命令和 <code>docker run</code>很像，但是不启动容器,很多option也类似。但是<code>docker create</code>如果没有直接命名容器的话，会随机产生一个形容词+名词的容器名</p>
+<h3 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a>docker ps</h3><pre><code>docker ps [OPTIONS]
+</code></pre><p>列出容器（List containers），默认只列出启动的容器，常用option:<br><code>-a</code> 列出所用容器<br><code>-q</code> 或    <code>--quiet</code>只列出容器ID<br><code>-s</code> 或     <code>--size</code>列出容器大小<br><code>docker ps</code>最常用来显示正在运行的容器 </p>
+<h3 id="docker-exec"><a href="#docker-exec" class="headerlink" title="docker exec"></a>docker exec</h3><pre><code>docker exec [OPTIONS] CONTAINER COMMAND [ARG...] 
+</code></pre><p>在容器中运行命令（Run a command in a running container），常用形式：<br><code>docker exec -it &lt;container&gt; /bin/bash</code> 进入容器 </p>
+<h3 id="docker-kill-与-docker-stop"><a href="#docker-kill-与-docker-stop" class="headerlink" title="docker kill 与 docker stop"></a>docker kill 与 docker stop</h3><pre><code>docker kill [OPTIONS] CONTAINER [CONTAINER...] 
+docker stop [OPTIONS] CONTAINER [CONTAINER...] 
+</code></pre><p><code>docker kill</code> 和<code>docker stop</code>都是关闭一个容器，但它们是有区别的：<br>文档上是这样说的：<br><code>docker kill</code>: Kill a running container using SIGKILL or a specified signal<br><code>docker stop</code>: Stop a running container by sending SIGTERM and then SIGKILL after a grace period<br>所以：<br><code>docker kill</code> kill直接执行kill -9（直接发送SIGKILL），强行终止<br><code>docker stop</code>  发一个SIGTERM，让容器自己停。容器进程规定之间内不停，那么再调kill -9 </p>
+<h3 id="docker-rm"><a href="#docker-rm" class="headerlink" title="docker rm"></a>docker rm</h3><pre><code>docker rm [OPTIONS] CONTAINER [CONTAINER...] 
+</code></pre><p>移除一个已经停止的容器（Remove one or more containers） 常用option<br><code>-f</code> 或  <code>--force</code> 强制删除 （运行中的容器，发送SIGKILL)<br><code>-link</code> 或 <code>--link</code>  同时删除link<br><code>-volume</code> 或<code>-v</code> 同时删除volume </p>
+<h3 id="docker-logs"><a href="#docker-logs" class="headerlink" title="docker logs"></a>docker logs</h3><pre><code>docker logs [OPTIONS] CONTAINER 
+</code></pre><p>查看容器日志（Fetch the logs of a container） ,常用 ：<br><code>-f</code> 或 <code>-follow</code> 持续展示日志，CTRL+C 停止<br>其实日志会随着容器的存在一直写入，docker logs一直变长，所以可以把docker logs挂载在本机 </p>
+<h3 id="docker-inspect"><a href="#docker-inspect" class="headerlink" title="docker inspect"></a>docker inspect</h3><pre><code>docker inspect [OPTIONS] NAME|ID [NAME|ID...] 
+</code></pre><p>显示容器的底层信息（Return low-level information on Docker objects）默认为json格式返回数据 ， <code>docker inspect</code>显示的信息有很多，一般和<code>grep</code>配合使用，找出所需的信息，如<code>docker inspect &lt;container&gt;  | grep IPAddress</code> ，也可以使用<code>-f</code>或<code>--format</code>定义返回的格式 </p>
+<h3 id="docker-export-和-docker-import"><a href="#docker-export-和-docker-import" class="headerlink" title="docker export 和 docker import"></a>docker export 和 docker import</h3><pre><code>docker export [OPTIONS] IMAGE [IMAGE...] 
+</code></pre><p>持久化容器（Export a container’s filesystem as a tar archive），一般这样调用：<br><code>docker export &lt;container&gt; &gt; &lt;filename&gt;</code> 或 <code>docker export -o &lt;filename&gt; &lt;containr&gt;</code> 将容器导出到指定文件</p>
+<pre><code>docker import [OPTIONS] file|URL|- [REPOSITORY[:TAG]] 
+</code></pre><p> 从容器快照文件中再导入为镜像(Import the contents from a tarball to create a filesystem image) , 一般这样调用：<br><code>cat filename.tgz | docker import - image:tag</code> 从本地文件导出<br>也可以通过指定 URL 或者某个目录来导入.</p>
+<h2 id="关于镜像管理的命令"><a href="#关于镜像管理的命令" class="headerlink" title="关于镜像管理的命令"></a>关于镜像管理的命令</h2><h3 id="docker-images"><a href="#docker-images" class="headerlink" title="docker images"></a>docker images</h3><pre><code>docker images [OPTIONS] [REPOSITORY[:TAG]] 
+</code></pre><p>列出镜像（List images），默认的 docker images 列表中只会显示顶层镜像,常用：<br><code>-a</code> 显示所有镜像<br><code>-f</code>或 <code>--filter</code>  列出所有符合条件的镜像（删选）<br>可以看到列出镜像中，有一些镜像的仓库名和标签均为<none> ，这种镜像分为两种：</none></p>
+<ol>
+<li>新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为 <none>的情况，<code>docker pull</code>和<code>build build</code>都有可能产生这种镜像.这些镜像可以删除，使用<code>docker images -f dangling=true</code>可以列出这种镜像，使用<code>docker rmi $(docker images -q -f dangling=true)</code> 删除镜像 </none></li>
+<li>在构建镜像过程中产生的中间镜像，默认的 <code>docker images</code>中只会显示顶层镜像，如果希望显示包括中间层镜像在内的所有镜像的话，需要加 <code>-a</code>参数。这些镜像是其它镜像所依赖的镜像，不能删除。</li>
+</ol>
+<h3 id="docker-search"><a href="#docker-search" class="headerlink" title="docker search"></a>docker search</h3><pre><code>docker search [OPTIONS] TERM 
+</code></pre><p> 在Dokcerhub中寻找镜像（Search the Docker Hub for images），常用 ：<br> <code>--automated</code> ， 只找自动build的镜像<br> <code>--stars</code>或<code>-s</code>，镜像仓库至少要几星<br> <code>--limit</code>  最大查找数量<br> <code>docker search</code>非常实用，可以直接在命令行中查找镜像，查看镜像的信息 </p>
+<h3 id="docker-pull"><a href="#docker-pull" class="headerlink" title="docker pull"></a>docker pull</h3><pre><code>docker pull [OPTIONS] NAME[:TAG|@DIGEST] 
+</code></pre><p>从镜像仓库中拉取镜像,(Pull an image or a repository from a registry)不一定是Dockerhub,但是默认为Dokcerhub,可以更换为其它的镜像仓库地址。<br><code>`--all-tags</code>或<code>-a</code>，拉取所有这个仓库里所有标记了的镜像，一般是不需要的，所以在拉取的时候最好写好tag </p>
+<h3 id="dokcer-build"><a href="#dokcer-build" class="headerlink" title="dokcer build"></a>dokcer build</h3><pre><code>docker build [OPTIONS] PATH | URL | - 
+</code></pre><p>根据Dockerfile创建镜像(Build an image from a Dockerfile)<br>编写Dockerfile可以使用Dockerhub中的基础镜像，制作自定义的镜像。首先Dockerfile很小（只是一个文本文件），容易传播，可以根据自己的需要定制镜像（比如本机环境不同），但是Dockerfile的编写又是一门学问了2333。<br>也可以根据GitHub上的Dockerfilebuild镜像，比如：</p>
+<pre><code>docker build &lt;仓库地址&gt;#&lt;branch&gt;:&lt;directory&gt; 
+</code></pre><p>也可以根据压缩包构建镜像：</p>
+<pre><code>docker build http://server/context.tar.gz 
+</code></pre><p>一般用<code>-t</code>为构建的镜像添加tag </p>
+<h3 id="docker-save-和-docker-load"><a href="#docker-save-和-docker-load" class="headerlink" title="docker save 和 docker load"></a>docker save 和 docker load</h3><pre><code>docker save [OPTIONS] IMAGE [IMAGE...] 
+</code></pre><p>持久化镜像（Save one or more images to a tar archive） 一般这样调用 </p>
+<p><code>docker save  image:tag &gt; &lt;filename&gt;</code> 或 <code>docker save -o &lt;filename&gt; image:tag</code> 都是把镜像导出到指定文件  </p>
+<pre><code>docker load [OPTIONS] 
+</code></pre><p>导出镜像（Load an image from a tar archive or STDIN）<br><code>docker load</code>导入镜像存储文件到本地镜像库，<code>docker import</code>导入一个容器快照到本地镜像库。这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也要大.因此，从容器快照文件导入时可以重新指定标签等元数据信息。</p>
+<h3 id="docker-rmi"><a href="#docker-rmi" class="headerlink" title="docker rmi"></a>docker rmi</h3><pre><code>docker rmi [OPTIONS] IMAGE [IMAGE...] 
+</code></pre><p>删除镜像（Remove one or more images） 。<code>-f</code>或<code>--force</code>常用于强制删除 </p>
+<h1 id="Docker底层实现"><a href="#Docker底层实现" class="headerlink" title="Docker底层实现"></a>Docker底层实现</h1><p>Docker 底层的核心技术包括 Linux 上的命名空间（Namespaces）、控制组（Control groups）、Union 文件系统（Union file systems)。(不详细介绍，因为不是很了解)<br>容器的本质是资源隔离，利用的是Linux内核中已有的机制（其实就是新瓶装旧酒）。<br>传统的虚拟机通过在宿主主机中运行 hypervisor 来模拟一整套完整的硬件环境提供给虚拟机的操作系统。虚拟机系统看到的环境是可限制的，也是彼此隔离的。 这种直接的做法实现了对资源最完整的封装，但很多时候往往意味着系统资源的浪费。<br>与虚拟机相比，一个基础镜像的下载，能被很多镜像利用，不会有冗余。但虚拟机之间是不能相互利用，也不能利用主机资源，必定会造成浪费。<br>Container更像一种机制–某些进程共用一个内核和某些运行时环境（例如一些系统命令和系统库），但是彼此却看不到，都以为系统中只有自己的存在。这种机制就是容器（Container），利用命名空间来做权限的隔离控制，利用 cgroups 来做资源分配。</p>
+<h2 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h2><p>Linux Namespace是Linux提供的一种内核级别环境隔离的方法。 –&gt;<a href="https://lwn.net/Articles/531114/" target="_blank" rel="external">这是文档</a><br>有如下种类： </p>
+<p>Mount namespaces<br>UTS namespaces<br>IPC namespaces<br>PID namespaces<br>Network namespaces<br>User namespaces    </p>
+<p>通过这些namespace机制解决了环境隔离的问题，每个容器都有自己单独的命名空间，运行在其中的应用都像是在独立的操作系统中运行一样。命名空间保证了容器之间彼此互不影响。</p>
+<h2 id="cgroup"><a href="#cgroup" class="headerlink" title="cgroup"></a>cgroup</h2><p>Linux CGroup全称Linux Control Group， 是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。 namespace解决了环境隔离的问题，cgruop解决资源隔离的问题。<br>其实我觉得就是通过对共享资源进行隔离、限制分配到容器的资源，比如CPU限制，内存使用限制等。</p>
+<h2 id="UnionFS"><a href="#UnionFS" class="headerlink" title="UnionFS"></a>UnionFS</h2><p>Union File System联合文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。<br>UnionFS是 Docker分层镜像的基础。镜像可以通过分层来进行继承，基于基础镜像，可以制作各种具体的应用镜像。<br>Docker镜像是由多个文件系统（只读层）叠加而成。启动一个容器的时候，Docker会加载只读镜像层并在其上添加一个读写层。如果运行中的容器修改了现有的一个已经存在的文件，那该文件将会从读写层下面的只读层复制到读写层，该文件的只读版本仍然存在，只是已经被读写层中该文件的副本所隐藏。当删除容器，并通过该镜像重新启动时，之前的更改将会丢失。<br>–&gt;这是一张图：<br><img src="https://coolshell.cn/wp-content/uploads/2015/04/docker-filesystems-multilayer.png" alt=""></p>
+<h1 id="关于volume"><a href="#关于volume" class="headerlink" title="关于volume"></a>关于volume</h1><p>volume是为了保存（持久化）数据以及共享容器间的数据。简单来说，volume就是目录或者文件，它可以绕过默认的UnionFS，而以正常的文件或者目录的形式存在于宿主机上。<br>volume可以将容器以及容器产生的数据分离开来，这样，当你使用<code>docker rm &lt;container&gt;</code>删除容器时，不会影响相关的数据。<br>volume可以使用以下两种方式创建：<br>1.在Dockerfile中指定<code>VOLUME /some/dir</code><br>2.执行<code>docker run -v /some/dir</code>命令来指定<br>它们都做了同样的事，在主机上创建一个目录（默认是/var/lib/docker下），将其挂载到容器中的指定目录（如果没有，该目录会自动创建），当该容器被删除时，volume本身不会被影响。<br>那么，Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录有什么区别？<br>Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录的区别在于，run的-v可以指定挂载到宿主机的哪个目录，而Dockerfile的VOLUME不能，其挂载目录由docker随机生成。</p>
+<p>此外，使用Dockerfile还有一点值得注意：Dockerfile的VOLUME指令后的任何东西都不能改变该Volume，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FROM ubuntu:14.04</div><div class="line">RUN useradd foo</div><div class="line">VOLUME /data</div><div class="line">RUN touch /data/x</div><div class="line">RUN chown -R foo:foo /data</div></pre></td></tr></table></figure></p>
+<p>该Docker file不能按预期那样运行，我们本来希望touch命令在镜像的文件系统上运行，但是实际上它是在一个临时容器的Volume上运行。根据官方文档，Dockerfile生成目标镜像的过程就是不断<code>docker run</code> + <code>docker commit</code>的过程，执行一个指令，<code>docker commit</code>产生临时镜像，<code>docker run</code>产生临时容器.Dockerfile中的每个指令都会产生一个新的容器，也就是说，会创建一个新的volume。<br>这个Dockerfile中是先指定volume的，所以当执行<code>touch /data/x</code>命令的容器创建时，一个volume先被挂载到<code>/data</code>，然后x才能被写入此volume，而不是实际的容器或镜像的文件系统内。(而我们实际上是想在容器中创建x文件)<br>所以，Dockerfile中VOLUME指令的位置很关键，因为它在镜像内创建了不可改变的目录。</p>
+<h2 id="docker-volume"><a href="#docker-volume" class="headerlink" title="docker volume"></a>docker volume</h2><p>Docker 1.9新增了docker volume命令,这样使用volume就比较方便，文档是这样写的：<br><code>docker volume create</code>    Create a volume<br><code>docker volume inspect</code>    Display detailed information on one or more volumes<br><code>docker volume ls</code>    List volumes<br><code>docker volume prune</code>    Remove all unused volumes<br><code>docker volume rm</code>    Remove one or more volumes</p>
+<p>可是使用这个命令删除无用的volume(volume没有被任何容器挂载) : </p>
+<pre><code>docker volume rm $(docker volume ls -qf dangling=true) 
+</code></pre><p>总之，通过volume,可以绕过docker的Union File System，从而直接对宿主机的目录进行直接读写，实现了容器内数据的持久化和共享化。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/28/web-or-app/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1585,7 +1765,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1698,8 +1878,6 @@
   
 
 
-  
-
 
 
 
@@ -1727,9 +1905,6 @@
 
   
   <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-  
-  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
 
 
   
