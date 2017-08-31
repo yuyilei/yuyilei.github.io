@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Docker启动MySQL">
+<meta property="og:url" content="http://yoursite.com/2017/08/31/docker-for-mysql/index.html">
+<meta property="og:site_name" content="YYL&#39;s blog">
+<meta property="og:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2013.11.35.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.11.00.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-09%2011.22.59.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2014.01.33.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.21.05.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.04.55.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2015.05.03.png">
+<meta property="og:updated_time" content="2017-08-31T13:02:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Docker启动MySQL">
+<meta name="twitter:description" content="这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。  step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来">
+<meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-08-12%2013.11.35.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/31/docker-for-mysql/"/>
+
+
+
+
+
+  <title>用Docker启动MySQL | YYL's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YYL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/31/docker-for-mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/下载.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用Docker启动MySQL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-31T21:02:44+08:00">
+                2017-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。 </p>
+<h1 id="step1-制作mysql镜像"><a href="#step1-制作mysql镜像" class="headerlink" title="step1 制作mysql镜像"></a>step1 制作mysql镜像</h1><p>一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来说，utf8mb4 是 utf8 的超集并完全兼容utf8，能够用四个字节存储更多的字符。我们可以用官方的docker mysql image制作一个支持utf8mb4的mysql镜像。 </p>
+<p>首先，创建mysql的配置文件utf8mb4.cnf，如下： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[client]</div><div class="line">default-character-set = utf8mb4</div><div class="line"></div><div class="line">[mysql]</div><div class="line">default-character-set = utf8mb4</div><div class="line"></div><div class="line">[mysqld]</div><div class="line">character-set-client-handshake = FALSE  # 忽略客户端的字符集，使用服务器的设置 </div><div class="line">character-set-server = utf8mb4</div><div class="line">collation-server = utf8mb4_unicode_ci</div></pre></td></tr></table></figure>
+<p>然后，创建Dockerfile文件，基于mysql官方的docker镜像，将utf8mb4.cnf 复制到容器的/etc/mysql/conf.d/目录下，构建新镜像: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM mysql</div><div class="line">COPY utf8mb4.cnf /etc/mysql/conf.d/</div></pre></td></tr></table></figure>
+<p>在当前文件夹构建镜像，添加标签： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build . -t &lt;image-tag&gt;</div></pre></td></tr></table></figure>
+<p>最后启动一个容器:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --detach --name=&lt;mysql-name&gt; --env=&quot;MYSQL_ROOT_PASSWORD=mypassword&quot; --publish 6603:3306 &lt;image-tag&gt;</div></pre></td></tr></table></figure>
+<p>docker run 会启动一个mysql容器在后台运行，并设置其名字，把相应的参数设为mypassword，这个参数用于登录这个mysql容器，mysql容器默认开放3306端口，3306时容器对主机的端口，6603是主机对外界的端口，设置这个参数可以直接通过外界访问到mysql容器的内部。</p>
+<h1 id="step2-在mysql容器中创建数据库"><a href="#step2-在mysql容器中创建数据库" class="headerlink" title="step2  在mysql容器中创建数据库"></a>step2  在mysql容器中创建数据库</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker inspect test-mysql | grep IPAddress</div></pre></td></tr></table></figure>
+<p>获取主机中mysql容器的地址 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -pmypassword -h IPAddress -P 3306</div></pre></td></tr></table></figure>
+<p>进入容器，这时可以查看mysql容器的字符集情况 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show variables like &apos;character_set_%&apos;;</div></pre></td></tr></table></figure>
+<p>可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 13.11.35.png" alt=""><br>它们的含义如下 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">client	        为客户端使用的字符集。</div><div class="line">connection	为连接数据库的字符集设置类型，如果程序没有指明连接数据库使用的字符集类型则按照服务器端默认的字符集设置。</div><div class="line">database	为数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装时指定的字符集设置。</div><div class="line">results	        为数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。</div><div class="line">server	        为服务器安装时指定的默认字符集设定。</div><div class="line">system	        为数据库系统使用的字符集设定。</div></pre></td></tr></table></figure>
+<p>说明容器支持utf8mb4 。<br>创建数据库:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create database &lt;database-name&gt;;</div></pre></td></tr></table></figure>
+<h1 id="step3-配置docker-compose-yml-和-env-文件"><a href="#step3-配置docker-compose-yml-和-env-文件" class="headerlink" title="step3 配置docker-compose.yml 和 .env  文件"></a>step3 配置docker-compose.yml 和 .env  文件</h1><p>在docker-compose.yml文件中加入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">external_links: </div><div class="line">       - &lt;mysql-name&gt;:mysql</div></pre></td></tr></table></figure>
+<p>意为外连一个名为<mysql-name>的mysql容器</mysql-name></p>
+<p>在.env 文件中设置数据库的URL，使用刚才在mysql容器中创建的数据库 ，形如： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">WEBSITE_SQL=mysql://root:mypassword@IPAddress:3306/&lt;database-name&gt;</div></pre></td></tr></table></figure>
+<p>注意这里要使用IPAddress，IPAddress是mysql容器的IP地址，否则它会提示找不到localhost，之后会出现无法迁移数据库的情况。 </p>
+<h1 id="step4-初始化数据库"><a href="#step4-初始化数据库" class="headerlink" title="step4 初始化数据库"></a>step4 初始化数据库</h1><p>使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; + 命令</div></pre></td></tr></table></figure>
+<p>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db init</div><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div><div class="line">docker exec &lt;container-id&gt; python manage.py test</div></pre></td></tr></table></figure>
+<p>在这个过程中，我碰到了一些问题，关于migrations文件。运行docker exec <container-id> python manage.py db init 有时候会在本机生成migrations，有时候又没有，并且两者的docker-compose.yml和Dockerfile文件并无差别。<br>比如这样：<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""> 和<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>按理来说migrations不应该在本机生成。虽然生不生成migrations不影响数据库迁移，但是这很奇怪。</container-id></p>
+<p> 后续如果数据库中的模型有所变更，应使用如下命令迁移数据库： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div></pre></td></tr></table></figure>
+<h1 id="step5-解决中文字符"><a href="#step5-解决中文字符" class="headerlink" title="step5 解决中文字符"></a>step5 解决中文字符</h1><p>如果直接使用官方的mysql docker image，则无法支持中文字符，要修改mysql容器的字符设置，利用以下命令进入mysql容器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec -ti &lt;container-id&gt; /bin/bash</div></pre></td></tr></table></figure>
+<p>进入mysql容器之后，登录mysql:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -pmypassword</div></pre></td></tr></table></figure>
+<p>查看当前mysql字符集情况 可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 14.01.33.png" alt=""><br>database和service的字符集设定是Latin1，不支持中文，如果要支持中文，就要把要数据库编码修改为utf8mb4，但是我把这个mysql的配置和数据库的配置称utf8mb4，依旧不支持中文（这就很气<br>所以这是一个未解之谜，以后再解决吧。</p>
+<h1 id="step6-数据库迁移"><a href="#step6-数据库迁移" class="headerlink" title="step6 数据库迁移"></a>step6 数据库迁移</h1><p>之前我迁移数据库，由于各种原因不成功的时候，总是非常粗暴地直接进到服务的容器里面，直接把migrations删了重新，重新建一个。然而，运行到 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div></pre></td></tr></table></figure>
+<p>的时候，总是有一个报错：<br><img src="/uploads/屏幕快照 2017-08-12 15.21.05.png" alt=""><br>这是因为Alembic在数据库里保存了版本记录，虽然migrations已经删掉了，但是alembic_version还保留着它的版本，所以要把它删掉。<br>进入mysql容器，登录mysql，查找创建的数据库，果然发现里面有一个alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.04.55.png" alt=""><br>查看alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.05.03.png" alt=""><br>把alembic_version删除 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">drop table alembic_version;</div></pre></td></tr></table></figure>
+<p>这样就不会报错了。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>还是有很多很奇怪的地方，但好在问题都有了解决办法，，所以先不管它。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/31/note-for-docker/" rel="next" title="Docker in action读书笔记">
+                <i class="fa fa-chevron-left"></i> Docker in action读书笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/下载.jpeg"
+               alt="yuyilei" />
+          <p class="site-author-name" itemprop="name">yuyilei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuyilei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#step1-制作mysql镜像"><span class="nav-number">1.</span> <span class="nav-text">step1 制作mysql镜像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step2-在mysql容器中创建数据库"><span class="nav-number">2.</span> <span class="nav-text">step2  在mysql容器中创建数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step3-配置docker-compose-yml-和-env-文件"><span class="nav-number">3.</span> <span class="nav-text">step3 配置docker-compose.yml 和 .env  文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step4-初始化数据库"><span class="nav-number">4.</span> <span class="nav-text">step4 初始化数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step5-解决中文字符"><span class="nav-number">5.</span> <span class="nav-text">step5 解决中文字符</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#step6-数据库迁移"><span class="nav-number">6.</span> <span class="nav-text">step6 数据库迁移</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">7.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuyilei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
