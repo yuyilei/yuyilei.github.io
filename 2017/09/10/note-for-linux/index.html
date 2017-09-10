@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux常用操作和其他">
+<meta property="og:url" content="http://yoursite.com/2017/09/10/note-for-linux/index.html">
+<meta property="og:site_name" content="YYL&#39;s blog">
+<meta property="og:description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-10T09:48:54.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux常用操作和其他">
+<meta name="twitter:description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/10/note-for-linux/"/>
+
+
+
+
+
+  <title>Linux常用操作和其他 | YYL's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YYL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/10/note-for-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux常用操作和其他</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-10T15:56:58+08:00">
+                2017-09-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。</p>
+<h1 id="一天学一个命令"><a href="#一天学一个命令" class="headerlink" title="一天学一个命令"></a>一天学一个命令</h1><p>Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个)</p>
+<h2 id="top"><a href="#top" class="headerlink" title="top"></a>top</h2><p> <code>top</code>命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。<br><code>top</code>的作用是显示当前系统正在执行的进程的相关信息，包括进程ID、内存占用率、CPU占用率等。<br><code>top</code>是一个动态显示过程，即可以通过用户按键来不断刷新当前状态。如果再前台执行该命令，它将独占前台，直到用户终止该程序为止。<br>可以通过<code>man top</code>显示<code>top</code>的具体用法 </p>
+<h3 id="常用参数："><a href="#常用参数：" class="headerlink" title="常用参数："></a>常用参数：</h3><p><code>-b</code> : 分批处理，各个进程的资源占用情况时动态变化的，所以<code>top</code>显示的也是实时变化的，加上<code>-b</code>可以保留上一个时间间隔的情况<br><code>-d</code> : 指定每两次屏幕信息刷新之间的时间间隔，秒为单位<br><code>-p &lt;pid&gt;</code> : 查看指定进程的资源管理情况<br><code>-u &lt;user&gt;</code> : 指定用户的进程<br><code>-i</code> : 不显示僵死进程和闲置进程<br><code>-c</code> :  显示整个命令行，而不是只是命令名<br><code>-n</code> : 设置更新次数，比如 <code>-n 2</code>就是在数据更新2次之后就退出 </p>
+<h3 id="交互命令："><a href="#交互命令：" class="headerlink" title="交互命令："></a>交互命令：</h3><p>使用top命令进入交互后，就可以使用某些按键实行某些指令：<br><code>1</code> :  查看每个逻辑CPU的基本状况，再按<code>1</code>返回<br><code>P</code> :  以CPU使用资源进行排序（默认就是以CPU占有率排序）<br><code>M</code> :  以内存占有率进行排序（从大到小，下同）<br><code>N</code> :  以pid的大小进行排序<br><code>T</code> :  以该进程使用CPU的时间进行排序<br><code>&lt;</code>和<code>&gt;</code> : 向左或向右移动列，按照所在的列排序 </p>
+<h3 id="各列含义"><a href="#各列含义" class="headerlink" title="各列含义"></a>各列含义</h3><p><code>PID</code> :   进程id<br><code>PPID</code> :   父进程id<br><code>UID</code> :   进程所有者的用户id<br><code>USER</code> :    进程所有者的用户名<br><code>GROUP</code> :    进程所有者的组名<br><code>TTY</code> :   启动进程的终端名。不是从终端启动的进程则显示为?<br><code>PR</code> :      优先级<br><code>NInice</code> : NI值，负值表示高优先级，正值表示低优先级<br><code>P</code> :       最后使用的CPU，仅在多CPU环境下有意义<br><code>%CPU</code> :   上次更新到现在的CPU时间占用百分比<br><code>TIME</code> :   进程使用的CPU时间总计，单位秒<br><code>TIME+</code> :   进程使用的CPU时间总计，单位1/100秒<br><code>%MEM</code> :   进程使用的物理内存百分比<br><code>VIRT</code> :   进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES<br><code>SWAP</code> :   进程使用的虚拟内存中，被换出的大小，单位kb。<br><code>RES</code> :   进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA<br><code>CODE</code> :   可执行代码占用的物理内存大小，单位kb<br><code>DATA</code> :   可执行代码以外的部分(数据段+栈)占用的物理内存大小，单位kb<br><code>SHR</code> :   共享内存大小，单位kb<br><code>nFLT</code> :   页面错误次数<br><code>nDRT</code> :   最后一次写入到现在，被修改过的页面数。<br><code>COMMAND</code> :  命令名/命令行<br><code>WCHAN</code> : 若该进程在睡眠，则显示睡眠中的系统函数名<br><code>S</code> :   进程状态:<br>—–<code>D</code> :    不可中断的睡眠状态<br>—–<code>R</code> :   运行<br>—–<code>S</code> :  睡眠<br>—–<code>T</code> :   跟踪/停止<br>—–<code>Z</code> :  僵尸进程</p>
+<p>区分<code>PR</code>和<code>NI</code>：<br><code>NI</code> 是优先值，是用户层面的概念， <code>PR</code>是进程的实际优先级， 是给内核（kernel）看的。一般情况下，<code>PR</code>=<code>NI</code>+20。</p>
+<h3 id="信息统计区："><a href="#信息统计区：" class="headerlink" title="信息统计区："></a>信息统计区：</h3><h4 id="第1行任务队列信息"><a href="#第1行任务队列信息" class="headerlink" title="第1行任务队列信息"></a>第1行任务队列信息</h4><p>从左到右信息分别是：<br>当前时间<br>系统启动持续时间<br>当前登陆用户数<br>系统负载，即任务队列的平均长度</p>
+<h4 id="第2行进程信息-Tasks"><a href="#第2行进程信息-Tasks" class="headerlink" title="第2行进程信息(Tasks)"></a>第2行进程信息(Tasks)</h4><p>信息分别是：<br><code>total</code> ：进程总数<br><code>running</code>： 运行的进程数<br><code>sleeping</code>： 睡眠的进程数<br><code>stop</code>： 停止的进程数<br><code>zombie</code>： 僵死进程数</p>
+<h4 id="第3行CPU信息"><a href="#第3行CPU信息" class="headerlink" title="第3行CPU信息"></a>第3行CPU信息</h4><p><code>us</code> : 用户空间占用CPU百分比<br><code>sy</code> : 内核空间占用CPU百分比；<br><code>ni</code> : 用户进程空间内改变过优先级的进程占用CPU百分比<br><code>id</code> : 空闲CPU百分比<br><code>wa</code> : 等待输入输出的CPU时间百分比<br><code>hi</code> : ？？<br><code>si</code> : ？？</p>
+<h4 id="第4行内存信息-Mem"><a href="#第4行内存信息-Mem" class="headerlink" title="第4行内存信息(Mem)"></a>第4行内存信息(Mem)</h4><p><code>total</code> : 物理内存总量<br><code>used</code> : 已使用的物理内存总量<br><code>free</code> : 空闲内存总量<br><code>buffers</code> : 用作内核缓存的内存量</p>
+<h4 id="第5行交换区信息-Swap"><a href="#第5行交换区信息-Swap" class="headerlink" title="第5行交换区信息(Swap)"></a>第5行交换区信息(Swap)</h4><p><code>total</code> : 交换区总量<br><code>used</code> : 已使用的交换去总量<br><code>free</code> : 空闲交换区总量<br><code>cached</code> : 缓冲的交换区总量</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/31/docker-for-mysql/" rel="next" title="用Docker启动MySQL">
+                <i class="fa fa-chevron-left"></i> 用Docker启动MySQL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg"
+               alt="yuyilei" />
+          <p class="site-author-name" itemprop="name">yuyilei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuyilei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一天学一个命令"><span class="nav-number">1.</span> <span class="nav-text">一天学一个命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#top"><span class="nav-number">1.1.</span> <span class="nav-text">top</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用参数："><span class="nav-number">1.1.1.</span> <span class="nav-text">常用参数：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交互命令："><span class="nav-number">1.1.2.</span> <span class="nav-text">交互命令：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各列含义"><span class="nav-number">1.1.3.</span> <span class="nav-text">各列含义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信息统计区："><span class="nav-number">1.1.4.</span> <span class="nav-text">信息统计区：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第1行任务队列信息"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">第1行任务队列信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第2行进程信息-Tasks"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">第2行进程信息(Tasks)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第3行CPU信息"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">第3行CPU信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第4行内存信息-Mem"><span class="nav-number">1.1.4.4.</span> <span class="nav-text">第4行内存信息(Mem)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第5行交换区信息-Swap"><span class="nav-number">1.1.4.5.</span> <span class="nav-text">第5行交换区信息(Swap)</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuyilei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
