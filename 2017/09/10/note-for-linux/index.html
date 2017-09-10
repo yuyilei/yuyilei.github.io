@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+<meta name="description" content="记各种Linux命令和参数很痛苦，用到时，记错又很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux常用操作和其他">
 <meta property="og:url" content="http://yoursite.com/2017/09/10/note-for-linux/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
-<meta property="og:description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+<meta property="og:description" content="记各种Linux命令和参数很痛苦，用到时，记错又很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-10T14:40:51.000Z">
+<meta property="og:updated_time" content="2017-09-10T14:44:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux常用操作和其他">
-<meta name="twitter:description" content="记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，包">
+<meta name="twitter:description" content="记各种Linux命令和参数很痛苦，用到时，记错又很麻烦，最好的方法就是一边记录一边学啦啦。 一天学一个命令Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个) top top命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。top的作用是显示当前系统正在执行的进程的相关信息，">
 
 
 
@@ -319,7 +319,7 @@
       
 
       
-        <p>记各种Linux命令和参数很痛苦，用到时，差有很麻烦，最好的方法就是一边记录一边学啦啦。</p>
+        <p>记各种Linux命令和参数很痛苦，用到时，记错又很麻烦，最好的方法就是一边记录一边学啦啦。</p>
 <h1 id="一天学一个命令"><a href="#一天学一个命令" class="headerlink" title="一天学一个命令"></a>一天学一个命令</h1><p>Linux的命令很多，不积跬步，无以至千里，所以就一天学一个2333。 (其实也不是一天一个，就是想起一个是一个)</p>
 <h2 id="top"><a href="#top" class="headerlink" title="top"></a>top</h2><p> <code>top</code>命令是Linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况。像windows下的任务管理器。<br><code>top</code>的作用是显示当前系统正在执行的进程的相关信息，包括进程ID、内存占用率、CPU占用率等。<br><code>top</code>是一个动态显示过程，即可以通过用户按键来不断刷新当前状态。如果再前台执行该命令，它将独占前台，直到用户终止该程序为止。<br>输入<code>top</code>进入程序，按下<code>q</code>或<code>^C</code>退出<br>可以通过<code>man top</code>显示<code>top</code>的具体用法 </p>
 <h3 id="常用参数："><a href="#常用参数：" class="headerlink" title="常用参数："></a>常用参数：</h3><p><code>-b</code> : 分批处理，各个进程的资源占用情况时动态变化的，所以<code>top</code>显示的也是实时变化的，加上<code>-b</code>可以保留上一个时间间隔的情况<br><code>-d</code> : 指定每两次屏幕信息刷新之间的时间间隔，秒为单位<br><code>-p &lt;pid&gt;</code> : 查看指定进程的资源管理情况，可多个进程pid使用逗号隔开<br><code>-u &lt;user&gt;</code> : 指定用户的进程<br><code>-i</code> : 不显示僵死进程和闲置进程<br><code>-c</code> :  显示整个命令行，而不是只是命令名<br><code>-n</code> : 设置更新次数，比如 <code>-n 2</code>就是在数据更新2次之后就退出 </p>
