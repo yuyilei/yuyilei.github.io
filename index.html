@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next muse use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -108,7 +108,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Mist',
+    scheme: 'Muse',
     sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
@@ -255,7 +255,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -321,52 +321,16 @@
       
         
           
-            <p>这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。 </p>
-<h1 id="step1-制作mysql镜像"><a href="#step1-制作mysql镜像" class="headerlink" title="step1 制作mysql镜像"></a>step1 制作mysql镜像</h1><p>一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mysql在 5.5.3 之后增加了 utf8mb4 字符编码，mb4即 most bytes 4。简单来说，utf8mb4 是 utf8 的超集并完全兼容utf8，能够用四个字节存储更多的字符。我们可以用官方的docker mysql image制作一个支持utf8mb4的mysql镜像。 </p>
-<p>首先，创建mysql的配置文件utf8mb4.cnf，如下： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[client]</div><div class="line">default-character-set = utf8mb4</div><div class="line"></div><div class="line">[mysql]</div><div class="line">default-character-set = utf8mb4</div><div class="line"></div><div class="line">[mysqld]</div><div class="line">character-set-client-handshake = FALSE  # 忽略客户端的字符集，使用服务器的设置 </div><div class="line">character-set-server = utf8mb4</div><div class="line">collation-server = utf8mb4_unicode_ci</div></pre></td></tr></table></figure>
-<p>然后，创建Dockerfile文件，基于mysql官方的docker镜像，将utf8mb4.cnf 复制到容器的/etc/mysql/conf.d/目录下，构建新镜像: </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM mysql</div><div class="line">COPY utf8mb4.cnf /etc/mysql/conf.d/</div></pre></td></tr></table></figure>
-<p>在当前文件夹构建镜像，添加标签： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build . -t &lt;image-tag&gt;</div></pre></td></tr></table></figure>
-<p>最后启动一个容器:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run --detach --name=&lt;mysql-name&gt; --env=&quot;MYSQL_ROOT_PASSWORD=mypassword&quot; --publish 6603:3306 &lt;image-tag&gt;</div></pre></td></tr></table></figure>
-<p>docker run 会启动一个mysql容器在后台运行，并设置其名字，把相应的参数设为mypassword，这个参数用于登录这个mysql容器，mysql容器默认开放3306端口，3306时容器对主机的端口，6603是主机对外界的端口，设置这个参数可以直接通过外界访问到mysql容器的内部。</p>
-<h1 id="step2-在mysql容器中创建数据库"><a href="#step2-在mysql容器中创建数据库" class="headerlink" title="step2  在mysql容器中创建数据库"></a>step2  在mysql容器中创建数据库</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker inspect test-mysql | grep IPAddress</div></pre></td></tr></table></figure>
-<p>获取主机中mysql容器的地址 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -uroot -pmypassword -h IPAddress -P 3306</div></pre></td></tr></table></figure>
-<p>进入容器，这时可以查看mysql容器的字符集情况 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">show variables like &apos;character_set_%&apos;;</div></pre></td></tr></table></figure>
-<p>可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 13.11.35.png" alt=""><br>它们的含义如下 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">client	        为客户端使用的字符集。</div><div class="line">connection	为连接数据库的字符集设置类型，如果程序没有指明连接数据库使用的字符集类型则按照服务器端默认的字符集设置。</div><div class="line">database	为数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装时指定的字符集设置。</div><div class="line">results	        为数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。</div><div class="line">server	        为服务器安装时指定的默认字符集设定。</div><div class="line">system	        为数据库系统使用的字符集设定。</div></pre></td></tr></table></figure>
-<p>说明容器支持utf8mb4 。<br>创建数据库:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">create database &lt;database-name&gt;;</div></pre></td></tr></table></figure>
-<h1 id="step3-配置docker-compose-yml-和-env-文件"><a href="#step3-配置docker-compose-yml-和-env-文件" class="headerlink" title="step3 配置docker-compose.yml 和 .env  文件"></a>step3 配置docker-compose.yml 和 .env  文件</h1><p>在docker-compose.yml文件中加入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">external_links: </div><div class="line">       - &lt;mysql-name&gt;:mysql</div></pre></td></tr></table></figure>
-<p>意为外连一个名为<mysql-name>的mysql容器</mysql-name></p>
-<p>在.env 文件中设置数据库的URL，使用刚才在mysql容器中创建的数据库 ，形如： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">WEBSITE_SQL=mysql://root:mypassword@IPAddress:3306/&lt;database-name&gt;</div></pre></td></tr></table></figure>
-<p>注意这里要使用IPAddress，IPAddress是mysql容器的IP地址，否则它会提示找不到localhost，之后会出现无法迁移数据库的情况。 </p>
-<h1 id="step4-初始化数据库"><a href="#step4-初始化数据库" class="headerlink" title="step4 初始化数据库"></a>step4 初始化数据库</h1><p>使用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; + 命令</div></pre></td></tr></table></figure>
-<p>能操作容器。<br>所以，可以对运行在容器的内的服务进行如下操作：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db init</div><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div><div class="line">docker exec &lt;container-id&gt; python manage.py test</div></pre></td></tr></table></figure>
-<p>在这个过程中，我碰到了一些问题，关于migrations文件。运行docker exec <container-id> python manage.py db init 有时候会在本机生成migrations，有时候又没有，并且两者的docker-compose.yml和Dockerfile文件并无差别。<br>比如这样：<br><img src="/uploads/屏幕快照 2017-08-09 11.11.00.png" alt=""> 和<br><img src="/uploads/屏幕快照 2017-08-09 11.22.59.png" alt=""><br>按理来说migrations不应该在本机生成。虽然生不生成migrations不影响数据库迁移，但是这很奇怪。</container-id></p>
-<p> 后续如果数据库中的模型有所变更，应使用如下命令迁移数据库： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div><div class="line">docker exec &lt;container-id&gt; python manage.py db upgrade</div></pre></td></tr></table></figure>
-<h1 id="step5-解决中文字符"><a href="#step5-解决中文字符" class="headerlink" title="step5 解决中文字符"></a>step5 解决中文字符</h1><p>如果直接使用官方的mysql docker image，则无法支持中文字符，要修改mysql容器的字符设置，利用以下命令进入mysql容器：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec -ti &lt;container-id&gt; /bin/bash</div></pre></td></tr></table></figure>
-<p>进入mysql容器之后，登录mysql:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -u root -pmypassword</div></pre></td></tr></table></figure>
-<p>查看当前mysql字符集情况 可以看到：<br><img src="/uploads/屏幕快照 2017-08-12 14.01.33.png" alt=""><br>database和service的字符集设定是Latin1，不支持中文，如果要支持中文，就要把要数据库编码修改为utf8mb4，但是我把这个mysql的配置和数据库的配置称utf8mb4，依旧不支持中文（这就很气<br>所以这是一个未解之谜，以后再解决吧。</p>
-<h1 id="step6-数据库迁移"><a href="#step6-数据库迁移" class="headerlink" title="step6 数据库迁移"></a>step6 数据库迁移</h1><p>之前我迁移数据库，由于各种原因不成功的时候，总是非常粗暴地直接进到服务的容器里面，直接把migrations删了重新，重新建一个。然而，运行到 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker exec &lt;container-id&gt; python manage.py db migrate</div></pre></td></tr></table></figure>
-<p>的时候，总是有一个报错：<br><img src="/uploads/屏幕快照 2017-08-12 15.21.05.png" alt=""><br>这是因为Alembic在数据库里保存了版本记录，虽然migrations已经删掉了，但是alembic_version还保留着它的版本，所以要把它删掉。<br>进入mysql容器，登录mysql，查找创建的数据库，果然发现里面有一个alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.04.55.png" alt=""><br>查看alembic_version：<br><img src="/uploads/屏幕快照 2017-08-12 15.05.03.png" alt=""><br>把alembic_version删除 ：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">drop table alembic_version;</div></pre></td></tr></table></figure>
-<p>这样就不会报错了。</p>
-<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>还是有很多很奇怪的地方，但好在问题都有了解决办法，，所以先不管它。</p>
-
-          
+          这段时间，一直用docker部署内网，踩了很多坑，尤其是数据库，有时候感觉很棘手，有时候问题解决了，却还是很疑惑。先来总结一下如何用docker启动mysql。 
+step1 制作mysql镜像一般我们都需要数据库里面的数据支持中文，但是mysql默认字符集是latain,而它是不支持中文的，mys
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/31/docker-for-mysql/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -418,7 +382,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -484,69 +448,18 @@
       
         
           
-            <h1 id="一些常用的Docker命令"><a href="#一些常用的Docker命令" class="headerlink" title="一些常用的Docker命令"></a>一些常用的Docker命令</h1><pre><code>docker help +[command] 
-</code></pre><p>这个命令可以查看所有docker的命令和它的参数，非常实用 </p>
-<h2 id="关于容器管理的命令"><a href="#关于容器管理的命令" class="headerlink" title="关于容器管理的命令"></a>关于容器管理的命令</h2><h3 id="docker-run"><a href="#docker-run" class="headerlink" title="docker run"></a>docker run</h3><pre><code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
-</code></pre><p>这个命令会启动一个docker容器(Run a command in a new container) ，如果本地没有这个镜像，会从Dockerhub(默认）上下载运行。有几个option比较常用:<br><code>--name &lt;name&gt;</code>给容器命名<br><code>--env &lt;key&gt;=&lt;value&gt;</code> 或<code>-e &lt;key&gt;=&lt;value&gt;</code> 设置环境变量<br><code>--volume &lt;path&gt;</code> 或 <code>-v &lt;path&gt;</code> 将主机该目录下的文件挂载到容器中<br><code>--volume &lt;h-path&gt;:&lt;c-path&gt;</code> 或 <code>-v &lt;h-path&gt;:&lt;c-path&gt;</code> 容器上挂载指定的主机目录<br><code>--rm</code> 关闭容器之后自动清除容器<br><code>--volumes-from &lt;another-container&gt;</code> 访问另一个容器的volume（数据共享）<br><code>--iteractive</code>或<code>-i</code> 显示（获得容器中的输出）<br><code>--tty</code>或<code>-t</code>允许向容器内部发送信号（经常和-i一起使用，来与容器交互）<br><code>--detach</code>或<code>-d</code>在后台运行<br><code>-p &lt;port&gt;:&lt;port&gt;</code> 将主机的端口映射到容器的端口<br><code>--link</code>与另外一个容器连接  </p>
-<p>其中<code>--restart</code>是容器的重启机制，有4中类型<br>1.<code>no</code> ，当容器关闭时，从不自动重启，这是默认状态。<br>2.<code>on-failure[:max-retries]</code>,只有在容器以非零状态关闭时重启，可以设置最大尝试重启的次数<br>3.<code>always</code> ,无论任何情况都会重启，而且当docker daemon启动时，容器也会自动启动<br>4.<code>unless-stopped</code>,无论容器以什么状态停止都会重启，但是docker daemon启动，如果容器事先是停止状态，就不会重启（这里书上和文档上讲的不一样，以文档为准）</p>
-<p>docker run的option非常多，因为它运行一个容器的同时，可以添加参数修改build镜像时的默认设置，使用时，有需要用<code>docker help</code>查询 </p>
-<h3 id="docker-create"><a href="#docker-create" class="headerlink" title="docker create"></a>docker create</h3><pre><code>docker create [OPTIONS] IMAGE [COMMAND] [ARG...] 
-</code></pre><p>创建容器（Create a new container），这个命令和 <code>docker run</code>很像，但是不启动容器,很多option也类似。但是<code>docker create</code>如果没有直接命名容器的话，会随机产生一个形容词+名词的容器名</p>
-<h3 id="docker-ps"><a href="#docker-ps" class="headerlink" title="docker ps"></a>docker ps</h3><pre><code>docker ps [OPTIONS]
-</code></pre><p>列出容器（List containers），默认只列出启动的容器，常用option:<br><code>-a</code> 列出所用容器<br><code>-q</code> 或    <code>--quiet</code>只列出容器ID<br><code>-s</code> 或     <code>--size</code>列出容器大小<br><code>docker ps</code>最常用来显示正在运行的容器 </p>
-<h3 id="docker-exec"><a href="#docker-exec" class="headerlink" title="docker exec"></a>docker exec</h3><pre><code>docker exec [OPTIONS] CONTAINER COMMAND [ARG...] 
-</code></pre><p>在容器中运行命令（Run a command in a running container），常用形式：<br><code>docker exec -it &lt;container&gt; /bin/bash</code> 进入容器 </p>
-<h3 id="docker-kill-与-docker-stop"><a href="#docker-kill-与-docker-stop" class="headerlink" title="docker kill 与 docker stop"></a>docker kill 与 docker stop</h3><pre><code>docker kill [OPTIONS] CONTAINER [CONTAINER...] 
-docker stop [OPTIONS] CONTAINER [CONTAINER...] 
-</code></pre><p><code>docker kill</code> 和<code>docker stop</code>都是关闭一个容器，但它们是有区别的：<br>文档上是这样说的：<br><code>docker kill</code>: Kill a running container using SIGKILL or a specified signal<br><code>docker stop</code>: Stop a running container by sending SIGTERM and then SIGKILL after a grace period<br>所以：<br><code>docker kill</code> kill直接执行kill -9（直接发送SIGKILL），强行终止<br><code>docker stop</code>  发一个SIGTERM，让容器自己停。容器进程规定之间内不停，那么再调kill -9 </p>
-<h3 id="docker-rm"><a href="#docker-rm" class="headerlink" title="docker rm"></a>docker rm</h3><pre><code>docker rm [OPTIONS] CONTAINER [CONTAINER...] 
-</code></pre><p>移除一个已经停止的容器（Remove one or more containers） 常用option<br><code>-f</code> 或  <code>--force</code> 强制删除 （运行中的容器，发送SIGKILL)<br><code>-link</code> 或 <code>--link</code>  同时删除link<br><code>-volume</code> 或<code>-v</code> 同时删除volume </p>
-<h3 id="docker-logs"><a href="#docker-logs" class="headerlink" title="docker logs"></a>docker logs</h3><pre><code>docker logs [OPTIONS] CONTAINER 
-</code></pre><p>查看容器日志（Fetch the logs of a container） ,常用 ：<br><code>-f</code> 或 <code>-follow</code> 持续展示日志，CTRL+C 停止<br>其实日志会随着容器的存在一直写入，docker logs一直变长，所以可以把docker logs挂载在本机 </p>
-<h3 id="docker-inspect"><a href="#docker-inspect" class="headerlink" title="docker inspect"></a>docker inspect</h3><pre><code>docker inspect [OPTIONS] NAME|ID [NAME|ID...] 
-</code></pre><p>显示容器的底层信息（Return low-level information on Docker objects）默认为json格式返回数据 ， <code>docker inspect</code>显示的信息有很多，一般和<code>grep</code>配合使用，找出所需的信息，如<code>docker inspect &lt;container&gt;  | grep IPAddress</code> ，也可以使用<code>-f</code>或<code>--format</code>定义返回的格式 </p>
-<h3 id="docker-export-和-docker-import"><a href="#docker-export-和-docker-import" class="headerlink" title="docker export 和 docker import"></a>docker export 和 docker import</h3><pre><code>docker export [OPTIONS] IMAGE [IMAGE...] 
-</code></pre><p>持久化容器（Export a container’s filesystem as a tar archive），一般这样调用：<br><code>docker export &lt;container&gt; &gt; &lt;filename&gt;</code> 或 <code>docker export -o &lt;filename&gt; &lt;containr&gt;</code> 将容器导出到指定文件</p>
-<pre><code>docker import [OPTIONS] file|URL|- [REPOSITORY[:TAG]] 
-</code></pre><p> 从容器快照文件中再导入为镜像(Import the contents from a tarball to create a filesystem image) , 一般这样调用：<br><code>cat filename.tgz | docker import - image:tag</code> 从本地文件导出<br>也可以通过指定 URL 或者某个目录来导入.</p>
-<h2 id="关于镜像管理的命令"><a href="#关于镜像管理的命令" class="headerlink" title="关于镜像管理的命令"></a>关于镜像管理的命令</h2><h3 id="docker-images"><a href="#docker-images" class="headerlink" title="docker images"></a>docker images</h3><pre><code>docker images [OPTIONS] [REPOSITORY[:TAG]] 
-</code></pre><p>列出镜像（List images），默认的 docker images 列表中只会显示顶层镜像,常用：<br><code>-a</code> 显示所有镜像<br><code>-f</code>或 <code>--filter</code>  列出所有符合条件的镜像（删选）<br>可以看到列出镜像中，有一些镜像的仓库名和标签均为<none> ，这种镜像分为两种：</none></p>
-<ol>
-<li>新旧镜像同名，旧镜像名称被取消，从而出现仓库名、标签均为 <none>的情况，<code>docker pull</code>和<code>build build</code>都有可能产生这种镜像.这些镜像可以删除，使用<code>docker images -f dangling=true</code>可以列出这种镜像，使用<code>docker rmi $(docker images -q -f dangling=true)</code> 删除镜像 </none></li>
-<li>在构建镜像过程中产生的中间镜像，默认的 <code>docker images</code>中只会显示顶层镜像，如果希望显示包括中间层镜像在内的所有镜像的话，需要加 <code>-a</code>参数。这些镜像是其它镜像所依赖的镜像，不能删除。</li>
-</ol>
-<h3 id="docker-search"><a href="#docker-search" class="headerlink" title="docker search"></a>docker search</h3><pre><code>docker search [OPTIONS] TERM 
-</code></pre><p> 在Dokcerhub中寻找镜像（Search the Docker Hub for images），常用 ：<br> <code>--automated</code> ， 只找自动build的镜像<br> <code>--stars</code>或<code>-s</code>，镜像仓库至少要几星<br> <code>--limit</code>  最大查找数量<br> <code>docker search</code>非常实用，可以直接在命令行中查找镜像，查看镜像的信息 </p>
-<h3 id="docker-pull"><a href="#docker-pull" class="headerlink" title="docker pull"></a>docker pull</h3><pre><code>docker pull [OPTIONS] NAME[:TAG|@DIGEST] 
-</code></pre><p>从镜像仓库中拉取镜像,(Pull an image or a repository from a registry)不一定是Dockerhub,但是默认为Dokcerhub,可以更换为其它的镜像仓库地址。<br><code>`--all-tags</code>或<code>-a</code>，拉取所有这个仓库里所有标记了的镜像，一般是不需要的，所以在拉取的时候最好写好tag </p>
-<h3 id="dokcer-build"><a href="#dokcer-build" class="headerlink" title="dokcer build"></a>dokcer build</h3><pre><code>docker build [OPTIONS] PATH | URL | - 
-</code></pre><p>根据Dockerfile创建镜像(Build an image from a Dockerfile)<br>编写Dockerfile可以使用Dockerhub中的基础镜像，制作自定义的镜像。首先Dockerfile很小（只是一个文本文件），容易传播，可以根据自己的需要定制镜像（比如本机环境不同），但是Dockerfile的编写又是一门学问了2333。<br>也可以根据GitHub上的Dockerfilebuild镜像，比如：</p>
-<pre><code>docker build &lt;仓库地址&gt;#&lt;branch&gt;:&lt;directory&gt; 
-</code></pre><p>也可以根据压缩包构建镜像：</p>
-<pre><code>docker build http://server/context.tar.gz 
-</code></pre><p>一般用<code>-t</code>为构建的镜像添加tag </p>
-<h3 id="docker-save-和-docker-load"><a href="#docker-save-和-docker-load" class="headerlink" title="docker save 和 docker load"></a>docker save 和 docker load</h3><pre><code>docker save [OPTIONS] IMAGE [IMAGE...] 
-</code></pre><p>持久化镜像（Save one or more images to a tar archive） 一般这样调用 </p>
-<p><code>docker save  image:tag &gt; &lt;filename&gt;</code> 或 <code>docker save -o &lt;filename&gt; image:tag</code> 都是把镜像导出到指定文件  </p>
-<pre><code>docker load [OPTIONS] 
-</code></pre><p>导出镜像（Load an image from a tar archive or STDIN）<br><code>docker load</code>导入镜像存储文件到本地镜像库，<code>docker import</code>导入一个容器快照到本地镜像库。这两者的区别在于容器快照文件将丢弃所有的历史记录和元数据信息（即仅保存容器当时的快照状态），而镜像存储文件将保存完整记录，体积也要大.因此，从容器快照文件导入时可以重新指定标签等元数据信息。</p>
-<h3 id="docker-rmi"><a href="#docker-rmi" class="headerlink" title="docker rmi"></a>docker rmi</h3><pre><code>docker rmi [OPTIONS] IMAGE [IMAGE...] 
-</code></pre><p>删除镜像（Remove one or more images） 。<code>-f</code>或<code>--force</code>常用于强制删除 </p>
-<h1 id="Docker底层实现"><a href="#Docker底层实现" class="headerlink" title="Docker底层实现"></a>Docker底层实现</h1><p>Docker 底层的核心技术包括 Linux 上的命名空间（Namespaces）、控制组（Control groups）、Union 文件系统（Union file systems)。(不详细介绍，因为不是很了解)<br>容器的本质是资源隔离，利用的是Linux内核中已有的机制（其实就是新瓶装旧酒）。<br>传统的虚拟机通过在宿主主机中运行 hypervisor 来模拟一整套完整的硬件环境提供给虚拟机的操作系统。虚拟机系统看到的环境是可限制的，也是彼此隔离的。 这种直接的做法实现了对资源最完整的封装，但很多时候往往意味着系统资源的浪费。<br>与虚拟机相比，一个基础镜像的下载，能被很多镜像利用，不会有冗余。但虚拟机之间是不能相互利用，也不能利用主机资源，必定会造成浪费。<br>Container更像一种机制–某些进程共用一个内核和某些运行时环境（例如一些系统命令和系统库），但是彼此却看不到，都以为系统中只有自己的存在。这种机制就是容器（Container），利用命名空间来做权限的隔离控制，利用 cgroups 来做资源分配。</p>
-<h2 id="namespace"><a href="#namespace" class="headerlink" title="namespace"></a>namespace</h2><p>Linux Namespace是Linux提供的一种内核级别环境隔离的方法。 –&gt;<a href="https://lwn.net/Articles/531114/" target="_blank" rel="external">这是文档</a><br>有如下种类： </p>
-<p>Mount namespaces<br>UTS namespaces<br>IPC namespaces<br>PID namespaces<br>Network namespaces<br>User namespaces    </p>
-<p>通过这些namespace机制解决了环境隔离的问题，每个容器都有自己单独的命名空间，运行在其中的应用都像是在独立的操作系统中运行一样。命名空间保证了容器之间彼此互不影响。</p>
-<h2 id="cgroup"><a href="#cgroup" class="headerlink" title="cgroup"></a>cgroup</h2><p>Linux CGroup全称Linux Control Group， 是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。 namespace解决了环境隔离的问题，cgruop解决资源隔离的问题。<br>其实我觉得就是通过对共享资源进行隔离、限制分配到容器的资源，比如CPU限制，内存使用限制等。</p>
-<h2 id="UnionFS"><a href="#UnionFS" class="headerlink" title="UnionFS"></a>UnionFS</h2><p>Union File System联合文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。<br>UnionFS是 Docker分层镜像的基础。镜像可以通过分层来进行继承，基于基础镜像，可以制作各种具体的应用镜像。<br>Docker镜像是由多个文件系统（只读层）叠加而成。启动一个容器的时候，Docker会加载只读镜像层并在其上添加一个读写层。如果运行中的容器修改了现有的一个已经存在的文件，那该文件将会从读写层下面的只读层复制到读写层，该文件的只读版本仍然存在，只是已经被读写层中该文件的副本所隐藏。当删除容器，并通过该镜像重新启动时，之前的更改将会丢失。<br>–&gt;这是一张图：<br><img src="https://coolshell.cn/wp-content/uploads/2015/04/docker-filesystems-multilayer.png" alt=""></p>
-<h1 id="关于volume"><a href="#关于volume" class="headerlink" title="关于volume"></a>关于volume</h1><p>volume是为了保存（持久化）数据以及共享容器间的数据。简单来说，volume就是目录或者文件，它可以绕过默认的UnionFS，而以正常的文件或者目录的形式存在于宿主机上。<br>volume可以将容器以及容器产生的数据分离开来，这样，当你使用<code>docker rm &lt;container&gt;</code>删除容器时，不会影响相关的数据。<br>volume可以使用以下两种方式创建：<br>1.在Dockerfile中指定<code>VOLUME /some/dir</code><br>2.执行<code>docker run -v /some/dir</code>命令来指定<br>它们都做了同样的事，在主机上创建一个目录（默认是/var/lib/docker下），将其挂载到容器中的指定目录（如果没有，该目录会自动创建），当该容器被删除时，volume本身不会被影响。<br>那么，Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录有什么区别？<br>Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录的区别在于，run的-v可以指定挂载到宿主机的哪个目录，而Dockerfile的VOLUME不能，其挂载目录由docker随机生成。</p>
-<p>此外，使用Dockerfile还有一点值得注意：Dockerfile的VOLUME指令后的任何东西都不能改变该Volume，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">FROM ubuntu:14.04</div><div class="line">RUN useradd foo</div><div class="line">VOLUME /data</div><div class="line">RUN touch /data/x</div><div class="line">RUN chown -R foo:foo /data</div></pre></td></tr></table></figure></p>
-<p>该Docker file不能按预期那样运行，我们本来希望touch命令在镜像的文件系统上运行，但是实际上它是在一个临时容器的Volume上运行。根据官方文档，Dockerfile生成目标镜像的过程就是不断<code>docker run</code> + <code>docker commit</code>的过程，执行一个指令，<code>docker commit</code>产生临时镜像，<code>docker run</code>产生临时容器.Dockerfile中的每个指令都会产生一个新的容器，也就是说，会创建一个新的volume。<br>这个Dockerfile中是先指定volume的，所以当执行<code>touch /data/x</code>命令的容器创建时，一个volume先被挂载到<code>/data</code>，然后x才能被写入此volume，而不是实际的容器或镜像的文件系统内。(而我们实际上是想在容器中创建x文件)<br>所以，Dockerfile中VOLUME指令的位置很关键，因为它在镜像内创建了不可改变的目录。</p>
-<h2 id="docker-volume"><a href="#docker-volume" class="headerlink" title="docker volume"></a>docker volume</h2><p>Docker 1.9新增了docker volume命令,这样使用volume就比较方便，文档是这样写的：<br><code>docker volume create</code>    Create a volume<br><code>docker volume inspect</code>    Display detailed information on one or more volumes<br><code>docker volume ls</code>    List volumes<br><code>docker volume prune</code>    Remove all unused volumes<br><code>docker volume rm</code>    Remove one or more volumes</p>
-<p>可是使用这个命令删除无用的volume(volume没有被任何容器挂载) : </p>
-<pre><code>docker volume rm $(docker volume ls -qf dangling=true) 
-</code></pre><p>总之，通过volume,可以绕过docker的Union File System，从而直接对宿主机的目录进行直接读写，实现了容器内数据的持久化和共享化。</p>
-
-          
+          一些常用的Docker命令docker help +[command] 
+这个命令可以查看所有docker的命令和它的参数，非常实用 
+关于容器管理的命令docker rundocker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+这个命令会启动一个docker容器
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/31/note-for-docker/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -598,7 +511,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -664,38 +577,16 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <p>从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？</p>
-<h1 id="浏览器生成消息"><a href="#浏览器生成消息" class="headerlink" title="浏览器生成消息"></a>浏览器生成消息</h1><h2 id="解析URL"><a href="#解析URL" class="headerlink" title="解析URL"></a>解析URL</h2><p>在在浏览器中输入一个URL（统一资源定位符）如 <a href="http://www.balabala.com/dir/file.html/" target="_blank" rel="external">http://www.balabala.com/dir/file.html/</a> (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，// 后面的www.balabala.com表示服务器域名，dir表示文件目录，file.html表示所求文件名。这样就能准确定位一个资源。<br>有些URL，比如<a href="http://www.baidu.com" target="_blank" rel="external">http://www.baidu.com</a>  ，可以看到并没有文件目录和文件名，说明它们是可以省略的，省略时，访问的是服务器根目录上事先设置好的默认文件。<br>URL有不同的写法，但是URL开头的文字一般表示浏览器当前使用的协议（其实叫访问方法更为合适，因为file: 没用使用协议），包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http:  （HTTP）HyperText Transfer Protocol , 超文本传输协议，应用最为广泛。  </div><div class="line">file:  访问时不需要网络，访问本机文件，所以它不是协议。</div><div class="line">mailto:  Mailto Protocol, 电子邮件协议， 用于发送电子邮件 </div><div class="line">ftp:  (FTP) File Transfer Protocol ，文件传输协议，一般用于文件的上传和下载</div></pre></td></tr></table></figure></p>
-<p>通过解析URL之后，浏览器获得了想要获取的服务器名和文件名。</p>
-<h2 id="生成HTTP请求消息"><a href="#生成HTTP请求消息" class="headerlink" title="生成HTTP请求消息"></a>生成HTTP请求消息</h2><p>以HTTP为例，浏览器将根据规定生成请求消息，消息分为消息头，消息行，消息体。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;方法&gt;&lt;空格&gt;&lt;URI&gt;&lt;空格&gt;&lt;HTTP版本&gt;</div><div class="line">&lt;字段名&gt;：&lt;字段值&gt; </div><div class="line">  .</div><div class="line">  .</div><div class="line">  .</div><div class="line">&lt;空行&gt;</div><div class="line">&lt;消息体&gt;</div></pre></td></tr></table></figure></p>
-<p>请求消息的一行是消息头。<br>方法有GET，POST，PUT，DELETE，HEAD，OPTIONS等，但是一般情况下GET和POST就够用了。GET意为获取服务器端数据，POST意为想服务端发送数据。<br>URI（Uniform Resource Identifier) 统一资源标识符，一般来说，是一个存放网页数据的文件名（如前文的 ／dir/file.html ) 或一个存放CGI程序的文件名（浏览器可以调用该CGI程序）<br>HTTP版本号现在一般是 1.1  </p>
-<p>消息头下面是消息行，最有由一个空行结尾。<br>消息行的消息以键值对的形式规定了许多额外的消息，如日期(Date)，客户端支持的数据类型(Content-Type),语言(Accpet-Language)    等 </p>
-<p>消息行之后就是消息体，包含客户端向服务器端发送的数据，如POST方法中向服务器传输的表单数据。 </p>
-<h1 id="向DNS服务器查询Web服务器的IP地址"><a href="#向DNS服务器查询Web服务器的IP地址" class="headerlink" title="向DNS服务器查询Web服务器的IP地址"></a>向DNS服务器查询Web服务器的IP地址</h1><h2 id="DNS域名解析"><a href="#DNS域名解析" class="headerlink" title="DNS域名解析"></a>DNS域名解析</h2><p>浏览器虽然能够生成请求信息，但是不具备发送信息的功能。将信息发送到网络中需要操作系统的帮助。在此之前，还需要根据服务器域名获取服务器的IP地址。<br>首先了解一下IP地址。<br>IP地址是一般是一串32位的数字，8比特一位分为4组，表示计算机在网络中的地址，TCP／IP网络是通过IP地址获取通信对象的，如果没有IP地址，就没有办法通信。 像www.baidu.com 这样的不是IP而是域名。相比数字，一串有意义的英文字符更容易记忆，所以，一般访问网站时使用域名。但是如果通过域名来确定通信对象的话，一是，域名没有确定的长度，且域名最一般最短也也有几十字节，这样增加了路由器的负担，降低了网络请求发送和接受的效率。所以，解决方法就是，让人使用域名，再通过域名解析获取相应的IP地址。</p>
-<p>前文说到路由器，何为路由器？就像快递传送途中的各个站点，通过这些站点，能将快递送到目的地，将整个快递传输系统连成一个网。<br>学校和家里的局域网，可以看成一个子网，子网是通过路由器连接起来的，连接了这个子网的计算机，通过这个路由器与外界的网络联系。</p>
-<h2 id="通过解析器向DNS服务器发出请求获取IP地址"><a href="#通过解析器向DNS服务器发出请求获取IP地址" class="headerlink" title="通过解析器向DNS服务器发出请求获取IP地址"></a>通过解析器向DNS服务器发出请求获取IP地址</h2><p>如何获取域名对映的IP地址呢？<br>世界上有许多DNS服务器，上面储存的IP地址与域名解析之间的映射关系（这其实是简化的理解，并不是简单的映射关系），要获取IP地址，可以向DNS服务器发起请求查询IP地址。原理很简单，只要向DNS服务器询问www.baidu.com的IP地址就可以了。<br>向DNS服务器发起请求，这就要求本机上要有DNS客户端相应DNS服务器的相应消息，这个DNS客户端就是解析器，其本质就是一段程序（或说函数），位于Socket库中。Socket库中的函数能让应用程序调用操作系统的网络功能（因为浏览器不能发网络请求，就必须通过操作系统，Socket库中封装的函数，能让浏览器等应用程序调用，实现网络请求）。<br>假设这是一段浏览器中的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;函数名&gt; (&lt;参数&gt;) &#123; </div><div class="line">.</div><div class="line">.</div><div class="line">&lt;内存地址&gt; = gethostbyname(&quot;www.baidu.com&quot;) </div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;发送Http请求&gt;</div><div class="line">.</div><div class="line">.</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>函数gethostbyname就是解析器。程序运行到这里时，原本浏览器中正在运行的代码暂停，调用解析器，控制流程转移到操作系统，解析器生成请求信息，再通过调用操作系统内部的网络控制软件（其实和浏览器一样，解析器本身也不能发送网络请求，必须通过其他函数。其实很多功能的实现都是通过调用现有模块，现有函数，代码复用可以减少工作量，也能时程序更标准化）发送查询IP地址的请求，获取响应，响应中包括所求的IP地址，解析器取出IP地址，将其存入浏览器指定的内存区域，这样就获取了通信对象的IP地址。</p>
-<h2 id="DNS服务器大接力"><a href="#DNS服务器大接力" class="headerlink" title="DNS服务器大接力"></a>DNS服务器大接力</h2><p>其实有个现实问题，全世界的计算机不计其数，不可能将全世界所有的IP和域名的映射关系存到同一个DNS服务器中。必须通过各个DNS服务器之间的接力配合才能获取查询的IP地址。</p>
-<h3 id="域名的层次结构"><a href="#域名的层次结构" class="headerlink" title="域名的层次结构"></a>域名的层次结构</h3><p>观察域名 www.baidu.com 发送它被.分隔，具有层次结构。在域名中，越靠右，层次越高，处于同一个层次的个体属于同一个域，可以把每个域看作一个整体。将一个域的信息存入同一个DNS解析器中，于是，DNS服务器也有了像域名一样的层次结构，每一个域的信息都放在相应层级的DNS服务器中，上一级DNS服务器中存放着下一级DNS解析器的信息，一级一级顺藤摸瓜，可以获取最终的IP地址。</p>
-<h3 id="根域"><a href="#根域" class="headerlink" title="根域"></a>根域</h3><p>根域就是最顶级的域，根域就是一个点（.) 。 其中存着 com , jp 等次级域的信息。分配给根域的DNS服务器的IP地址在全世界只有13个，因此，全世界所有的DNS服务器中，都存着这13个服务器的信息，因此，访问任何一个DNS服务器，都可以获取根域的信息，再一级一级往下找。</p>
-<h3 id="具体流程"><a href="#具体流程" class="headerlink" title="具体流程"></a>具体流程</h3><p>以 www.balabala.hahaha.com为例。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">客户端访问最近的一台DNS服务器</div><div class="line">最近的一台DNS服务器查询根域服务器的IP地址，返回给客户端</div><div class="line">客户端访问根域服务器</div><div class="line">根域服务器查询com域的DNS服务器IP地址，返回给客户端 </div><div class="line">客户端访问com域的DNS服务器</div><div class="line">com域的DNS服务器查询hahaha.com域的IP地址，返回给客户端 </div><div class="line">客户端访问hahaha.com域</div><div class="line">.</div><div class="line">.</div><div class="line">.</div><div class="line">客户端访问www.balabala.hahaha.com 成功</div></pre></td></tr></table></figure></p>
-<p>如此，浏览器获得了通信对象的IP地址，存储在对应的内存地址。</p>
-<h1 id="socket：连接，通信与断开"><a href="#socket：连接，通信与断开" class="headerlink" title="socket：连接，通信与断开"></a>socket：连接，通信与断开</h1><h2 id="什么是socket？"><a href="#什么是socket？" class="headerlink" title="什么是socket？"></a>什么是socket？</h2><p>socket是什么？这个问题困扰了我很久。socket的中文翻译是套接字，emmmmmm非常难以描述。就说一下自己的理解吧。<br>Unix/Linux里有个思想是“一切皆文件”，可以把socket看成一个文件，它可以打开（connect），读（read），写（write），关闭（close）。但是socket是一个特殊的文件，特殊之处在于socket中的信息是可以从它连接的两端读出，写入，实现通信的功能。<br>socket”打开—读/写—关闭”模式的实现，以使用TCP协议通讯的socket为例，其交互流程大概是这样子:<br><img src="/uploads/05232335-fb19fc7527e944d4845ef40831da4ec2-2.png" alt=""><br>socket其实没有实体，只是一个概念，如果一定要说实体，内存中有一块区域，储存着控制通信操作的信息，如通信对象的IP地址，端口号，通信操作的进行状态等信息，这些内存区域就是socket的实体。通过对象的IP地址和端口号，可以确定通信对象，在通信的过程中，通信操作的进行状态也被储存下来（如通信对象是否收到响应），用于后续的通信。</p>
-<h2 id="调用socket的操作"><a href="#调用socket的操作" class="headerlink" title="调用socket的操作"></a>调用socket的操作</h2><p>Socket库中有很多操作socket的函数，在应用程序中调用，创建socket，连接，通信，断开，都是在应用程序中调用的。<br>假设这是一段浏览器中的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">&lt;函数名&gt; (&lt;参数&gt;) &#123; </div><div class="line">.</div><div class="line">.</div><div class="line">&lt;内存地址&gt; = gethostbyname(&quot;www.baidu.com&quot;)  // 获取IP地址</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;描述符&gt; = socket(&lt;使用IPv4&gt;,&lt;使用TCP&gt;....)  // 创建socket</div><div class="line">.</div><div class="line">.</div><div class="line">connect(...)  // 连接</div><div class="line">.</div><div class="line">.</div><div class="line">write(...) // 给通信对象发送信息</div><div class="line">.</div><div class="line">.</div><div class="line">&lt;接受数据长度&gt; = read(...)  // 接受通信对象的信息</div><div class="line">.</div><div class="line">.</div><div class="line">close(&lt;描述符&gt;) //  关闭socket </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这段伪代码和上面那段很像，但是把&lt;发送http请求&gt; 换成了socket的一系列操作。其实&lt;发送http请求&gt;是一个笼统的说法，它的实现需要很多“精细”的操作，socket的创建，连接，通信，关闭，就是其中之一（或说是实现&lt;发送http请求&gt;的方法）。<br>图中浏览器调用socket方法时，声明遵守TCP协议，接下来的说明时关于TCP的。</p>
-<h3 id="创建socket"><a href="#创建socket" class="headerlink" title="创建socket"></a>创建socket</h3><p>socket的实体是一段内存空间，创建socket就是操作系统为其分配所需的内存空间，初始化其状态信息（写入初始状态，通信对象的IP地址和端口号），返回socket的描述符，这个描述符相当于socket的编号，后续可以使用描述符来确定相应的socket，获取通信所用的信息。</p>
-<h3 id="连接服务器"><a href="#连接服务器" class="headerlink" title="连接服务器"></a>连接服务器</h3><p>其实在服务器端也创建了监听socket（该socket的IP地址和端口号就是客户端socket中储存的IP地址和端口号），用于等待客户端socket的连接请求（监听socket中没有通信对象的IP地址和端口号）。当客户端发起连接请求时，就会告知服务器端客户端socket的IP地址和端口号。<br>实际上，“连接”服务器的说法不是很准确，因为并没有真正的像管道一样的东西连接了客户端和服务器端，而它们的“连接”状态以通信控制信息的形式储存在各自的socket和头部（主要是TCP头部）中。在这个“连接”的过程中，客户端向服务器端传达了通信请求，双方交换了通信所需的控制信息（比如，监听socket创建时，并没有通信对象的IP地址和端口号），创建了临时收发数据所需的内存空间（缓冲区），所以，与其说是“连接”服务器，“准备”更为恰当。</p>
-<h1 id="IP模块与以太网包的收发"><a href="#IP模块与以太网包的收发" class="headerlink" title="IP模块与以太网包的收发"></a>IP模块与以太网包的收发</h1><h2 id="包的概念"><a href="#包的概念" class="headerlink" title="包的概念"></a>包的概念</h2><p>关于通信过程中的控制信息，大概包括两方面。<br>一，socket中储存的信息（通信对象的IP地址和端口号，通信状态等）<br>二，头部中保存的信息。有些信息不仅在客户端和服务器端连接时需要，在整个通信过程都需要，所以将信息储存在头部。这里的头部包括TCP头部，IP头部，以太网头部。<br>其结构如图：<br><img src="/uploads/2012111621050639.jpg" alt=""><br>可以看出，原本的应用数据，由TCP头部包裹，封装成TCP包，TCP包由IP头部包装，封装成IP包，IP包由以太网头部包装，封装成最后传输的数据包。当接收方获取到数据包之后，再一层一层打开。</p>
-<p>这里强调一点，在TCP层面，TCP头部包装的用户数据（也就是HTML等应用层数据）其实只是普通的二进制数据流（虽然HTML可以渲染出页面，但是TCP层只是把它看作普通数据），在IP层层面，整个TCP段（TCP头部和用户数据）是普通的二进制数据流，用IP头部进行包装。以此类推，每一层都将其上一层作为普通数据进行封装。当接受方收到数据时，在一层一层揭开，得到用户数据。<br>TCP头部中的信息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">发送方端口号</div><div class="line">接收方端口号</div><div class="line">序号 （发送方用于告知接受方已经发送了几个字节，其实就是发送方已经发送的字节数</div><div class="line">ACK号 （接收方用于告知发送方已经接受了几个字节，其实就是接受方已经接受的字节数）</div><div class="line">数据偏移量 头部的长度 </div><div class="line">控制位  常用的有ACK（1表示接收方已经收到），SYN（表示连接）和FIN（表示断开）</div><div class="line">窗口 接收方告知发送发窗口大小（无需等待就可以一起发送的最大数据量） </div><div class="line">校验和 用于检查是否出错</div></pre></td></tr></table></figure></p>
-<p>关于TCP连接，可见另一篇博客 –&gt; <a href="https://yuyilei.github.io/2017/08/19/tcp/" target="_blank" rel="external">可靠的TCP</a>。<br>众所周知，TCP连接三次握手，四次挥手，它的实现也是通过socket实现的，如图：<br><img src="/uploads/05234946-b80841921eae4d2ab983f26ed9023768.png" alt=""></p>
-<h2 id="IP模块"><a href="#IP模块" class="headerlink" title="IP模块"></a>IP模块</h2><p>IP模块是数据包传输的“入口”，当应用层数据被加上了TCP头部，TCP模块就会“委托”IP模块“发送”数据包，这个“发送”实际上是由集线器，路由器等网络设备完成的，IP模块的工作是给数据包加上IP头部和以太网头部，所以说IP模块是数据包传输的“入口”。IP模块负责添加这两个头部：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IP头部： 包括接受方和发送方的IP地址</div><div class="line">MAC头部 ： 也就是以太网头部，包括接收方和发送方的MAC地址，以太网通过MAC地址定位和确定通信对象</div></pre></td></tr></table></figure></p>
-<p>前文说到，IP模块会讲TCP模块的数据（TCP头部和应用层数据）看作一个普通的二进制数据块，不关心TCP头部信息和应用层数据，换言之，IP模块不关心TCP模块的操作，对于包的乱序和丢失也一概不知。总之，IP模块的就是TCP模块委托的数据包打包“发送出去”，或者接收对方的数据包。</p>
-<h3 id="IP头部"><a href="#IP头部" class="headerlink" title="IP头部"></a>IP头部</h3><p>IP头部中包括很多通信信息，其中最重要的是通信对象的IP地址，这个IP地址是由TCP模块告知的，如果IP地址是错误的，IP模块也不会校验，因为IP模块无法判断包的目的地。通过IP头部的IP地址就可以判断数据包发送到哪里了，但是以太网判断数据包目的地的方式与TCP／IP方式不同，想把数据包发送出去，必须要采取与以太网相匹配的方式，所以就需要以太网头部。</p>
-<h3 id="以太网头部"><a href="#以太网头部" class="headerlink" title="以太网头部"></a>以太网头部</h3><p>IP模块在生成IP头部之后，会再加上MAC头部，MAC头部就是以太网头部。MAC头部中有发送方和接收方的MAC地址（类似于IP地址，但是MAC地址是48比特）。那么如何获取接受方的MAC地址呢？<br>在以太网中有一种“广播”的方法–ARP（Address Resolution Protocol，地址解析协议）。ARP就是通过向同一以太网中的其中设备发送包查询MAC地址。相当于，在同一以太网中，利用”广播“对所有设备说：”XXXX这个IP地址是谁？请把你的MAC地址发给我”，其它设备听到“广播”后，会检查这个IP是不是自己的，如果不是，直接忽略，如果符合，就把自己的MAC地址发送给它。这样就获取了MAC地址。</p>
-<h3 id="IP地址和MAC地址接力"><a href="#IP地址和MAC地址接力" class="headerlink" title="IP地址和MAC地址接力"></a>IP地址和MAC地址接力</h3><p>可以看到IP和地址MAC都是不可或缺的，IP地址确定通信对象，通过IP地址获取通信对象的MAC地址，然后在以太网中通过MAC地址传输数据包。<br>实际的情况比这个复杂，数据包不可能直接从客户端发送到服务器端，中间经过了很多“驿站”（就像快递一样），这里的“驿站”就是路由器。</p>
-<h2 id="路由器和交换机"><a href="#路由器和交换机" class="headerlink" title="路由器和交换机"></a>路由器和交换机</h2><p>数据包的传输靠的是路由器和交换机（实际上，家用的路由器已经具有交换机的功能，不存在“纯粹“的路由器和交换机，这里把它们分开是为了说明它们各自的各自的功能） ，这里就简单一下它们工作的大致流程。<br>路由器是基于IP设计的，交换机是基于以太网设计的。<br>当一个路由器收到一个包时，从IP路由表中查询下一个路由器的IP地址，通过ARP（需要IP地址）查询下一个路由器的MAC地址，将MAC地址写入MAC头部，交换机通过以太网将这个包发送到下一个路由器，下一个路由器重复操作，直到送达到目的地。<br>简单的说，（路由器）负责将数据包发送给通信对象这一整体过程，而其中，将数据包传输到下一个路由器是由以太网（交换机）执行的。 </p>
-
-          
+          从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？
+浏览器生成消息解析URL在在浏览器中输入一个URL（统一资源定位符）如 http://www.balabala.com/dir/file.html/ (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/22/network-work1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -747,7 +638,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -813,33 +704,15 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <h1 id="TCP-IP协议"><a href="#TCP-IP协议" class="headerlink" title="TCP/IP协议"></a>TCP/IP协议</h1><p>TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">应用层 ： http, talnet , Email等协议 </div><div class="line">传输层 ： TCP和UDP </div><div class="line">网络层 ： IP，ICMP，ARP等协议 </div><div class="line">链路层 ： 处理物理接口细节</div></pre></td></tr></table></figure></p>
-<p>IP位于网络层位，是无连接的通信协议，连接两个计算机，它不会占用两个正在通信的计算机之间的通信线路。这样，IP 就降低了对网络线路的需求。每条线可以同时满足许多不同的计算机之间的通信需要，因此，就降低了可靠性，失败了不会重发。<br>TCP协议位于传输层，Transmission Control Protocol （传输控制协议）是一种面向连接的、可靠的、基于字节流的传输层通信协议，速度慢，可靠性高。<br>UDP协议也位于传输层，User Datagram Protocol（用户数据报协议），是一种无连接的传输层协议，提供面向事务的简单不可靠信息传送服务，速度快，可靠性低。<br>那么TCP协议到底可靠在哪里？</p>
-<h1 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h1><p>TCP协议通过三次握手，建立可靠的连接。<br>首先，客户端像服务器端发送要求连接的请求，然后，服务器端向客户端发送响应，表示能够与服务器端建立连接，最后，客户端接受到响应之后，向服务器发送信息，确认能和服务器够建立可靠的连接。这就是3次握手的大概过程。<br>第一次握手：确保客户端的发送信息能力和服务器端的接受信息能力。<br>第二次握手：确保客户端的接受信息能力和服务器端的发送信息能力。<br>第三次握手：向服务器发送响应，使服务器，确保双方的发信收信能力都是好的。<br>这样连接就建立起来了，后续就可以开始传输数据了。可以看出，这样的连接并不是真实存在的，是虚拟的，连接建立的信息并不会在路上保存，相反，连接的状态是在服务器和客户端这两端维持。<br>连接实现的过程如图：<br><img src="http://img.blog.csdn.net/20160809094108622" alt=""><br> a. 第一次握手：客户端将标志位SYN置为1，随机产生一个值seq=J，并将该数据包发送给服务器端，客户端进入SYN_SENT状态，等待服务器确认。</p>
-<p> b.第二次握手：服务器端收到数据包后由标志位SYN=1知道客户端请求建立连接，客户端将标志位SYN和ACK都置为1，Ack=J+1，随机产生一个值seq=K，并将该数据包发送给客户端以确认连接请求，服务器端进入SYN_RCVD状态。</p>
-<p> c. 第三次握手：客户端收到确认后，检查Ack是否为J+1，ACK是否为1，如果正确则将标志位ACK置为1，Ack=K+1，并将该数据包发送给服务器端，服务器端检查Ack是否为K+1，ACK是否为1，如果正确则连接建立成功，客户端和服务器端进入ESTABLISHED状态，完成三次握手。</p>
-<p>三次握手是为了建立可靠连接，并把连接的状态保存到两端。<br>那么TCP如何中断连接呢？</p>
-<h1 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h1><p>TCP通过四次挥手来中断连接，由于客户端和服务器端的连接是双全工的，因此每个方向都需要中断连接。<br>当一方停止了传输数据之后，就会向另一方发送FIN来终止这一方向的连接，表示这一方向上不再接受数据，但是TCP连接任然能传输数据，直到另一方发送了FIN。<br>具体是这样实现的：<br><img src="http://img.blog.csdn.net/20160809094125476" alt=""></p>
-<p> a. 第一次挥手：客户端发送一个FIN，用来关闭客户端到服务器端的数据传送，客户端进入FIN_WAIT_1状态。</p>
-<p> b. 第二次挥手：服务器端收到FIN后，发送一个ACK给客户端，确认序号为收到序号+1，服务器端进入CLOSE_WAIT状态。</p>
-<p> c. 第三次挥手：服务器端发送一个FIN，用来关闭服务器端到客户端的数据传送，服务器端进入LAST_ACK状态。</p>
-<p> d. 第四次挥手：客户端收到FIN后，客户端进入TIME_WAIT状态，接着发送一个ACK给服务器端，确认序号为收到序号+1，服务器端进入CLOSED状态，完成四次挥手。</p>
-<p>这样TCP连接就终止了，TCP连接本身就是虚拟的，不存在的，因此，TCP连接中断实质是客户端和服务器两端原本的连接状态的终止。<br>值得注意的是，TCP连接一般是由客户端引发的，TCP中断连接是由服务器和客户端中任意一端引起的。<br>有一个经典的问题，为什么握手是3次，挥手是4次呢？<br>可以看出，之所以挥手是4次，是因为在中挥手中，服务器向客户端发送的ACK和FIN是分开2次发送的，这就造成了握手比挥手多一次。我的理解是，当服务器端收到FIN时，表示客户端不再向自己发送数据，但是客户端还能接受数据，有可能服务器端依然有数据要向客户端发送，所以，先向客户端发送ACK，表示自己接收到了来自的FIN，继续向客户端传输数据，完成中断连接的准备工作后，再向客户端发送FIN，表示服务器端不在向客户端发送数据。客户端接受到后，再向服务器端发送ACK，中断连接状态。 </p>
-<h1 id="重传与确认机制"><a href="#重传与确认机制" class="headerlink" title="重传与确认机制"></a>重传与确认机制</h1><p>经过三次握手，建立起了可靠的连接，就可以传输数据了。TCP的主要任务是打包和传输数据，当要传输的数据太大时，必须将数据分割成片段进行分段发送，这样就有一个问题？当其中的一个片段在传输的过程中丢失怎么办？如果将所有的数据全部重传，会浪费网络资源。有什么办法能够选择性的重传那些丢失的片段呢？</p>
-<h2 id="TCP滑动窗口确认机制"><a href="#TCP滑动窗口确认机制" class="headerlink" title="TCP滑动窗口确认机制"></a>TCP滑动窗口确认机制</h2><p>TCP将独立的字节数据当作流来处理，当发送方需要传输一长串的字节流时，接受方无法一次全部接收，接受方限制发送方每次传输的字节流数量，为了限制任一时刻可发送的数据量，并为接受方提供流量控制，TCP 使用窗口实现这些目的。如图，该窗口是接受方允许发送端发送的字节流的数据范围。发送方只能发送位于窗口内的字节流中的字节。该窗口随着发送方的出站字节流和接收端的入站字节流而滑动。<br><img src="https://technet.microsoft.com/cc162519.fig01%28zh-cn%29.gif?_=4332652" alt=""><br>任何时期TCP 缓冲区中的数据都能分为如下四个状态：<br> a. 已发送已确认,数据流中最早的字节已经发送并得到确认。这些是站在发送方的角度来看的。</p>
-<p> b. 已发送但尚未确认,已发送但尚未得到确认的字节。发送方在确认之前，不认为这些数据已经被处理。</p>
-<p> c. 未发送而接收方ready,设备尚未将数据发出，但接收方根据最近一次关于发送方一次要发送多少字节确认自己有足够空间。发送方会立即尝试发送。</p>
-<p> d. 未发送而接收方not Ready,由于接收方not ready，还不允许发送方将这部分数据发出。<br>四种状态如图所示：<br><img src="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95961/image003.jpg" alt=""><br>那么，TCP如何确定数据是否已经被接受，是否被丢失呢？</p>
-<h2 id="选择性重传"><a href="#选择性重传" class="headerlink" title="选择性重传"></a>选择性重传</h2><p>TCP重传的基本原理是每一次发送一个片段，就开启一个重传计时器。计时器有一个初始值并随时间递减。如果在片段接收到确认之前计时器超时，就重传片段。TCP一次传输多个片段，如何高效地，在合适的时机重传则需要更复杂的机制。 </p>
-<p> a. TCP开始传输数据时，每个片段一经发送，就开启该片段的重传计时器，将该片段拷贝到一个重传队列中（一个数据结构）。</p>
-<p> b. 如果在计时器结束之前受到确认信息，就将该片段从重传队列中删除。</p>
-<p> c. 在计时器结束时候仍未收到确认信息，就将该片段重传，如果重传的片段依旧失败，该片段就是继续重传，如果一直失败，重传就会一直下去，这是我们不愿意看到的结构，所以应该限定TCP重传的次数。</p>
-<p>那么如何确定片段时候已经被接受到呢？<br>TCP确认机制是基于序列号累积的。<br>一个简单的例子，这里有3个片段：<br>片段1 序列号是1片段长度80。所以片段1中最后一个序列号是80。<br>片段2 序列号是81片段长度是120。片段2中最后一个序列号是200。<br>片段3 序列号是201片段长度是160。片段3中最后一个序列号是360。 </p>
-<p>假设客户端接收到第一个片段，它会发回一条确认消息确认号为81。从而告知服务器前第一个片段已经被客户端成功接收了，服务器发送窗口右移80字节，将片段1从重传队列中移除，在接收到确认号81或更高的片段之前，片段2会保留在重传队列中；片段3需要确认号201或更高。<br>假设传输过程中片段2丢失了，但片段3被接收到了。客户端将片段3保存在接收buffer中，但是不需要确认，因为TCP是累积确认机制——确认片段3表示片段2也接收到了，但实际上并没有。因此，客户端需要等待片段2。实际上，服务器端片段2的重传计时器会超时，服务器之后重传片段2。之后客户端收到，然后发送片段2和3确认信息给服务器。</p>
-<p>工作流程如图：<br><img src="https://community.emc.com/servlet/JiveServlet/downloadImage/2-840427-95924/image002.jpg" alt=""><br>最后，通过确认和重传，所以的数据片段都将会传输到接受方。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>TCP连接非常可靠，我认为主要通过建立可靠的连接和确保片段传输机制的功劳。<br>首先。通过，3次握手客户端和服务器端建立可靠的连接（这里的连接是虚拟连接）<br>然后，通过滑动窗口确认机制和选择性重传，将分成一个个片段的数据安全地传输到目的地。<br>最后，通过4次挥手断开TCP连接。</p>
-
-          
+          TCP/IP协议TCP/IP协议是一组网络传输协议的集合，按照网络模型的不同层次，使用不同的传输协议进行分工合作。TCP/IP的网络参考模型一共有四层，自上而下分别为应用层，传输层，网络层和数据链路层。1234应用层 ： http, talnet , Email等协议 传输层 ： TCP和UDP 网
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/19/tcp/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -891,7 +764,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -957,48 +830,15 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <h1 id="http与https"><a href="#http与https" class="headerlink" title="http与https"></a>http与https</h1><p>https 全称Hyper Text Transfer Protocol Secure， 相比http多了secure，https到底比http安全在哪里呢？<br>http （Hyper Text Transfer Protocol）超文本传输协议，是一个基于请求与响应模式的、无状态的、应用层协议，位于TCP／IP协议上层。http协议用户客户端与浏览器端之前的信息传递与交互。<br>http所封装的信息是明文的，这就意为着可以通过抓包工具获取内容信息，这是很不安全的，所以就需要https，它在http的基础上添加了SSL(安全套接字层)层来保证传输数据的安全问题。<br>TCP/IP四层协议从下往上包括数据链路层，IP（网络层），TCP（传输层），HTTP（应用层），https在http的基础上添加了TLS，SSL（安全层），位于TCP与http层之间。</p>
-<h1 id="http工作流程"><a href="#http工作流程" class="headerlink" title="http工作流程"></a>http工作流程</h1><p>http的大体流程是客户端向服务器端发送请求，服务器回送响应。(http协议是一个无状态的协议，同一个客户端的这次请求和上次请求是没有对应关系)一次HTTP操作称为一个事务，其工作过程可分为四步：  </p>
-<ol>
-<li>首先客户端与服务器需要建立连接。</li>
-<li>建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（URL）、协议版本号，后边是MIME信息包括请求修饰符、客户端信息等。</li>
-<li>服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个状态码，服务器信息、实体信息等。</li>
-<li>客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户端与服务器断开连接。</li>
-</ol>
-<p>这样一个流程看似没有问题，但是http所封装的信息是明文的，信息有可能被别人获取，这就需要https。</p>
-<h1 id="https工作流程"><a href="#https工作流程" class="headerlink" title="https工作流程"></a>https工作流程</h1><p>https的工作流程和http的流程大题一致。但是https对传输的数据有加密和解密的操作。总结起来就是：客户端将数据通过密钥加密生成密文，客户端向服务器端发送密文。服务器端收到密文之后，用密钥解密得到原始数据。但是这里有一个问题，密钥如何传输？密钥如果在传输的过程中被中间人截获了，那么传输的数据还是会轻易的被人获取。<br>那其实还有一种办法，就是客户端通过公钥加密数据，发送到服务器之后通过私钥解密，公钥是可以公开的，私钥不公开，一个公钥对应一个私钥，二者不能互相计算出，而且用私钥加密的数据，只有对应的公钥才能解密，用公钥加密的数据， 只有对应的私钥才能解密。但是这样又出现了一个问题，这种加密方式比之前慢多了。</p>
-<h1 id="对称加密-非对称加密"><a href="#对称加密-非对称加密" class="headerlink" title="对称加密+非对称加密"></a>对称加密+非对称加密</h1><ol>
-<li>对称加密 : 采用单钥密码系统的加密方法，同一个密钥可以同时用作信息的加密和解密.</li>
-<li>非对称加密 : 非对称加密也叫公开密钥加密,它使用了两个密钥,一个为公钥,一个为私钥,当一个用作于加密的时候,另一个则用作解密.这两个密钥就算被其他人知道了其中一个也不能凭借它计算出另一个密钥,所以可以公开其中一个密钥(也就是公钥),不公开的密钥为私钥.</li>
-</ol>
-<p>可以看出对称加密比较简便，但是一旦被人获取了密钥，数据就随之公开。非对称加密相对繁琐，却不会因为密钥被获取而泄露数据。<br>回到最初的问题，如果解决的了对称加密中的密钥传输问题，后续就可以使用对称加密来传输数据了。那么，何不结合对称加密和非对称加密？先使用非对称加密传输对称加密使用的密钥，这样就保证密钥不会泄露，之后客户端和服务器端使用对称加密的密钥传输数据，由于密钥没有泄露，中间人即使获取了密文，也没办法解密。既解决了密钥的传递问题， 又解决了非对称加密速度慢的问题。</p>
-<h1 id="怎么证明你是你"><a href="#怎么证明你是你" class="headerlink" title="怎么证明你是你"></a>怎么证明你是你</h1><p>但是，这样又引发了一些问题： </p>
-<ul>
-<li>客户端怎么确保获取的公钥就是服务器发送过来的密钥呢？</li>
-</ul>
-<p>如果中间人获取了服务器发送的公钥，将自己的公钥发送给客户端，客户端就会用这个公钥加密数据，中间人获取后就可以用自己私钥解密！！必须要确保是服务器的公钥发送到客户端！！<br>问题回到公钥的发送，公钥虽然可以公开，但是可能会被别有用心的人利用。怎样确保公钥安全无误地传输到客户端呢？<br>解决方法依是通过一个权威的CA(Certificate Authority)证书中心,它来负责颁发证书,这个证书包含:</p>
-<ol>
-<li>证书的发布机构.</li>
-<li>证书的有效期</li>
-<li>公钥</li>
-<li>证书所有人</li>
-<li>数字签名</li>
-</ol>
-<p>将公钥和个人信息用一个Hash算法生成一个消息摘要，这个Hash算法是不可逆的，只要输入数据有一点点变化，那生成的消息摘要就会有巨变，这样就可以防止别人修改原始内容，再将消息摘要通过CA的私钥加密,最终形成数字签名。数字签名用户验证数据的完整性。<br>当客户端接收到证书时,只需要用同样的Hash算法再次生成一个消息摘要,然后用CA的公钥对证书进行解密,之后再对比两个消息摘要就能知道数据有没有被篡改过了。<br>但是又出现了一个问题：CA的公钥要从哪里来呢？？又会到公钥的传输的问题。陷入鸡生蛋，蛋生鸡的无限循环中。<br>这就要从CA说起了。<br>网上的公众用户通过验证CA的签字从而信任CA，任何人都可以得到CA的证书含公钥，用以验证后续它所签发的证书。如果用户想得到一份属于自己的证书，他应先向CA提出申请。在CA 判明申请者的身份后，便为他分配一个公钥，并且CA将该公钥与申请者的身份信息绑在一起，并为之签字后，便形成证书发给申请者。CA证书的信用体系就像一棵树的结构,上层节点是信用高的CA同时它也会对底层的CA做信用证书,操作系统中已经内置了一些根证书,所以相当于你已经自动信任了它们(需要注意误安装一些非法或不安全的证书)。<br>这就是说，当客户端使用CA证书的时候，就已经默认信任CA了。<br>这样通过CA证书验证，客户端就可以确保获得服务器的公钥，再使用公钥进行非对称加密传输对称加密所需的密钥，最后用这个密钥加密和解密。 </p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
-<li>客户端与服务器连接，客户端向服务器发送请求。</li>
-<li>服务器向客户端发送CA证书。</li>
-<li>客户端读取证书中的所有人,有效期等信息并进行校验。</li>
-<li>客户端查找操作系统中内置的已经信任的根证书,并对服务器发来的证书进行验证。</li>
-<li>验证成功之后，客户端会从操作系统中取出CA的公钥,然后对服务器发来的证书中的数字签名进行解密。</li>
-<li>客户端使用相同的Hash算法计算出消息摘要,然后对数字签名中的消息摘要进行校对。</li>
-<li>校对成功，则证明证书安全。客户端获取非对称加密的公钥，生成后续对称加密所需的密钥，利用非对称加密的公钥对该密钥加密生成密文，传输给服务器端。</li>
-<li>服务器获取密文，利用非对称加密的私钥解密，获取后续对称加密所需的密钥。</li>
-<li>服务器和客户端使用密钥进行对称加密传输。 </li>
-</ol>
-<p>总结起来就是，通过一系列的操作保证密钥不被获取，然后用密钥进行对称加密传输数据。</p>
-
-          
+          http与httpshttps 全称Hyper Text Transfer Protocol Secure， 相比http多了secure，https到底比http安全在哪里呢？http （Hyper Text Transfer Protocol）超文本传输协议，是一个基于请求与响应模式的、无状态的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/13/https/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1050,7 +890,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1116,11 +956,15 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <h1 id="python简介"><a href="#python简介" class="headerlink" title="python简介"></a>python简介</h1><p>python是一种面向对象的编程语言，也是木犀后端使用的主要语言。你可能听过许多中语言，比如非常高深的C语言，非常流行的Java，适合初学者的Basic，适合网页编程的JavaScript等。<br>那python是一种什么语言？<br>python是一种面向对象的高级语言，高级语言是相对于机器语言和汇编语言来讲的。计算机的CPU只认识机器语言，所以，尽管不同的编程语言差异极大，最后都得“翻译”成CPU可以执行的机器语言。而不同的编程语言，完成同样一个功能，编写的代码量，差距也很大。比如，完成同一个任务，C语言要写1000行代码，Java只需要写100行，而Python可能只要20行。而代码少的代价是运行速度慢，C程序运行1秒钟，Java程序可能需要2秒，而Python程序可能就需要10秒。<br>总的来说，python的哲学就是简单优雅明确，尽量写容易看明白的代码，尽量写少的代码，对于编程初学者非常友好。网上学习python的教程有很多，比如，<a href="https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000" target="_blank" rel="external">廖雪峰的python教程</a>，简单易懂上手快。</p>
-<h1 id="题目要求"><a href="#题目要求" class="headerlink" title="题目要求"></a>题目要求</h1><p>题目要求使用python完成一个简单的小题目，你可以通过自学python来实现它。这是你要求达到的效果：<br><img src="/uploads/屏幕快照 2017-08-09 22.40.32.png" alt=""><br>要求输入一个尽可能长的数字，计算其各位数的总和，得到其各位数总和的拼音，将各位数总和转化为7进制。<br>我们为你提供了源代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">#!/usr/bin/env python</div><div class="line"># encoding: utf-8</div><div class="line"></div><div class="line">class Read() :</div><div class="line">    def __init__(self,num) :</div><div class="line">        self.num = int(num)</div><div class="line">        self.sumup = 0</div><div class="line"></div><div class="line">    def sum_up(self) :</div><div class="line">    	pass</div><div class="line"></div><div class="line">    def print_it(self) :</div><div class="line">    	pass</div><div class="line"></div><div class="line">    def change(self) :</div><div class="line">    	pass</div><div class="line"></div><div class="line">if __name__ == &apos;__main__&apos; :</div><div class="line">    number = Read(input(&quot;输入一个尽可能长的数字\n&quot;))</div><div class="line">    number.sum_up()</div><div class="line">    number.print_it()</div><div class="line">    number.change()</div></pre></td></tr></table></figure></p>
-<p>你需要改变Read类里面的sum_up,print_it,change这3个函数，分别实现计算各位数总和，展示各位数总和的拼音，将各位数总和转化为7进制的功能。<br>请你将补充完整的代码推到你的GitHub仓库。将仓库地址填入报名表发给我们.</p>
-
-          
+          python简介python是一种面向对象的编程语言，也是木犀后端使用的主要语言。你可能听过许多中语言，比如非常高深的C语言，非常流行的Java，适合初学者的Basic，适合网页编程的JavaScript等。那python是一种什么语言？python是一种面向对象的高级语言，高级语言是相对于机器语言
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/09/task2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1172,7 +1016,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1238,42 +1082,16 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <p>平时我们使用Google需要翻墙，如果部署一个属于自己的TinyGoogle就可以不需翻墙也能尝试使用Google，根据以下部署步骤既简单又高效，赶快学起来吧(ง •̀_•́)ง 。<br>这是效果图 <img src="/uploads/屏幕快照 2017-07-27 15.49.57.png" alt=""> </p>
-<h3 id="step0"><a href="#step0" class="headerlink" title="step0"></a>step0</h3><p>下载百度网盘连接中的文件，按照gitbash.docx中的指引安装git bash,了解基本的命令。   下载地址–&gt; <a href="https://pan.baidu.com/s/1pLr1XH5" target="_blank" rel="external">git bash</a></p>
-<p>那么什么是git bash呢 : </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">git </div><div class="line">版本控制工具，支持该工具的网站有Github、BitBucket、Gitorious、国内的osChina仓库、csdn仓库等等，这些网站都是代码托管的网站。</div><div class="line">shell</div><div class="line">是linux、unix系统的用户界面，也可以理解为命令行，就是你输入并执行命令的地方，git通过命令行和图形界面两种方式使用shell。</div><div class="line">bash</div><div class="line">是shell的一种，最常用的shell之一。</div><div class="line">git Bash</div><div class="line">方便你在windows下使用git以及一些其他命令的模拟终端（windows自带的cmd功能太弱....windows就有点弱23333）linux、ＭacOS可以直接在Terminal(终端程序)中使用git以及一下命令。</div></pre></td></tr></table></figure>
-<p>申请一个github帐号,如果不会就百度吧！<br>根据<a href="http://www.jianshu.com/p/19a3e78aafd0" target="_blank" rel="external">这篇文章</a>来了解如何使用git版本控制工具</p>
-<h3 id="step1"><a href="#step1" class="headerlink" title="step1"></a>step1</h3><p>在gitbash中输入：</p>
-<pre><code>ssh root@39.108.79.110
-</code></pre><p>根据提示输入服务器密码（Hack4muxi）进入服务器</p>
-<p>创建一个以自己姓名拼音为名称（如 小明就创建<code>xiaoming</code>文件夹）的文件夹，并进入该文件夹 （ 了解Linux常用命令 –&gt; <a href="http://blog.csdn.net/ljianhui/article/details/11100625/" target="_blank" rel="external">点我</a> )<br>这个步骤是登陆服务器那么什么是登陆服务器呢 ： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">服务器：</div><div class="line">服务器的本质就是计算机，但是它能被其他计算机访问，为其它计算机提供某些服务。</div><div class="line">ssh：</div><div class="line">简单说，SSH是一种网络协议，用于计算机之间的加密登录。以上这个命令利用ssh连接，从你的计算机远程登陆到服务器上，之后一切的操作都是在服务器上进行。</div></pre></td></tr></table></figure>
-<p>登陆服务器 –&gt;  如图 ：<br><img src="/uploads/屏幕快照 2017-07-31 15.08.31.png" alt=""></p>
-<p>注意输入的密码是不显示的,然后接下来在gitbash中的操作都是在服务器啦</p>
-<h3 id="step2"><a href="#step2" class="headerlink" title="step2"></a>step2</h3><p>在浏览器地址栏中输入  <a href="https://github.com/yuyilei/TinyGoogle" target="_blank" rel="external">https://github.com/yuyilei/TinyGoogle</a><br>到达仓库页面，点击右上角的Fork，将仓库Fork到自己的账号下面</p>
-<p><img src="https://storage1.cuntuku.com/2017/07/31/fork.png" alt="fork.png"><br>-<br>-<br>在自己账号的仓库中，点击Clone or download ,复制该仓库的地址。<br><a href="https://cuntuku.com/image/4Komo" target="_blank" rel="external"><img src="https://storage2.cuntuku.com/2017/07/31/clone.png" alt="clone.png"></a><br>在git bash中输入<br>git clone 再将仓库地址复制到这句命令后面，等待克隆完毕</p>
-<p>克隆完毕后进入TinyGoogle文件夹.<br>–&gt; 如图 ：<br><img src="/uploads/屏幕快照 2017-07-31 15.19.15.png" alt=""> </p>
-<h3 id="step3"><a href="#step3" class="headerlink" title="step3"></a>step3</h3><p>在命令行中输入　python tinygoogle.py  来运行tinygoogle.py 程序<br>按照提示输入端口号,程序便能运行起来<br>–&gt; 如图<br><img src="/uploads/屏幕快照 2017-08-03 14.24.42.png" alt="">  </p>
-<p>使用ctrl+c可以停止它</p>
-<h3 id="step4"><a href="#step4" class="headerlink" title="step4"></a>step4</h3><p>打开任意一个浏览器，在浏览器中输入 39.108.79.110:port<br>其中port是你在step3中输入的那个数字,便能看到你刚才部署上去的网站了！<br>尝试使用你部署上去的TinyGoogle搜索一下你感兴趣的内容吧~（如果搜索地很慢甚至根本搜索不到，不是你的问题，这个原来就因为 Google Custom Search 自身的原因很慢，就像这样，请求超时 –&gt; 如图 ：<br><img src="/uploads/屏幕快照 2017-07-31 15.54.25.png" alt=""></p>
-<h3 id="step5"><a href="#step5" class="headerlink" title="step5"></a>step5</h3><p>也可以使用gunicorn 启动，文件夹下有个 tinygoogle.sh脚本，直接运行脚本 ： </p>
-<pre><code>./tinygoogle.sh 
-</code></pre><p>这样就是运行成功了 –&gt; 如图<br><img src="/uploads/屏幕快照 2017-07-31 16.07.40.png" alt=""><br>根据提示输入port,便可以通过39.108.79.110:port来访问<br>你同样可以用ctrl+c来停止 </p>
-<h3 id="step6"><a href="#step6" class="headerlink" title="step6"></a>step6</h3><p> 使用vim编辑查看文件（在vim编辑器中一切都要用英文输入法输入）<br> 如要查看 app.py ，就在终端输入 </p>
-<pre><code>vim app.py 
-</code></pre><p>进入之后，在键盘上点 i 键来进入vim编辑器的编辑模式。(了解vim的四种模式 –&gt; <a href="http://www.cnblogs.com/zzqcn/p/4619012.html" target="_blank" rel="external">点我</a>)<br>此时你可以通过上下左右键来控制光标的位置。<br>在键盘上点左上角的Esc键来退出vim编辑器的编辑模式。<br>此时输入 <code>:wq</code> 来退出并保存工作vim编辑器。<br>查看vim的基本操作可以<a href="http://www.jianshu.com/p/5767c86ffa25" target="_blank" rel="external">点我</a></p>
-<h3 id="step7"><a href="#step7" class="headerlink" title="step7"></a>step7</h3><p>这一步帮助你理解路由，URL和视图函数之间的关系<br>首先你要知道什么事路由，什么是视图函数 </p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">路由： </div><div class="line">程序需要知道每个URL请求运行哪些代码，所以保存了一个URL到一个python函数的映射关系，处理URL和函数之间的关系的程序就是路由 </div><div class="line">URL ：</div><div class="line">统一资源定位符，像www.baidu.com 就是一个URL </div><div class="line">视图函数：  </div><div class="line">某一个URL对应的处理程序</div></pre></td></tr></table></figure>
-<p> 下面是一个小例子 ： 在app.py里面有一个路由：</p>
-<p> <img src="/uploads/屏幕快照 2017-08-02 23.29.12.png" alt=""> </p>
-<p> 当你在浏览器中访问 39.108.79.110:port/hello/ 时，你会得到这样的返回：<br> –&gt;如图<br> <img src="/uploads/屏幕快照 2017-08-02 23.30.44.png" alt="">  </p>
-<p> 当你访问39.108.79.110:port/hello/时，这个URL已经绑定到hello这个函数上，所以就会运行hello函数作为URL的处理函数，他们之间形成了一种映射关系 </p>
-<p> 我们可以看到app.py里面还有一个路由： </p>
-<p> <img src="/uploads/屏幕快照 2017-08-02 23.40.25.png" alt=""> </p>
-<p> 思考如何利用这个路由实现，如下效果：<br> –&gt; 如图<br> <img src="/uploads/屏幕快照 2017-08-02 23.41.26.png" alt=""><br>将你实现的结果截图，上传到你Fork来的GitHub仓库上。</p>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>用<a href="http://wowubuntu.com/markdown/" target="_blank" rel="external">markdown</a>的格式写下你对每个步骤的理解，过程中遇到的问题，如何解决这些问题，上传到你Fork来的GitHub仓库上。<br>请将你的GitHub仓库地址填入报名表，发给我们！</p>
-
-          
+          平时我们使用Google需要翻墙，如果部署一个属于自己的TinyGoogle就可以不需翻墙也能尝试使用Google，根据以下部署步骤既简单又高效，赶快学起来吧(ง •̀_•́)ง 。这是效果图  
+step0下载百度网盘连接中的文件，按照gitbash.docx中的指引安装git bash,了解基本
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/06/task1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1325,7 +1143,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1391,37 +1209,15 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <h1 id="HTTP-的无状态"><a href="#HTTP-的无状态" class="headerlink" title="HTTP 的无状态"></a>HTTP 的无状态</h1><p>HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按需生成的动态信息会使web变得更加有用，就萌发了cookie 和session 等客户端与服务器之间保持状态的解决方案。</p>
-<p> ##Session – 创建，保存在服务器中的会话</p>
-<ul>
-<li>当用户打开某个web应用时，便与web服务器产生一个session。服务器使用session把用户的信息临时保存在了服务器上， 存放于内存。 </li>
-<li>session是由服务器创建的，跟浏览器没有半毛钱关系，浏览器只是拿到一个session 的 ID。</li>
-<li>session是消耗服务器内存的，所以要合理使用session。<br>缺陷：如果web服务器做了负载均衡，那么下一个操作请求到了另一台服务器的时候session会丢失。</li>
-</ul>
-<h2 id="Cookie-–-服务器上生成，保存于客户端"><a href="#Cookie-–-服务器上生成，保存于客户端" class="headerlink" title="Cookie – 服务器上生成，保存于客户端"></a>Cookie – 服务器上生成，保存于客户端</h2><ul>
-<li>cookie由服务器生成，发送给浏览器，浏览器把cookie以kv形式保存到某个目录下的文本文件内，下一次请求同一网站时会把该cookie发送给服务器。</li>
-<li>一个cookie的设置以及发送过程分为以下四步：<br>客户端发送一个http请求到服务器端<br>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部<br>客户端发送一个http请求到服务器端，其中包含Cookie头部<br>服务器端发送一个http响应到客户端</li>
-<li>局限：由于cookie是存在客户端上的，所以浏览器加入了一些限制确保cookie不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的cookie数量是有限的 ； cookie 不是很安全 ， 别人可以利用储存的本地的cookie 。</li>
-</ul>
-<h2 id="Token-–-验证用户身份的令牌"><a href="#Token-–-验证用户身份的令牌" class="headerlink" title="Token – 验证用户身份的令牌"></a>Token – 验证用户身份的令牌</h2><ul>
-<li>唯一的 ，比较安全</li>
-<li>token 验证流程 ：<br>客户端使用用户名跟密码请求登录。<br>服务端收到请求，去验证用户名与密码。<br>验证成功后，服务端会签发一个 Token，再把这个 Token 发送给客户端。<br>客户端收到 Token 以后可以把它存储起来。<br>客户端每次向服务端请求资源的时候需要带着服务端签发的 Token<br>服务端收到请求，然后去验证客户端请求里面带着的 Token，如果验证成功，就向客户端返回请求的数据。</li>
-</ul>
-<h2 id="cookie-和session"><a href="#cookie-和session" class="headerlink" title="cookie 和session"></a>cookie 和session</h2><ul>
-<li>cookie数据存放在客户的浏览器上，session数据放在服务器上。</li>
-</ul>
-<ol>
-<li>cookie不是很安全，考虑到安全应当使用session。</li>
-<li>session会在一定时间内保存在服务器上。当访问增多，会比较占用服务器的性能考虑到减轻服务器性能方面，应当使用cookie。</li>
-<li>单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</li>
-<li>将登陆信息等重要信息存放为session,其他信息如果需要保留，可以放在cookie中<br>6 . 由于采用服务器端保持状态的方案在客户端也需要保存一个标识，所以session机制可能需要借助于cookie机制来达到保存标识的目的，但实际上它还有其他选择 –由于cookie可以被人为的禁止，必须有其他机制以便在cookie被禁止时仍然能够把session id传递回服务器. </li>
-</ol>
-<h2 id="token-和session"><a href="#token-和session" class="headerlink" title="token 和session"></a>token 和session</h2><ul>
-<li>session只提供一种简单的认证，即有此 session ID ，即认为有此 User的全部权力 ； token Token是唯一的。提供的是认证 和 授权 ，认证是针对用户，授权是针对app， 不可以转移到其它 app上，也不可以转到其它 用户上。 </li>
-<li>所以,如果用户数据可能需要和第三方共享，或者允许第三方调用 API 接口，用 token 。如果只是自己的网站，自己的 app，用session也可以。</li>
-</ul>
-
-          
+          HTTP 的无状态HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/06/session/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1473,7 +1269,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/下载.jpeg">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -1539,32 +1335,15 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       
         
           
-            <h2 id="统一验证"><a href="#统一验证" class="headerlink" title="统一验证"></a>统一验证</h2><p> <a href="https://github.com/Muxi-X/Auth" target="_blank" rel="external">Auth</a>是一个统一验证的微服务，具有完整的用户系统，具有注册，登录，个人信息等功能。这次，Auth将用于木犀内网和木犀内外app，作为其身份验证的中心，统一保存和验证用户身份和密码，为木犀分享和木犀博客服务。把Auth从原有的用户系统中分出来，可以实现代码复用，其它服务都可以使用Auth作为身份验证，且细分各个服务，使代码适得其所，有利于代码维护，逻辑更清晰。</p>
-<h2 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h2><p>Auth的核心作用就是保存用户和密码，与其它服务对接，为其它服务提供用户身份信息。实现流程是这样的： </p>
-<ul>
-<li><p><strong>用户注册</strong> ：<br>  1  在Auth中注册用户<br>  2  在Auth中注册成功后，在其它服务中查询该用户（其它服务也有完整的用户系统)，若没有该用户，则在其它服务中注册该用户，至此，Auth服务与其它服务的用户系系统保持一致 </p>
-</li>
-<li><p><strong>用户登录</strong> ：<br>  1  在Auth中使用 用户名和密码 登录，若密码正确，则登录成功<br>  2  在Auth中登录成功之后，用在Auth中获取的用户名，在其它服务中登录，获取后续操作所需的身份凭证（一般是token），由于在Auth中已经保证用户密码正确，验证过用户身份，所以无需在其它服务登录时使用密码。</p>
-</li>
-</ul>
-<h2 id="具体案例"><a href="#具体案例" class="headerlink" title="具体案例"></a>具体案例</h2><p>以木犀内网的share服务和Auth为例。share本来使用自己的用户验证系统，现在，其验证以Auth为中心。</p>
-<ul>
-<li><p>当点击share页的注册时，实际上触发了2个事件，调用了2个api，分别是Auth中的注册 api和share中的 注册api 。</p>
-</li>
-<li><p>当点击share页的登录时，同样调用了2个api，分别是Auth中的登录api和share中的登录api 。在Auth中登录时，验证用户密码是否正确，登录成功后，使用用户名在share中登录，获取token。在share中登录本身是不需要密码的，因为Auth作为验证的中心，只有Auth才保存用户密码，但是为了和share原有的用户系统相协调，登录时需要使用密码。这里，可以使用一个固定的字符串在share中注册时作为密码，在share中登录时，使用这个固定字符串登录。 </p>
-</li>
-</ul>
-<h2 id="解决跨域"><a href="#解决跨域" class="headerlink" title="解决跨域"></a>解决跨域</h2><p>只要协议、域名、端口有任何一个不同，都被当作是不同的域。而Auth和其它服务的二级域名不同，是不同的域，不能在同一个页面访问，怎么办呢？<br>以木犀通行证为例，木犀通行证是首页是</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://user.muxixyz.com/?landing=gs.muxiyxz.com</div></pre></td></tr></table></figure>
-<p>当点击登录时，登录成功后，跳转为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://gs.muxiyxz.com/?email=xxxx@qq.com</div></pre></td></tr></table></figure>
-<p>通过这种方式可以解决跨域的问题。<br>在注册需要调用2个api,分别是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auth.muxixyz.test:5499/signup/    </div><div class="line">share.muxixyz.test:5488/api/v2.0/signup/</div></pre></td></tr></table></figure>
-<p>同理：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">auth.muxixyz.test:5499/signup/?landing=share.muxixyz.test:5488/api/v2.0/signup／</div></pre></td></tr></table></figure>
-<p>点击注册，先调用 auth的注册api ，在auth中注册，然后跳转到share.muxixyz.test:5488/api/v2.0/signup/，调用share的注册api， 利用从auth获得的username在share注册。  </p>
-
-          
+          统一验证 Auth是一个统一验证的微服务，具有完整的用户系统，具有注册，登录，个人信息等功能。这次，Auth将用于木犀内网和木犀内外app，作为其身份验证的中心，统一保存和验证用户身份和密码，为木犀分享和木犀博客服务。把Auth从原有的用户系统中分出来，可以实现代码复用，其它服务都可以使用Auth作
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/06/auth/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1632,7 +1411,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
       <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/uploads/下载.jpeg"
+               src="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg"
                alt="yuyilei" />
           <p class="site-author-name" itemprop="name">yuyilei</p>
            
@@ -1718,7 +1497,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Mist
+    NexT.Muse
   </a>
 </div>
 
