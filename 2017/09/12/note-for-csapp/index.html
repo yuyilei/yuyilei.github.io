@@ -94,17 +94,19 @@
 
 
 
-<meta name="description" content="HTTP 的无状态HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按需生成的动态信息会使web变得更加有用，就萌发了cookie 和session 等客户端与服务器之间">
+<meta name="description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Token , Cookie 与 Session">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/session/index.html">
+<meta property="og:title" content="CSAPP小记">
+<meta property="og:url" content="http://yoursite.com/2017/09/12/note-for-csapp/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
-<meta property="og:description" content="HTTP 的无状态HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按需生成的动态信息会使web变得更加有用，就萌发了cookie 和session 等客户端与服务器之间">
+<meta property="og:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-20T08:20:06.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
+<meta property="og:updated_time" content="2017-09-12T15:48:51.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Token , Cookie 与 Session">
-<meta name="twitter:description" content="HTTP 的无状态HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按需生成的动态信息会使web变得更加有用，就萌发了cookie 和session 等客户端与服务器之间">
+<meta name="twitter:title" content="CSAPP小记">
+<meta name="twitter:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
+<meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
 
 
 
@@ -133,13 +135,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/06/session/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/12/note-for-csapp/"/>
 
 
 
 
 
-  <title>Token , Cookie 与 Session | YYL's blog</title>
+  <title>CSAPP小记 | YYL's blog</title>
   
 
 
@@ -252,7 +254,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/06/session/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/12/note-for-csapp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="yuyilei">
@@ -269,7 +271,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Token , Cookie 与 Session</h1>
+          <h1 class="post-title" itemprop="name headline">CSAPP小记</h1>
         
 
         <div class="post-meta">
@@ -281,8 +283,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-06T13:36:05+08:00">
-                2017-08-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-12T22:28:05+08:00">
+                2017-09-12
               </time>
             
 
@@ -319,36 +321,24 @@
       
 
       
-        <h1 id="HTTP-的无状态"><a href="#HTTP-的无状态" class="headerlink" title="HTTP 的无状态"></a>HTTP 的无状态</h1><p>HTTP协议是无状态的，这与HTTP协议本来的目的是相符的，客户端只需要简单的向服务器请求下载某些文件，无论是客户端还是服务器都没有必要纪录彼此过去的行为，每一次请求之间都是独立的，好比一个顾客和一个自动售货机或者一个普通的（非会员制）大卖场之间的关系一样。 但是如果能够提供一些按需生成的动态信息会使web变得更加有用，就萌发了cookie 和session 等客户端与服务器之间保持状态的解决方案。</p>
-<p> ##Session – 创建，保存在服务器中的会话</p>
-<ul>
-<li>当用户打开某个web应用时，便与web服务器产生一个session。服务器使用session把用户的信息临时保存在了服务器上， 存放于内存。 </li>
-<li>session是由服务器创建的，跟浏览器没有半毛钱关系，浏览器只是拿到一个session 的 ID。</li>
-<li>session是消耗服务器内存的，所以要合理使用session。<br>缺陷：如果web服务器做了负载均衡，那么下一个操作请求到了另一台服务器的时候session会丢失。</li>
-</ul>
-<h2 id="Cookie-–-服务器上生成，保存于客户端"><a href="#Cookie-–-服务器上生成，保存于客户端" class="headerlink" title="Cookie – 服务器上生成，保存于客户端"></a>Cookie – 服务器上生成，保存于客户端</h2><ul>
-<li>cookie由服务器生成，发送给浏览器，浏览器把cookie以kv形式保存到某个目录下的文本文件内，下一次请求同一网站时会把该cookie发送给服务器。</li>
-<li>一个cookie的设置以及发送过程分为以下四步：<br>客户端发送一个http请求到服务器端<br>服务器端发送一个http响应到客户端，其中包含Set-Cookie头部<br>客户端发送一个http请求到服务器端，其中包含Cookie头部<br>服务器端发送一个http响应到客户端</li>
-<li>局限：由于cookie是存在客户端上的，所以浏览器加入了一些限制确保cookie不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的cookie数量是有限的 ； cookie 不是很安全 ， 别人可以利用储存的本地的cookie 。</li>
-</ul>
-<h2 id="Token-–-验证用户身份的令牌"><a href="#Token-–-验证用户身份的令牌" class="headerlink" title="Token – 验证用户身份的令牌"></a>Token – 验证用户身份的令牌</h2><ul>
-<li>唯一的 ，比较安全</li>
-<li>token 验证流程 ：<br>客户端使用用户名跟密码请求登录。<br>服务端收到请求，去验证用户名与密码。<br>验证成功后，服务端会签发一个 Token，再把这个 Token 发送给客户端。<br>客户端收到 Token 以后可以把它存储起来。<br>客户端每次向服务端请求资源的时候需要带着服务端签发的 Token<br>服务端收到请求，然后去验证客户端请求里面带着的 Token，如果验证成功，就向客户端返回请求的数据。</li>
-</ul>
-<h2 id="cookie-和session"><a href="#cookie-和session" class="headerlink" title="cookie 和session"></a>cookie 和session</h2><ul>
-<li>cookie数据存放在客户的浏览器上，session数据放在服务器上。</li>
-</ul>
-<ol>
-<li>cookie不是很安全，考虑到安全应当使用session。</li>
-<li>session会在一定时间内保存在服务器上。当访问增多，会比较占用服务器的性能考虑到减轻服务器性能方面，应当使用cookie。</li>
-<li>单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</li>
-<li>将登陆信息等重要信息存放为session,其他信息如果需要保留，可以放在cookie中<br>6 . 由于采用服务器端保持状态的方案在客户端也需要保存一个标识，所以session机制可能需要借助于cookie机制来达到保存标识的目的，但实际上它还有其他选择 –由于cookie可以被人为的禁止，必须有其他机制以便在cookie被禁止时仍然能够把session id传递回服务器. </li>
-</ol>
-<h2 id="token-和session"><a href="#token-和session" class="headerlink" title="token 和session"></a>token 和session</h2><ul>
-<li>session只提供一种简单的认证，即有此 session ID ，即认为有此 User的全部权力 ； token Token是唯一的。提供的是认证 和 授权 ，认证是针对用户，授权是针对app， 不可以转移到其它 app上，也不可以转到其它 用户上。 </li>
-<li>所以,如果用户数据可能需要和第三方共享，或者允许第三方调用 API 接口，用 token 。如果只是自己的网站，自己的 app，用session也可以。</li>
-</ul>
-
+        <h1 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h1><h2 id="客户端-服务器编程模型"><a href="#客户端-服务器编程模型" class="headerlink" title="客户端-服务器编程模型"></a>客户端-服务器编程模型</h2><p>在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤：</p>
+<pre><code>1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务） 
+2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源） 
+3）服务器端发送响应，等待下一个请求
+4）客户端收到响应，处理之。 
+</code></pre><p>需要注意的是，这里的客户端和服务器端都是进程的概念。</p>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><p>客户端和服务器端运行在不同的主机上，通过计算机的硬件和软件资源来通信，就需要网络。<br>在物理上，网络是一个按照地理远近组成的层次系统。<br>底层是LAN（local Area Network，局域网），是一个较小区域里面的网络（比如一个建筑，一个学校之类的），比最著名的是以太网（Ethernet）<br>一个以太网段包括一些电缆和一个集线器，局域网内的主机连接着集线器的端口，集线器将每个端口上收到的个位复制到其他端口，实现了每个主机都能看到每个位。<br>可以利用网桥连接多个以太网段形成较大的局域网（桥接以太网），网桥比集线器更智能化，它们可以随着时间自动学习哪个主机通过哪个端口可达。<br>多个不兼容的局域网通过路由器连进程一个互联网络（internet） ，最著名的是因特网（Internet）。 </p>
+<p><code>多个主机--&gt;集线器连接--&gt;形成局域网--&gt;网桥连接--&gt;较大的局域网--&gt;路由器连接--&gt;互联网</code></p>
+<p>为了兼容不同的局域网，将数据通过网络发送到另一个主机，需要分离出一个中间层。有一句话，“计算机中的所有问题都可以通过增加一个中间层来解决～“<br>这个中间层就是一个运行在每个主机和路由器上的一个协议软件，它消除了不同网络之间的差异，控制主机和路由器协同工作实现数据传输。这个协议必须提供两种基本能力。 </p>
+<pre><code>1）命名机制：定义一种格式一致的主机地址，这个地址唯一标示了这个主机
+2）传送机制：定义一种把数据位捆扎成不连续的片（就是包）的统一方式解决传输问题。 
+</code></pre><p>通过<code>命名机制</code>确定了网络传输的两个端点，通过<code>传送机制</code>在这两个端点之间传输数据。<br>当然其中的实现是很复杂的。 </p>
+<h2 id="TCP-IP协议族"><a href="#TCP-IP协议族" class="headerlink" title="TCP/IP协议族"></a>TCP/IP协议族</h2><p>这张图展示了Internet上客户端和服务器端应用程序的基本硬件和软件组织。<br><img src="/uploads/屏幕快照 2017-09-12 23.20.18.png" alt=""><br>可以看到因特网主机都实现了TCP/IP协议。<br>客户端和服务器端混合使用socket函数和Unix I/O函数进行通信。通常socket函数实现为系统调用，这些系统调用会陷入内核，并调用内核模式的TCP／IP函数。<br>TCP／IP协议是一个协议族，每一个都提供不同功能，如，IP协议提供基本的命名方法和递送机制，实现一台主机向其他主机发送包；而TCP协议构建在IP协议之上，扩展了IP协议，这样包可以在进程间传输而不是主机之间，而且提供实现机制保障传输的可靠性。 </p>
+<p>因特网是一个世界范围内的主机集合：</p>
+<pre><code>1）每个主机映射为32位的IP地址（其实也有128位的） 
+2）IP地址被映射为因特网域名
+3）主机之前的进程通过连接与其他主机上的进程通信（这里强调进程的概念） 
+</code></pre>
       
     </div>
     
@@ -372,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/auth/" rel="next" title="Auth统一验证服务">
-                <i class="fa fa-chevron-left"></i> Auth统一验证服务
+              <a href="/2017/09/10/note-for-linux/" rel="next" title="Linux常用操作和其他">
+                <i class="fa fa-chevron-left"></i> Linux常用操作和其他
               </a>
             
           </div>
@@ -381,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/06/task1/" rel="prev" title="Task:The First Step On The Backend!">
-                Task:The First Step On The Backend! <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -513,7 +499,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP-的无状态"><span class="nav-number">1.</span> <span class="nav-text">HTTP 的无状态</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie-–-服务器上生成，保存于客户端"><span class="nav-number">1.1.</span> <span class="nav-text">Cookie – 服务器上生成，保存于客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Token-–-验证用户身份的令牌"><span class="nav-number">1.2.</span> <span class="nav-text">Token – 验证用户身份的令牌</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cookie-和session"><span class="nav-number">1.3.</span> <span class="nav-text">cookie 和session</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#token-和session"><span class="nav-number">1.4.</span> <span class="nav-text">token 和session</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络编程"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端-服务器编程模型"><span class="nav-number">1.1.</span> <span class="nav-text">客户端-服务器编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">1.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">1.3.</span> <span class="nav-text">TCP/IP协议族</span></a></li></ol></li></ol></div>
             
 
           </div>
