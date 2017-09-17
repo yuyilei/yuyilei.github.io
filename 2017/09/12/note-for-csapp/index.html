@@ -102,7 +102,7 @@
 <meta property="og:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
-<meta property="og:updated_time" content="2017-09-12T15:48:51.000Z">
+<meta property="og:updated_time" content="2017-09-17T15:55:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSAPP小记">
 <meta name="twitter:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
@@ -338,7 +338,35 @@
 <pre><code>1）每个主机映射为32位的IP地址（其实也有128位的） 
 2）IP地址被映射为因特网域名
 3）主机之前的进程通过连接与其他主机上的进程通信（这里强调进程的概念） 
-</code></pre>
+</code></pre><h2 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h2><p>现在使用的IP地址一般都是32位的（IPv4），但是少部分的IP的地址是128位的IPv6。<br>IP地址结构总是以大端法（网络字节顺序）的顺序存放，即使主机字节顺序是小端法，Unix提供内置函数，实现两者之间的转换。<br>IP地址用<code>点分十进制</code>来表示，每个字节用十进制表示，并用句点分开。使用函数<code>inet_pton</code>和<code>inet_ntop</code>实现IP地址和十进制的转换。</p>
+<h3 id="因特网域名-（domain-name）"><a href="#因特网域名-（domain-name）" class="headerlink" title="因特网域名 （domain name）"></a>因特网域名 （domain name）</h3><p>域名显示出一种层次结构，越右边，域名的层级越高。域名集合和IP地址之间的映射关系由DNS数据库（domain name system）维护。<br>一个域名可能映射为多个IP地址，一个IP地址也可能映射多个域名。</p>
+<h3 id="因特网连接"><a href="#因特网连接" class="headerlink" title="因特网连接"></a>因特网连接</h3><p>因特网的客户端和服务端通过在连接上发送和接收字节流来通信，连接是点对点的（因为连接是一对进程）。socket是连接的端点，每个socket对有对应的socket地址（由地址：端口号）组成，客户端的端口号是内核随机分配的， 而服务器端的端口是指定的知名端口。这样每个socket对就确定了两个连接的两个端点。<br>从Linux内核的角度来看，一个socket是通信连接的一个端点，从Linux程序的角度来看，socket是一个有相应描述符的打开文件（可以读写数据）。连接以文件描述符的形式提供给应用程序，socket接口提供打开和关闭socket描述符的函数，客户端和服务端通过读写这些socket描述符来实现彼此的通信（所以说这很像一个文件，可以打开关闭，读写） </p>
+<h2 id="socket的辅助函数"><a href="#socket的辅助函数" class="headerlink" title="socket的辅助函数"></a>socket的辅助函数</h2><p>to do  </p>
+<h1 id="并发编程"><a href="#并发编程" class="headerlink" title="并发编程"></a>并发编程</h1><p>如果逻辑控制流有时间上的重叠，那他们就是并发的。<br>一般认为，并发是操作系统内核运行应用程序程序的机制，但其实应用级的并发也是很有用的，许多应用程序也需要用到并发机制。用到并发的应用程序成为<code>并发程序</code>,有三种实现并发程序的基本方法： </p>
+<pre><code>1. 进程，每个逻辑控制流都是一个进程，由内核调度和维护。进程有独立的虚拟内存地址空间，控制流使用显式的`进程间通信函数`与其他进程通信。 
+2. I/O多路复用， 应用程序在一个进程的上下文中显式地调用它们自己的逻辑流。逻辑流被模型化为状态机，数据到达文件描述符后，主程序显示地从一个状态转到另一个状态，因为程序是一个单独的进程，所以所有的流共享同一个地址空间。 
+3. 线程，线程是运行在单一进程上下文的逻辑控制流，由内核进行调度，可以把线程看成其他两种方式的混合体，像进程一样由内核进行调度，像I／O多路复用一样共享同一个虚拟地址空间。
+</code></pre><h2 id="基于进程的并发编程"><a href="#基于进程的并发编程" class="headerlink" title="基于进程的并发编程"></a>基于进程的并发编程</h2><p>对于一个服务器，在父进程中监听一个监听描述符（如描述符3），一旦收到来自客户端的连接请求，接受连接请求之后，返回一个已经连接的描述符（如文件描述符4），父进程派生一个子进程，这个子进程获得服务器描述符表的完整副本，在子进程中关闭描述符3，在父进程中关闭描述4，然后，这个子进程为该客户端服务，父进程继续监听，等待下一个连接请求。<br>父进程和子进程中已连接的描述符都指向同一个文件表表项，所以需要在各自进程中关闭连接描述符的副本，否则可能会造成内存泄露，系统崩溃。<br>进程有个非常清晰的模型，共享文件表，但不共享用户地址空间，这样不会造成进程之间虚拟内存的覆盖，同时，也会加大进程间共享信息的难度，必须显示的使用（进程间通信，IPC）机制，但是它的缺点是比较慢。</p>
+<h2 id="基于I／O多路复用的并发编程"><a href="#基于I／O多路复用的并发编程" class="headerlink" title="基于I／O多路复用的并发编程"></a>基于I／O多路复用的并发编程</h2><p>I/O多路复用是指使用一个线程检查多个描述符的就绪状态，比如调用select函数，传入多个描述符，如果有一个或多个描述符准备就绪（一个或多个I／O事件发生后）就返回，否则就一直阻塞直到超时。<br>Linux中基于socket的通信本质就是一种I／O，使用socket函数创建的socket默认都是阻塞的，这就意味着，当socket API调用不能立即完成时，线程一直处于等待状态，直到操作完成得到结果或者操作超时出错。会引起阻塞的socket API有4中： </p>
+<pre><code>1. 输入操作
+2. 输出操作
+3. 接受连接（accept）等待对方接受连接请求，如果没有接受，线程就会进入睡眠
+4. 发起连接（connect）在收到服务端的应答前不会返回。 
+</code></pre><p>在服务端，通常要处理大量的socket连接请求，如果线程阻塞于上述的某一个输入或输出调用时，将无法处理其他任何运算或响应其他网络请求，这么做无疑是十分低效的，当然可以采用多线程，但大量的线程占用很大的内存空间，并且线程切换会带来很大的开销。而I/O多路复用模型能处理多个连接请求的优点就使其能支持更多的并发连接请求。<br>Linux支持I/O多路复用的系统调用有select、poll、epoll，这些调用都是内核级别的。<br>Linux提供的select相关函数接口如下： </p>
+<pre><code>#include &lt;sys/select.h&gt;
+#include &lt;sys/time.h&gt;
+int select(int max_fd, fd_set *readset, fd_set *writeset, fd_set *exceptset, struct timeval *timeout) ; 
+FD_ZERO(int fd, fd_set* fds) ;   //清空集合
+FD_SET(int fd, fd_set* fds)   ;  //将给定的描述符加入集合
+FD_ISSET(int fd, fd_set* fds)  ; //将给定的描述符从文件中删除  
+FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
+</code></pre><ol>
+<li>select函数的返回值就绪描述符的数目，超时时返回0，出错返回-1。</li>
+<li>第一个参数max_fd指待测试的fd个数，它的值是待测试的最大文件描述符加1，文件描述符从0开始到max_fd-1都将被测试。</li>
+<li>中间三个参数readset、writeset和exceptset指定要让内核测试读、写和异常条件的fd集合，如果不需要测试的可以设置为NULL。</li>
+</ol>
+<p>I/O多路复用并发事件驱动程序的基础。 </p>
+
       
     </div>
     
@@ -499,7 +527,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络编程"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端-服务器编程模型"><span class="nav-number">1.1.</span> <span class="nav-text">客户端-服务器编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">1.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">1.3.</span> <span class="nav-text">TCP/IP协议族</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络编程"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端-服务器编程模型"><span class="nav-number">1.1.</span> <span class="nav-text">客户端-服务器编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">1.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">1.3.</span> <span class="nav-text">TCP/IP协议族</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP地址"><span class="nav-number">1.4.</span> <span class="nav-text">IP地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网域名-（domain-name）"><span class="nav-number">1.4.1.</span> <span class="nav-text">因特网域名 （domain name）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网连接"><span class="nav-number">1.4.2.</span> <span class="nav-text">因特网连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket的辅助函数"><span class="nav-number">1.5.</span> <span class="nav-text">socket的辅助函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">2.</span> <span class="nav-text">并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于进程的并发编程"><span class="nav-number">2.1.</span> <span class="nav-text">基于进程的并发编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于I／O多路复用的并发编程"><span class="nav-number">2.2.</span> <span class="nav-text">基于I／O多路复用的并发编程</span></a></li></ol></li></ol></div>
             
 
           </div>
