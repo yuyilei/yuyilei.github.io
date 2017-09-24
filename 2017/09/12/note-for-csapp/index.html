@@ -102,7 +102,7 @@
 <meta property="og:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
-<meta property="og:updated_time" content="2017-09-17T15:55:20.000Z">
+<meta property="og:updated_time" content="2017-09-17T16:13:09.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSAPP小记">
 <meta name="twitter:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
@@ -365,7 +365,7 @@ FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
 <li>第一个参数max_fd指待测试的fd个数，它的值是待测试的最大文件描述符加1，文件描述符从0开始到max_fd-1都将被测试。</li>
 <li>中间三个参数readset、writeset和exceptset指定要让内核测试读、写和异常条件的fd集合，如果不需要测试的可以设置为NULL。</li>
 </ol>
-<p>I/O多路复用并发事件驱动程序的基础。 </p>
+<p>I/O多路复用可以用作并发事件驱动程序的基础。 </p>
 
       
     </div>
@@ -399,6 +399,10 @@ FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/24/eat-app/" rel="prev" title="从"吃饭app"讲到web开发流程规范">
+                从"吃饭app"讲到web开发流程规范 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -475,7 +479,7 @@ FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
