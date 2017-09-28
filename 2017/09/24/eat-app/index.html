@@ -106,7 +106,11 @@
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-24%2023.23.18.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-24%2023.24.05.png">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-24%2023.33.09.png">
-<meta property="og:updated_time" content="2017-09-25T15:45:41.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-25%2023.50.11.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-27%2021.38.55.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-27%2021.43.11.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-27%2021.46.10.png">
+<meta property="og:updated_time" content="2017-09-28T01:57:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从&quot;吃饭app&quot;讲到web开发流程规范">
 <meta name="twitter:description" content="本文以一个小的应用为例子讲web开发的流程规范。这是一个吃饭app，效果是这样的，点击 fetch , 就随机返回一个吃饭的地点。 这个小小的例子中，就包含了web开发中的流程规范。大概的流程是这样的。  人员编排吃饭app运维：yyl吃饭app前端开发: cruyun吃饭app后端开发: 可可 API文档的编写和测试驱动开发api文档的编写要按照规范，吃饭app只有一个api,它的文档如下：规定">
@@ -331,7 +335,8 @@
 <h1 id="API文档的编写和测试驱动开发"><a href="#API文档的编写和测试驱动开发" class="headerlink" title="API文档的编写和测试驱动开发"></a>API文档的编写和测试驱动开发</h1><p>api文档的编写要按照规范，吃饭app只有一个api,它的文档如下：<br><img src="/uploads/屏幕快照 2017-09-24 23.12.32.png" alt=""><br>规定好api文档后，就可以开始写后台的程序了。编写api的时候，采用测试驱动开发。<br>测试驱动开发就是编写一个api(根据已有的api文档编写)之前，先写这个api的测试，完成相应的api之后，再跑这个测试。<br>这是编写api之前跑的测试：<br><img src="/uploads/屏幕快照 2017-09-24 23.23.18.png" alt=""><br>显示这个api的测试失败<br>完成 api 之后的测试：<br><img src="/uploads/屏幕快照 2017-09-24 23.24.05.png" alt=""><br>测试成功，就代表这个api编写，完成.</p>
 <h1 id="分支的管理"><a href="#分支的管理" class="headerlink" title="分支的管理"></a>分支的管理</h1><p>开发过程中主要维护master，dev和release分支<br>这是吃饭app前端仓库的分支。<br><img src="/uploads/屏幕快照 2017-09-24 23.33.09.png" alt=""><br>master是主分支，dev-xxx是当前正在开发的分支(如图中显示正在开发1.5版)，release-xxx是每一个版本的分支(比如图中就显示了曾经的1.0版)<br>吃饭app的开发1.5版的过程是在dev-xxx分支上进行的，当1.5版完成时，将dev-1.5分支合并到master分支,从master分支中拉出release-1.5分支，删除dev-1.5分支。 </p>
 <h1 id="部署到测试环境"><a href="#部署到测试环境" class="headerlink" title="部署到测试环境"></a>部署到测试环境</h1><p>当吃饭app的前后端的开发都完成之后，就可以部署到测试环境了。我们的测试环境就是一些阿里云的学生学生机。<br>在本地和测试环境上都应该使用docker部署，镜像的构建有两种方式，一种就是直接在测试环境上拉取吃饭app仓库的代码，另一种是使用阿里云RAM(Resource Access Management,简称RAM)相应的镜像仓库里构建镜像再把镜像拉到测试环境。<br>吃饭app的前端是cruyun写的，吃饭app的后台是可可写的。所以吃饭app的前端部署到测试环境由cruyun负责（使用docker），吃饭app的后端是由可可负责部署测试环境（使用docker）.</p>
-<h1 id="部署到生产环境"><a href="#部署到生产环境" class="headerlink" title="部署到生产环境"></a>部署到生产环境</h1><p>吃饭app在测试环境上测试成功后，就可以部署到生产环境上了。部署到生产环境需要使用阿里云RAM(Resource Access Management,简称RAM)。<br>部署到生产环境需要测试需要专门的权限。</p>
+<h1 id="部署到生产环境"><a href="#部署到生产环境" class="headerlink" title="部署到生产环境"></a>部署到生产环境</h1><p>吃饭app在测试环境上测试成功后，就可以部署到生产环境上了。部署到生产环境需要使用阿里云RAM(Resource Access Management,简称RAM)。<br>部署到生产环境需要测试需要专门的权限。这个权限久需要吃饭app的运维人员（也就是我）。<br>我先登录阿里云的RAM控制台。<br><img src="/uploads/屏幕快照 2017-09-25 23.50.11.png" alt=""><br>这个账号是团队的子账号，是专门的人才有的哦。<br>登录之后，点击容器服务，进入镜像仓库控制台。为这个吃饭app创建一个命名空间（namespace） –muxi<br><img src="/uploads/屏幕快照 2017-09-27 21.38.55.png" alt=""><br>现在我创建了这个namespace，我对这个namespace有管理权限，所以我可以在这个namespace下为吃饭app创建新的镜像仓库。<br>如图，这是我为吃饭app前端创建的镜像，可以看到我对这个镜像仓库有管理权限。<br><img src="/uploads/屏幕快照 2017-09-27 21.43.11.png" alt=""><br>点击进入管理镜像仓库，设置构建信息，构建镜像。<br><img src="/uploads/屏幕快照 2017-09-27 21.46.10.png" alt=""><br>这样吃饭app的前端镜像就构建好了，根据镜像地址就可以部署到生产环境了呢！<br>吃饭app后端同理。</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>哇！这样我们的吃饭app就上线了？？！！<br>没错就是这简单！<br>只要遵守这个开发流程，就是这么简单撒！！！<br>感谢cruyun , yyl 和 可可！！！</p>
 
       
     </div>
@@ -497,7 +502,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#人员编排"><span class="nav-number">1.</span> <span class="nav-text">人员编排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API文档的编写和测试驱动开发"><span class="nav-number">2.</span> <span class="nav-text">API文档的编写和测试驱动开发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分支的管理"><span class="nav-number">3.</span> <span class="nav-text">分支的管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署到测试环境"><span class="nav-number">4.</span> <span class="nav-text">部署到测试环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署到生产环境"><span class="nav-number">5.</span> <span class="nav-text">部署到生产环境</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#人员编排"><span class="nav-number">1.</span> <span class="nav-text">人员编排</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API文档的编写和测试驱动开发"><span class="nav-number">2.</span> <span class="nav-text">API文档的编写和测试驱动开发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分支的管理"><span class="nav-number">3.</span> <span class="nav-text">分支的管理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署到测试环境"><span class="nav-number">4.</span> <span class="nav-text">部署到测试环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部署到生产环境"><span class="nav-number">5.</span> <span class="nav-text">部署到生产环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">6.</span> <span class="nav-text">最后</span></a></li></ol></div>
             
 
           </div>
