@@ -96,15 +96,19 @@
 
 <meta name="description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CSAPP小记">
+<meta property="og:title" content="CSAPP小记(十到十二章)">
 <meta property="og:url" content="http://yoursite.com/2017/09/12/note-for-csapp/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
 <meta property="og:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
-<meta property="og:updated_time" content="2017-09-17T16:13:09.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-06%2020.35.41.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-06%2020.31.06.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-06%2020.56.10.png">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-06%2021.08.04.png">
+<meta property="og:updated_time" content="2017-10-06T13:19:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CSAPP小记">
+<meta name="twitter:title" content="CSAPP小记(十到十二章)">
 <meta name="twitter:description" content="网络编程客户端-服务器编程模型在这个模型中，一个应用是有一个服务器进程和多个客户端进程组成（注意是进程），无论客户端和服务器端是怎样映射到主机上，客户端-服务端模型都相同。由以下四个步骤： 1）客户端向服务器端发送请求，发起一个事务（该模型中的基本操作是事务）  2）服务器端收到请求之后，解释它，以适当方式解释服务器端的资源（客户端需要的资源）  3）服务器端发送响应，等待下一个请求 4）客户端收">
 <meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-09-12%2023.20.18.png">
 
@@ -141,7 +145,7 @@
 
 
 
-  <title>CSAPP小记 | YYL's blog</title>
+  <title>CSAPP小记(十到十二章) | YYL's blog</title>
   
 
 
@@ -271,7 +275,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CSAPP小记</h1>
+          <h1 class="post-title" itemprop="name headline">CSAPP小记(十到十二章)</h1>
         
 
         <div class="post-meta">
@@ -365,7 +369,108 @@ FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
 <li>第一个参数max_fd指待测试的fd个数，它的值是待测试的最大文件描述符加1，文件描述符从0开始到max_fd-1都将被测试。</li>
 <li>中间三个参数readset、writeset和exceptset指定要让内核测试读、写和异常条件的fd集合，如果不需要测试的可以设置为NULL。</li>
 </ol>
-<p>I/O多路复用可以用作并发事件驱动程序的基础。 </p>
+<p>I/O多路复用可以用作并发事件驱动程序的基础。  </p>
+<h1 id="系统级I／O"><a href="#系统级I／O" class="headerlink" title="系统级I／O"></a>系统级I／O</h1><p>输入／输出是内存和外部设备之间复制数据的过程。<br>在Linux系统中，用系统级的unix I／O 实现高级语言中的输入输入函数（如 printf, scanf） </p>
+<h2 id="模型化为文件"><a href="#模型化为文件" class="headerlink" title="模型化为文件"></a>模型化为文件</h2><p>在Linux系统中，一切都可以看作是文件，同样，可以把I／O设备模型化为文件，输入，输出作为相应文件的读写来进行。<br>这种将设备映射为文件，允许内核引出一个简单，低级的应用接口的方式就叫unix I／O ：<br>    1） <code>打开文件</code> ： 访问相应I／O设备时，相当于打开一个文件，返回一个文件描述符（一个非零整数），在后续的操作中标识符代表这个文件，内核记录这个打开文件的相关信息，应用程序只需记住这个文件表示符。<br>    2） <code>标准输入</code>，<code>标准输出</code>，<code>标准错误</code>，Linux shell创建每个进程时，都要打开这个三个文件，文件标识符分别为（0，1，2），所以别的文件标识符从3开始。<br>    3） <code>当前文件位置</code> ： 在内核中保存每个打开文件的文件位置k，初始化0，这是从文件开头起始的文件偏移量。<br>    4） <code>读写文件</code> : 读操作是从文件复制到内存，写操作是从内存复制到文件，读写以字节为单位，读写结束之后，文件位置k做相应改变，如果，要读的字节不够，会出发一个end-of-file（EOF）,文件结尾并没有EOF。<br>    5） <code>关闭文件</code> : 通知内核关闭文件，内核释放文件打开时创建的数据结构，并把这个文件描述符恢复为可用。 </p>
+<h2 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h2><p>每个Linux文件都有其相应的角色<br>    1)  <code>普通文件</code> : 应用程序将其分为<code>文本文件</code>和<code>二进制文件</code>，<code>文本文件</code>只包含ascii码或unicode字符， <code>二进制文件</code>是用二进制编码表示的文件，对内核来说，两者没有区别.<br>    2)  <code>目录</code> : 目录是包含一组链接的文件，每个链接映射到一个文件，目录中也有目录,每个目录都有 <code>.</code> , <code>..</code>这两个目录链接，分别是到自身和上一级目录的链接。<br>    3)  <code>socket</code> :  用来与另一进程跨网络通信的文件。 </p>
+<p>作为上下文的一部分，每个进程都有当前工作目录。 </p>
+<h3 id="打开和关闭文件"><a href="#打开和关闭文件" class="headerlink" title="打开和关闭文件"></a>打开和关闭文件</h3><p>使用 <code>open</code> 打开文件 </p>
+<pre><code>int open(char *filename , int flags , mode_t mode ) ; //  成功返回文件描述符，失败返回-1 
+</code></pre><p><code>open</code>函数返回一个文件描述符（总是当前进程中没有打开的最小描述符)<br><code>flags</code> 参数指明如何访问，是一个或多位掩码的或，表示只读，只写或其他设置。<br><code>mode</code>  参数定义文件访问权限 。 作为上下文的一部分，每个进程都有一个umask，调用umask函数来设置（文件的在这个进程中的读写权限，比如同一个组的成员能否读写）  </p>
+<p>使用<code>close</code> 来关闭一个文件</p>
+<pre><code>int close(int fd) ;  // 成功返回0，出错返回-1 
+</code></pre><h3 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h3><p>使用 <code>write</code>和<code>read</code>函数来实现读写. </p>
+<pre><code>sszie_t read(int fd, void *buf, size_t n ) ;  // 成功就返回读的字节数，失败返回-1 ，EOF返回0 
+</code></pre><p>从当前文件复制到内存位置buf中。  </p>
+<pre><code>ssize_t write(int fd , const void *buf , size_t n ) ; //  成功返回写入的字节数，出错返回-1 
+</code></pre><p>从内存位置buf复制到当前文件中。 </p>
+<p>在某些情况下，<code>read</code>和<code>write</code>函数复制的字节比应用程序要求的少，返回不足值不代表错误，所以使用RIO自动处理不足值， RIO函数分为2类：<br>    1) 无缓冲区的输入输出函数： 直接在文件和内存之间传输，没有应用级缓冲区，对将二进制数据读写到网络和从网络读写二进制数据尤其有用。<br>    2) 有缓冲区的输入函数： 高效地读写文本和二进制文件，可以为printf函数提供缓冲区。带缓冲的RIO函数是线程安全的，在同一个描述符可以交错地被使用。 </p>
+<h4 id="无缓冲区的输入输出函数"><a href="#无缓冲区的输入输出函数" class="headerlink" title="无缓冲区的输入输出函数"></a>无缓冲区的输入输出函数</h4><p>输出： </p>
+<pre><code>sszie_t rio_readn(int fd , void *usrbuf , size_t n ) ; // 遇到EOF返回0，成功返回读入的字节数，出错返回-1 
+</code></pre><p>输入： </p>
+<pre><code>sszie_t rio_writen(int fd , void *usrbuf , size_t n ) ; //  出错返回-1，成功返回写入的字节数
+</code></pre><p>对同一个描述符，可以交替使用<code>rio_readn</code> 和 <code>rio_writen</code> 。 如果输入输出时被应用信号中断，<code>rio_readn</code>和<code>rio_writen</code>函数会重新启动<code>read</code>函数和<code>write</code>函数 。<br>可以理解为<code>rio_readn</code> 和 <code>rio_writen</code>是对 <code>read</code>和 <code>write</code>函数的封装，其中处理了不足值和被应用级信号中断的问题，保证不会出现不足值，只有<code>read</code>和<code>write</code>函数本身错误才会返回-1 </p>
+<h4 id="有缓冲区的输入函数"><a href="#有缓冲区的输入函数" class="headerlink" title="有缓冲区的输入函数"></a>有缓冲区的输入函数</h4><p>每次调用<code>read</code>函数的时候，都会陷入内核（文件描述符代表的文件信息储存在内核），如果需要统计一个文件中的文本行数，不用缓冲区的话，要一个字节一个字节地从文件中读取到内存（调用<code>read</code>函数）每次都会陷入内核，这样效率不高，所以需要使用带缓冲区的rio输入输出函数，先把内容读取到缓冲区，再从缓冲区读到指定的内存区。 </p>
+<pre><code>void rio_readinitb(rio_t *rp , int fd ) ; 
+</code></pre><p><code>rio_readinitb</code> 函数初始化创建了一个新的缓冲区，并将一个打开文件的文件描述符与这个缓冲区联系起来 。 <code>rio_readinitb</code>函数 : </p>
+<pre><code>void rio_readinitb(rio_t *rp , int fd){
+    rp-&gt;rio_fd = fd ; 
+    rp-&gt;rio_cnt = 0 ; 
+    rp-&gt;rio_bufptr = rp-&gt;rio_buf ; 
+}
+</code></pre><p>定义rio_t 结构体： </p>
+<pre><code>#define RIO_BUFSIZE 8192 
+typedef struct {
+    int rio_fd ; // 文件描述符 
+    int rio_cnt ; // 缓冲区中未读的字节数
+    char *rio_bufptr ; // 指向缓冲区未读部分的指针  
+    char rio_buf[RIO_BUFSIZE] ; // 缓冲区 
+} rio_t ; 
+</code></pre><p>RIO读程序的核心是<code>rio_read</code>函数： </p>
+<pre><code>static ssize_t rio_read( rio_t * rp , char *usrbuf , size_t n ) {
+    while ( rp-&gt;rio_cnt &lt;= 0 ) { 
+        rp-&gt;rio_cnt = read(rp-&gt;rio_fd,rp-&gt;buf,sizeof(rp-&gt;buf)) ; 
+        if ( rp-&gt;rio_cnt &lt; 0 ) {
+            if ( error != EINTR )  // sig handler return 
+                return -1 ; 
+        } 
+        else if ( rp-&gt;rio_cnt == 0 )  // EOF
+            return 0 ; 
+        else 
+            rp-&gt;rio_bufptr = rp-&gt;rio_buf ; 
+    } 
+
+    cnt = min(rp-&gt;rio_cnt,n) ; 
+    memcpy(usrbuf,rp-&gt;rio_bufptr,cnt) ; 
+    rp-&gt;rio_bufptr += cnt ; 
+    rp-&gt;rio_cnt -= cnt ; 
+    return cnt ; 
+}
+</code></pre><p><code>rio_read</code>函数，如果缓冲区为空(rp-&gt;rio_cnt &lt; 0)，就调用<code>read</code>函数从文件中读取制定字节到缓冲区，在这过程中，如果被信号打断，就重新调用<code>read</code>函数，如果读取错误，返回-1，如果遇到EOF，返回0，读取正常，就将缓冲区的指定字节（n和rp-&gt;rio_cnt中的较小值，有可能要读取的字节比缓冲区的字节大，所以取两者的较小值）的复制到用户缓冲区(usrbuf)，并相应改变rp-&gt;cnt的值。 </p>
+<p>这样，我们就可以每次都从缓冲区读取，就不用每次都陷入内核。 </p>
+<h2 id="读取文件元数据"><a href="#读取文件元数据" class="headerlink" title="读取文件元数据"></a>读取文件元数据</h2><p>关于文件的信息称为<code>元数据</code>. </p>
+<pre><code>int stat(const char *filename, struct stat *buf) ;     //以文件名作为输入
+int fstat(int fd, struct stat *buf) ;             //以文件描述符作为输入
+</code></pre><p><code>stat</code>和<code>fstat</code>函数将文件转化为元数据, 也就是是 <code>stat</code>结构体 :</p>
+<pre><code>struct stat {
+    dev_t       st_dev ;     /*device*/ 
+    ino_t       st_ino ;     /*inode*/
+    mode_t      st_mode ;    /*文件类型与文件访问许可位*/
+    nlink_t     st_nlink ;   /*hard links的number*/
+    uid_t       st_uid ;     /*User ID of owner*/
+    gid_t       st_gid ;     /*Group ID of owner*/
+    ...
+    off_t       st_size ;    /*文件的字节大小*/
+    ...
+    ...
+}; 
+</code></pre><p>st_mode表示文件访问许可位和文件类型,可以用以下宏谓词来确定文件类型: </p>
+<pre><code>S_ISREG(m) 　m是一个普通文件吗?
+S_ISDIR(m)   m是一个目录文件吗?
+S_ISSOCK(M)  m是一个套接字吗?
+</code></pre><h2 id="读取目录内容"><a href="#读取目录内容" class="headerlink" title="读取目录内容"></a>读取目录内容</h2><p>用<code>readdir</code>系列的函数读取目录的内容 </p>
+<pre><code>DIR *opendir(const char *name) ; // 以路径为参数，返回指向目录流的指针,若出错，返回NULL 
+struct dirent *readdir ( DIR *dirp) ; // 若成功，返回指向下一个目录项的指针，若没有或出错，则返回NULL 
+int closedir (DIR *dirp) ; // 关闭并释放所有资源 
+</code></pre><p>每个目录项都有一个结构： </p>
+<pre><code>struct dirent {
+    ino_t d_ino ; // 文件位置 
+    char  d_name[256] ; // 文件名 
+} ； 
+</code></pre><h2 id="共享文件"><a href="#共享文件" class="headerlink" title="共享文件"></a>共享文件</h2><p>内核用三个相关的数据结构表示打开的文件 </p>
+<p>1） <code>描述符表</code> ： 每个进程都有独立的描述符表，它的表项是这个进程打开的文件的文件描述符,每个表项指向<code>文件表</code>的一个表项。<br>2)  <code>文件表</code> ：所有进程共用一个<code>文件表</code>,表示所有打开的文件的集合,包括的列有文件位置，引用计数,以及一个指向<code>v-node表</code>中对应表项的指针.内核会在一个表项的引用计数为0时删除一个表项.<br>3)  <code>v-node表</code> : 所有进程共用一张表，每个表项包括st_mode, st_size等stat结构中的大多数信息(相当于每个文件的详细信息，而不是像<code>文件表</code>中那样比较笼统的信息) </p>
+<p>多个描述符可以同一个<code>文件表项</code>来引用同一个文件，如用同一个filename调用<code>open</code>函数两次，关键思想是每个描述符都有自己的文件位置（这里的文件位置表示的文件中已读的字节位置）:<br><img src="/uploads/屏幕快照 2017-10-06 20.35.41.png" alt=""> </p>
+<h3 id="父子进程共享文件"><a href="#父子进程共享文件" class="headerlink" title="父子进程共享文件"></a>父子进程共享文件</h3><p><code>fork</code>之后，子进程有一个父进程<code>描述符表</code>的副本，子进程增加了对于<code>文件表</code>中相应文件的引用次数.父子进程共享相同的文件位置（这里的文件位置是文件中已读的字节位置）,所以，在内核删除相应文件表项之前，要求父子进程都关闭了它们的描述符.<br><img src="/uploads/屏幕快照 2017-10-06 20.31.06.png" alt=""> </p>
+<h2 id="I-O重定向"><a href="#I-O重定向" class="headerlink" title="I/O重定向"></a>I/O重定向</h2><p>在shell中，可用 <code>&gt;</code> 或 <code>&lt;</code> 符号来重定向输出到文件。 如 : ls &gt; foo.txt  </p>
+<p>还有就是使用<code>dup2</code>函数： </p>
+<pre><code>int dup2(int oldfd, int newfd);
+</code></pre><p><code>dup2()</code>函数复制该进程的描述符表中的oldfd的表项到newfd表项。覆盖newfd之前的内容。如果newfd已经打开了,<code>dup2()</code>会在复制oldfd之前关闭newfd。<code>dup2()</code>会更改文件引用次数，如图：<br><img src="/uploads/屏幕快照 2017-10-06 20.56.10.png" alt=""></p>
+<p>调用<code>dup2</code>函数之后，两个文件描述符都指向文件B；文件A已经关闭，它的<code>文件表</code>和<code>v-node表表项</code>也已经别删除了，文件B的引用次数增加了。</p>
+<h2 id="标准I-O即＜stdio-h＞"><a href="#标准I-O即＜stdio-h＞" class="headerlink" title="标准I/O即＜stdio.h＞"></a>标准I/O即＜stdio.h＞</h2><p>C语言定义一组高级输入输出函数：<br>1).打开关闭文件的函数:fopen(), fclose()<br>2).读写字节的函数:fread(), fwrite()<br>3).读写字符串:fgets(), fputs()<br>4).复杂格式化I/O:scanf(), printf()</p>
+<p>标准I/O库将一个打开的文件模型化一个指向FILE类型的结构的指针,也叫<code>流</code>。<br>每个C程序都要打开三个流，<code>stdin</code>,<code>stdout</code>,<code>stderr</code>，分别是标准输入流，标准输出流，标准错误流（我的理解是打开这三个文件）<br>FILE类型的流是对文件描述符和流缓冲的的抽象，因为Linux I/O函数开销较大，每次调用都要陷入内核。如果用一次调用<code>read</code>填充缓冲区，每次就能直接从缓冲区获得服务，就减轻了负担，增加了效率。 </p>
+<h2 id="综合：该使用哪些I-O函数"><a href="#综合：该使用哪些I-O函数" class="headerlink" title="综合：该使用哪些I/O函数"></a>综合：该使用哪些I/O函数</h2><p>Unix I/O, 标准I/O,RIO之间的关系：<br><img src="/uploads/屏幕快照 2017-10-06 21.08.04.png" alt=""></p>
+<p>Unix I/O基于操作系统内核实现，高级别的RIO和标准I/O基于unix I/O实现。有几个建议：</p>
+<p>1） 尽可能多的使用标准I/O<br>2） 不要使用<code>scanf</code>和<code>rio_readlineb</code> 读二进制文件。<br>3） 对网络socket的I/O使用<code>RIO</code>函数，因为对socket和流的限制有时会冲突（不兼容）。 </p>
 
       
     </div>
@@ -531,7 +636,7 @@ FD_CLR(int fd, fd_set* fds)  ;  //判断指定描述符是否在集合中
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络编程"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端-服务器编程模型"><span class="nav-number">1.1.</span> <span class="nav-text">客户端-服务器编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">1.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">1.3.</span> <span class="nav-text">TCP/IP协议族</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP地址"><span class="nav-number">1.4.</span> <span class="nav-text">IP地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网域名-（domain-name）"><span class="nav-number">1.4.1.</span> <span class="nav-text">因特网域名 （domain name）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网连接"><span class="nav-number">1.4.2.</span> <span class="nav-text">因特网连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket的辅助函数"><span class="nav-number">1.5.</span> <span class="nav-text">socket的辅助函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">2.</span> <span class="nav-text">并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于进程的并发编程"><span class="nav-number">2.1.</span> <span class="nav-text">基于进程的并发编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于I／O多路复用的并发编程"><span class="nav-number">2.2.</span> <span class="nav-text">基于I／O多路复用的并发编程</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#网络编程"><span class="nav-number">1.</span> <span class="nav-text">网络编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端-服务器编程模型"><span class="nav-number">1.1.</span> <span class="nav-text">客户端-服务器编程模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">1.2.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">1.3.</span> <span class="nav-text">TCP/IP协议族</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IP地址"><span class="nav-number">1.4.</span> <span class="nav-text">IP地址</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网域名-（domain-name）"><span class="nav-number">1.4.1.</span> <span class="nav-text">因特网域名 （domain name）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#因特网连接"><span class="nav-number">1.4.2.</span> <span class="nav-text">因特网连接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#socket的辅助函数"><span class="nav-number">1.5.</span> <span class="nav-text">socket的辅助函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#并发编程"><span class="nav-number">2.</span> <span class="nav-text">并发编程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于进程的并发编程"><span class="nav-number">2.1.</span> <span class="nav-text">基于进程的并发编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于I／O多路复用的并发编程"><span class="nav-number">2.2.</span> <span class="nav-text">基于I／O多路复用的并发编程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统级I／O"><span class="nav-number">3.</span> <span class="nav-text">系统级I／O</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模型化为文件"><span class="nav-number">3.1.</span> <span class="nav-text">模型化为文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件"><span class="nav-number">3.2.</span> <span class="nav-text">文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打开和关闭文件"><span class="nav-number">3.2.1.</span> <span class="nav-text">打开和关闭文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读写文件"><span class="nav-number">3.2.2.</span> <span class="nav-text">读写文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#无缓冲区的输入输出函数"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">无缓冲区的输入输出函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#有缓冲区的输入函数"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">有缓冲区的输入函数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读取文件元数据"><span class="nav-number">3.3.</span> <span class="nav-text">读取文件元数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读取目录内容"><span class="nav-number">3.4.</span> <span class="nav-text">读取目录内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#共享文件"><span class="nav-number">3.5.</span> <span class="nav-text">共享文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#父子进程共享文件"><span class="nav-number">3.5.1.</span> <span class="nav-text">父子进程共享文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O重定向"><span class="nav-number">3.6.</span> <span class="nav-text">I/O重定向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#标准I-O即＜stdio-h＞"><span class="nav-number">3.7.</span> <span class="nav-text">标准I/O即＜stdio.h＞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#综合：该使用哪些I-O函数"><span class="nav-number">3.8.</span> <span class="nav-text">综合：该使用哪些I/O函数</span></a></li></ol></li></ol></div>
             
 
           </div>
