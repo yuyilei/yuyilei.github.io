@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="排序算法">
+<meta property="og:url" content="http://yoursite.com/2017/10/06/sort/index.html">
+<meta property="og:site_name" content="YYL&#39;s blog">
+<meta property="og:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-07T14:24:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="排序算法">
+<meta name="twitter:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/06/sort/"/>
+
+
+
+
+
+  <title>排序算法 | YYL's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YYL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/06/sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">排序算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-06T22:01:47+08:00">
+                2017-10-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。<br>这里说的排序算法都是内部排序。  </p>
+<h1 id="基本排序"><a href="#基本排序" class="headerlink" title="基本排序"></a>基本排序</h1><p>下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是<code>(n*n)</code><br>在描述排序之前，先定义几个“操作符”： </p>
+<pre><code>typedef int Item ; 
+#define key(A) (A) 
+#define less(A,B) (key(A) &lt; key(B))  
+#define exch(A,B) { Item t = A ; A = B ; B = t ; } 
+#define compexch(A,B) if (less(B,A)) exch(A,B) 
+</code></pre><h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>冒泡排序是我学的第一个排序算法，它很简单：遍历数组，如果相邻的两个元素大小不对，就交换两个元素，重复这样的操作直到数组有序。<br>假设从数组的右往左移动，第一次遍历中，遇到较小元素时，将它与左边元素交换，最后最小元素移到第一位，第二次遍历中，通过交换，将第二小的元素放在第二位，依次类推。<br>每一次遍历中的当前的最小元素都要向前移动，就想泡泡那样，“冒到”最前端。<br>代码如下：</p>
+<pre><code>void bubble(Item a[] , int l , int r ) {
+    for ( int i = l ; i &lt; r ; i++ ) {
+        for ( int j = r ; j &gt; r ; j-- ) 
+            compexch(a[j-i],a[j]) ; 
+    }
+} 
+</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code> （用于储蓄这个数组） </p>
+<p>可以改进冒泡排序，若某一次遍历中没有发生交换，就说明，该数据已经有序，可以跳出外部循环： </p>
+<pre><code>void bubble(Item a[] , int l , int r ) {
+    for ( int i = l ; i &lt; r ; i++ ) { 
+        int flag = 0 ; 
+        for ( int j = r ; j &gt; r ; j-- ) {
+            compexch(a[j-i],a[j]) ;  
+            flag = less(a[j-1],a[j]) ;
+        } 
+        if ( !flag ) 
+        break ; 
+    }
+} 
+</code></pre><p>这种改进能将最好情况下的时间复杂度优化为<code>O(n)</code> （仅做一次外部循环）  </p>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序是我的学的第二个排序算法，我觉得选择排序是冒泡排序有异曲同工之妙。<br>冒泡排序将每次遍历交换得到的“最小项”放到相应的位置，而选择排序选出数组中的最小值，与数组的第一位交换，选出数组的次小值，与数组的第二位交换，以此类推。<br>冒泡排序和选择排序都是每次找出排序后应该<code>第i项</code>的的元素，将这个元素放在数组的<code>第i位</code>。选择排序通过对当前元素和先前找到的最小值相比的操作获取每次的<code>第i项</code>，不需要交换操作，而冒泡排序是通过一次一次的交换实现这一过程，需要更多的执行更多的步骤来将每个元素放在相应的位置。<br>代码如下： </p>
+<pre><code>void selection(Item a[], int l , int r ) {
+    for ( int i =  l ; i &lt; r ; i++ ){
+        int min = i ; 
+        for ( int j = i + 1 ; j &lt; r ; j++ ) {
+            if ( less(a[j],a[min])) 
+                min = j ; 
+        }
+        exch(a[i],a[min]) ; 
+    }
+}
+</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code>存储整个数列，<code>O(1)</code>储存辅助元素<br>选择排序相比冒泡排序效率要高一些，因为冒泡排序每一轮的每一次比较之后，如果相邻两个元素大小关系不对，就要立即交换，而选择排序每一轮最多只进行一次交换。但是两者的循环次数是相等的。<br>但是选择排序也有一个缺点，就是对数组的有序部分利用较少，对排好序的数组排序所花的时间和对随机数组排序所花的时间基本相同，而改进后的冒泡排序，能有效的利用数据原有的有序性。</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>理牌的时候，我们通常只考虑一张牌，每次将一张牌插入已经排好序的牌的适当位置，将原本在这张牌前面的牌挤到了后面的位置。这就是插入排序。<br>过程如下：<br>1) 将一个数组分为两部分，<strong>有序的</strong>和<strong>无序的</strong>（一个元素可以看作是有序的）<br>2）从无序部分中拿出一个元素，遍历有序部分，将这个元素插入到有序部分的合适位置<br>3）将有序部分中的插入元素之后的元素都向后移一位，得到新的有序部分。<br>4）重复1到3，直到无序部分为空 </p>
+<p>代码如下： </p>
+<pre><code>void insertion(Item a[] , int l , int r ) {
+    for ( int i = r ; i &gt; l ; i-- ) 
+        compexch(a[i-1],a[i]) ; // 这个循环将最小值放到第一位
+    for ( int i = l+2 ; i &lt; r ; i++ ) {
+        int j = i ; 
+        Item v = a[i] ; 
+        while (less(a[i],a[j-1])) { //从后往前遍历，遇到比当前值大的值，后移，反之，跳出循环 
+             a[j] = a[j-1] ;
+            j-- ; 
+        } 
+        a[j] = v ; 
+    }
+}
+</code></pre><p>时间复杂度： <code>O(n^2)</code>，最好情况下为<code>O(n)</code> （数组已经排好序了）<br>空间复杂度： <code>O(n)</code>储存数组，<code>O(1)</code>储蓄辅助元素</p>
+<h1 id="高效排序"><a href="#高效排序" class="headerlink" title="高效排序"></a>高效排序</h1><h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并是建立在归并操作上的一种有效的排序算法,该算法是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。<br>归并排序有两种实现方法，<strong>递归法</strong>和<strong>迭代法</strong> </p>
+<h3 id="递归法"><a href="#递归法" class="headerlink" title="递归法"></a>递归法</h3><p>归并法工作原理如下（假设序列共有n个元素）：<br>1）将序列每相邻两个数字进行归并操作（merge)，形成f=(n/2)个子序列，排序后每个序列包含两个元素<br>2）将上述序列再次归并，形成(n/4)个序列，每个序列包含四个元素<br>3）重复步骤2，直到所有元素排序完毕</p>
+<p> 代码如下： </p>
+<pre><code> void merge(vector&lt;int&gt; &amp;arr, int l , int m , int r , vector&lt;int&gt; temp ){
+    int i = l , j = m + 1 , k = 0 ;
+    while ( i &lt;= m &amp;&amp; j &lt;= r  ) 
+        temp[k++] = (arr[i] &lt; arr[j] ) ? arr[i++] : arr[j++];
+    while ( i &lt;= m )
+        temp[k++] = arr[i++] ;
+    while ( j &lt;= r )
+        temp[k++] = arr[j++] ;
+    k = 0 ;
+    while ( l &lt;= r )
+        arr[l++] = temp[k++] ;
+}
+
+void Msort(vector&lt;int&gt; &amp;arr, int l, int r, vector&lt;int&gt; temp ) {
+    if ( l &lt; r ) {
+        int m = (l+r) / 2 ;
+        Msort(arr,l,m,temp) ;
+        Msort(arr,m+1,r,temp) ;
+        merge(arr,l,m,r,temp) ;
+    }
+}
+</code></pre><p>时间复杂度： <code>O(nlog(n))</code><br>空间复杂度： <code>O(n)</code> 用于储存数组， <code>O(log(n))</code>用与储存辅助数组.<br>稳定性：排序过程中需要两两比较，不存在跳跃，所以是一种稳定的排序。<br>虽然递归法在代码上比较清晰，容易理解，但是递归调用会造成时间和空间上性能的损耗。 </p>
+<h3 id="迭代法"><a href="#迭代法" class="headerlink" title="迭代法"></a>迭代法</h3><p>迭代法没有显示地分割数组，但是它思想也是合并有序的子序列，得到有序序列。<br>步骤（假设有序列有n个元素）：<br>1）申请一个大小为n的辅助数组，step从1开始，每次乘二<br>2）从头开始每两个step长的子序列进行归并，使其有序，将其存在辅助数组（如果是对辅助数组进行排序，就存在原数组里）<br>3）重复步骤2，直到step 大于数组长度 </p>
+<p>其中需要注意的问题是在遍历的过程中要防止下表越界。 </p>
+<pre><code>void merge_sort(vector&lt;int&gt; &amp;arr ) {
+    int i = 1 , len = arr.size() ;
+    vector&lt;int&gt; tmp (len) ;
+    while ( i &lt; len ) {
+        mergepass(arr,tmp,i) ;
+        i *= 2 ;
+        if ( i &gt;= len ) {
+            for ( int j = 0 ; j &lt; len ; j++ )
+                arr[j] = tmp[j] ;
+            return ;
+        }
+        mergepass(tmp,arr,i) ;
+        i *= 2 ;
+    }
+}
+
+void mergepass(vector&lt;int&gt; &amp;s, vector&lt;int&gt; &amp;d , int step ) {
+    int i = 0 , len = s.size() ;
+    while ( i &lt; len - step + 1 ) {
+        int tmp = min(len-1,i+2*step-1) ; // 防止下标越界 
+        merge(s, d,i,i+step-1,tmp) ;
+        i = 2*step + i ;
+    }
+    for ( int j = i ; j &lt; len ; j++ )    // 剩下的长度不足一个step，直接复制 
+        d[j] = s[j] ;
+}
+
+void merge(vector&lt;int&gt;&amp;s,vector&lt;int&gt;&amp;d,int l,int m, int r) {
+    int i = l , j = m+1 , k = l ;
+    while ( i &lt;= m &amp;&amp; j &lt;= r )
+        d[k++] = (s[i]&gt;s[j]) ? (s[j++]) : s[i++] ;
+    while ( i &lt;= m )
+        d[k++] = s[i++] ;
+    while ( j &lt;= r )
+        d[k++] = s[j++] ;
+}
+</code></pre><p>时间复杂度： <code>O(nlog(n))</code><br>空间复杂度： <code>O(n)</code> 用于存储数组和辅助数组。<br>稳定性：排序过程中需要两两比较，不存在跳跃，所以是一种稳定的排序。<br>迭代法避免了递归时深度为logn的栈空间，在空间上，只利用了长度与原数组相同的辅助数组，避免递归也在时间性能上有一定提升。</p>
+<p>综合来说，归并排序是比较占内存空间，但是高效稳定的排序算法，其中迭代法在时间和空间上一定程度上优于递归法。 </p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>快速排序的基本思想是通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，最后获得一个有序的序列。 步骤：<br>1） 从数列中挑出一个元素，称为”基准元素”。<br>2） 排序数列，所有元素比基准元素值小的摆放在基准元素前面，所有元素比基准元素值大的摆在基准的后面（相同的数可以到任一边）。结束之后，该基准元素就处于数列的中间位置。<br>3） 递归地把小于基准值元素的子数列和大于基准值元素的子数列排序。</p>
+<p>代码： </p>
+<pre><code>void quicksort(vector&lt;int&gt; &amp;arr, int left , int right ) {
+    if ( left &lt; right ) {
+        int l = left , r = right , tmp = arr[left] ;
+        while ( l != r ) {
+            while ( l &lt; r &amp;&amp; arr[r] &gt;= tmp )
+                r-- ;
+            arr[l] = arr[r] ;
+            while ( l &lt; r &amp;&amp; arr[l] &lt;= tmp )
+                l++ ;
+            arr[r] = arr[l] ;
+        }
+        arr[l] = tmp ;
+        quicksort(arr,left,l-1) ; // 将两边的子序列排序
+        quicksort(arr,l+1,right) ;
+    }
+}
+</code></pre><p>快速排序之所比较快，因为相比冒泡排序，每次交换是跳跃式的。每次排序的时候设置一个基准点，将小于等于基准点的数全部放到基准点的左边，将大于等于基准点的数全部放到基准点的右边。这样在每次交换的时候就不会像冒泡排序一样每次只能在相邻的数之间进行交换，交换的距离就大的多了。因此总的比较和交换次数就少了，速度就提高了。当然在最坏的情况下，仍可能是相邻的两个数进行了交换。<br>快速排序之所以叫快速排序，是因为快速排序在最好情况和一般情况下的时间复杂度都是最低的。</p>
+<p>时间复杂度：最好和平均情况下，<code>O(nlog(n))</code> ， 最坏情况下：<code>O(n^2)</code><br>空间复杂度：<code>O(n)</code>储存数组，在最好和平均情况下<code>O(log(n))</code>储存辅助数组，最坏情况下<code>O(n)</code>储存数组 </p>
+<h1 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h1><p>基数排序中，通常将数的不同的位看作是不同的属性（也就是每一轮排序中的基数），也就是依次根据各个位上数字的大小进行排序。<br>基数排序的基本思想是根据元素中各位的值，通过对排序的N个元素进行若干趟“分配”与“收集”来实现排序的。<br>基数排序根据先根据高位还是低位开始分为<code>高位排序</code>和<code>低位排序</code>。<br>人的习惯是<code>高位排序</code>，某两个数只要高位不同就可以直接比较出大小，不用比较低位。<br>未完。。。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/25/daily-ex/" rel="next" title="刷题笔记～">
+                <i class="fa fa-chevron-left"></i> 刷题笔记～
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg"
+               alt="yuyilei" />
+          <p class="site-author-name" itemprop="name">yuyilei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuyilei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本排序"><span class="nav-number">1.</span> <span class="nav-text">基本排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#冒泡排序"><span class="nav-number">1.1.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择排序"><span class="nav-number">1.2.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入排序"><span class="nav-number">1.3.</span> <span class="nav-text">插入排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效排序"><span class="nav-number">2.</span> <span class="nav-text">高效排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#归并排序"><span class="nav-number">2.1.</span> <span class="nav-text">归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#递归法"><span class="nav-number">2.1.1.</span> <span class="nav-text">递归法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代法"><span class="nav-number">2.1.2.</span> <span class="nav-text">迭代法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序"><span class="nav-number">2.2.</span> <span class="nav-text">快速排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基数排序"><span class="nav-number">3.</span> <span class="nav-text">基数排序</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuyilei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
