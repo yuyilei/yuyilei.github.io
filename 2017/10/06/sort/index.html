@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="YYL&#39;s blog">
 <meta property="og:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-08T13:03:52.000Z">
+<meta property="og:updated_time" content="2017-10-10T14:45:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序算法">
 <meta name="twitter:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
@@ -367,7 +367,7 @@
     for ( int i = l+2 ; i &lt; r ; i++ ) {
         int j = i ; 
         Item v = a[i] ; 
-        while (less(a[i],a[j-1])) { //从后往前遍历，遇到比当前值大的值，后移，反之，跳出循环 
+        while (less(v,a[j-1])) { //从后往前遍历，遇到比当前值大的值，后移，反之，跳出循环 
              a[j] = a[j-1] ;
             j-- ; 
         } 
