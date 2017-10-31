@@ -94,17 +94,19 @@
 
 
 
-<meta name="description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+<meta name="description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。排序算法的稳定性： 稳定的排序算法不会改变关键字相同时候两个元素的顺序，也就是所有稳定的排序算法将返回一个排序结构，而不稳定的排序算法对同一组数据排序后，可能产生多种结果，且可能打乱一些其他关键字的顺序。对于简单的元素，这一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="排序算法">
 <meta property="og:url" content="http://yoursite.com/2017/10/06/sort/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
-<meta property="og:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+<meta property="og:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。排序算法的稳定性： 稳定的排序算法不会改变关键字相同时候两个元素的顺序，也就是所有稳定的排序算法将返回一个排序结构，而不稳定的排序算法对同一组数据排序后，可能产生多种结果，且可能打乱一些其他关键字的顺序。对于简单的元素，这一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-10T14:45:41.000Z">
+<meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-28%2015.34.24.png">
+<meta property="og:updated_time" content="2017-10-31T13:02:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序算法">
-<meta name="twitter:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。   基本排序下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是(n*n)在描述排序之前，先定义几个“操作符”：  typedef int Item ;  #define key(A) (A)">
+<meta name="twitter:description" content="排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。这里说的排序算法都是内部排序。排序算法的稳定性： 稳定的排序算法不会改变关键字相同时候两个元素的顺序，也就是所有稳定的排序算法将返回一个排序结构，而不稳定的排序算法对同一组数据排序后，可能产生多种结果，且可能打乱一些其他关键字的顺序。对于简单的元素，这一">
+<meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-10-28%2015.34.24.png">
 
 
 
@@ -319,7 +321,7 @@
       
 
       
-        <p>排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。<br>这里说的排序算法都是内部排序。  </p>
+        <p>排序分为内部排序和外部排序，内部排序是数据记录在内存中进行排序，外部排序因为排序的数据很大，一次不能容纳全部的排序记录，在排序过程中需要访问外存。<br>这里说的排序算法都是内部排序。<br><strong>排序算法的稳定性</strong>： 稳定的排序算法不会改变关键字相同时候两个元素的顺序，也就是所有稳定的排序算法将返回一个排序结构，而不稳定的排序算法对同一组数据排序后，可能产生多种结果，且可能打乱一些其他关键字的顺序。对于简单的元素，这一点并没有什么意义。而现实生活中，排序对象往往复杂，比如学生成绩排序，首先按总分排序，再按数学，语文高低排序，最后是按照名字排序。那么我们会先排名字，然后语文，然后数学，然后总分。这样，如果用了不稳定的排序算法后，前面排的有序的结果可能会被打乱。这样就无法完成这一工作了。<br><strong>一般来说，若存在不相邻元素间交换，很可能是不稳定的排序.</strong> </p>
 <h1 id="基本排序"><a href="#基本排序" class="headerlink" title="基本排序"></a>基本排序</h1><p>下面三种排序都是课本上一般有介绍的，比较的简单的三种排序算法，它们循环的次数都是<code>(n*n)</code><br>在描述排序之前，先定义几个“操作符”： </p>
 <pre><code>typedef int Item ; 
 #define key(A) (A) 
@@ -333,7 +335,7 @@
             compexch(a[j-i],a[j]) ; 
     }
 } 
-</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code> （用于储蓄这个数组） </p>
+</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code> （用于储蓄这个数组）<br>冒泡排序是稳定的排序。</p>
 <p>可以改进冒泡排序，若某一次遍历中没有发生交换，就说明，该数据已经有序，可以跳出外部循环： </p>
 <pre><code>void bubble(Item a[] , int l , int r ) {
     for ( int i = l ; i &lt; r ; i++ ) { 
@@ -358,7 +360,7 @@
         exch(a[i],a[min]) ; 
     }
 }
-</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code>存储整个数列，<code>O(1)</code>储存辅助元素<br>选择排序相比冒泡排序效率要高一些，因为冒泡排序每一轮的每一次比较之后，如果相邻两个元素大小关系不对，就要立即交换，而选择排序每一轮最多只进行一次交换。但是两者的循环次数是相等的。<br>但是选择排序也有一个缺点，就是对数组的有序部分利用较少，对排好序的数组排序所花的时间和对随机数组排序所花的时间基本相同，而改进后的冒泡排序，能有效的利用数据原有的有序性。</p>
+</code></pre><p>时间复杂度： <code>O(n^2)</code><br>空间复杂度： <code>O(n)</code>存储整个数列，<code>O(1)</code>储存辅助元素。<br>因为每次都是无序序列中的最小元素和第一个元素交换，是跨距离的交换，所以选择排序是不稳定的排序。<br>选择排序相比冒泡排序效率要高一些，因为冒泡排序每一轮的每一次比较之后，如果相邻两个元素大小关系不对，就要立即交换，而选择排序每一轮最多只进行一次交换。但是两者的循环次数是相等的。<br>但是选择排序也有一个缺点，就是对数组的有序部分利用较少，对排好序的数组排序所花的时间和对随机数组排序所花的时间基本相同，而改进后的冒泡排序，能有效的利用数据原有的有序性。</p>
 <h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>理牌的时候，我们通常只考虑一张牌，每次将一张牌插入已经排好序的牌的适当位置，将原本在这张牌前面的牌挤到了后面的位置。这就是插入排序。<br>过程如下：<br>1) 将一个数组分为两部分，<strong>有序的</strong>和<strong>无序的</strong>（一个元素可以看作是有序的）<br>2）从无序部分中拿出一个元素，遍历有序部分，将这个元素插入到有序部分的合适位置<br>3）将有序部分中的插入元素之后的元素都向后移一位，得到新的有序部分。<br>4）重复1到3，直到无序部分为空 </p>
 <p>代码如下： </p>
 <pre><code>void insertion(Item a[] , int l , int r ) {
@@ -374,8 +376,54 @@
         a[j] = v ; 
     }
 }
-</code></pre><p>时间复杂度： <code>O(n^2)</code>，最好情况下为<code>O(n)</code> （数组已经排好序了）<br>空间复杂度： <code>O(n)</code>储存数组，<code>O(1)</code>储蓄辅助元素</p>
-<h1 id="高效排序"><a href="#高效排序" class="headerlink" title="高效排序"></a>高效排序</h1><h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并是建立在归并操作上的一种有效的排序算法,该算法是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。<br>归并排序有两种实现方法，<strong>递归法</strong>和<strong>迭代法</strong> </p>
+</code></pre><p>插入排序是稳定的排序。<br>时间复杂度： <code>O(n^2)</code>，最好情况下为<code>O(n)</code> （数组已经排好序了）<br>空间复杂度： <code>O(n)</code>储存数组，<code>O(1)</code>储蓄辅助元素</p>
+<h1 id="高效排序"><a href="#高效排序" class="headerlink" title="高效排序"></a>高效排序</h1><h2 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a>希尔排序</h2><p>希尔排序是对插入排序的改进，对于大规模的乱序数组，插入排序速度很慢，因为它只能交换相邻元素，元素只能一点点移动到另一端。而希尔排序改进了插入排序，交换不相邻的数组对数组的局部进行排序，最后使用插入排序对局部有序的数组进行排序。<br>希尔排序的思想是让数组中任意间隔为<code>h</code>的元素都是有序的，这样的数组被称为<code>h有序数组</code>。下图就是h=4的<code>h有序数组</code><br><img src="/uploads/屏幕快照 2017-10-28 15.34.24.png" alt=""><br>如果<code>h</code>很大，就能在一次交换中，将元素交换到很远的地方，为实现更小的h有序创造条件。希尔排序需要一个<code>递增序列</code>，这个递增序列就是h每次的值。<br>实现插入排序的方式，就是对于每个h，用插入排序将h个子数组独立地进行排序，子数组之间是独立的，可以在h子数组中将每个元素交换到比它大的元素之前去，只需将插入排序中移动元素的距离由1改成h即可，这样就实现了一个类似于插入排序但是使用不同增量的过程，代码如下 ： </p>
+<pre><code>void shell_sort(Item a[], int N){ 
+    int h = 1 , i , j  ; 
+    while ( h &lt; N/3 ) 
+        h = h*3 + 1 ; 
+    while ( h &gt;= 1 ){
+        for ( i = h ; i &lt; N ; i++ ){
+            Item tmp = a[i] ; 
+            for ( j = i ; j &gt;= h &amp;&amp; less(tmp,a[j-h]) ; j -= h )
+                a[j] = a[j-h] ;  
+            a[j] = tmp ; 
+        }
+        h /= 3 ; 
+    }
+}
+</code></pre><p>以上代码中h从N／3递减至1。它的递增序列为1，4，13，40，121，363···　<br>希尔排序是不稳定的排序算法。希尔排序是多次插入排序的结果，我们知道，一次插入排序是有序的，但在不同的插入排序过程中，相同的元素可能在各自的插入排序中移动，最后其稳定性就会被打乱，所以希尔排序是不稳定的。<br>时间复杂度：希尔排序的时间复杂度和递增序列有关，在上述递增序列（1，4，13，121）中，希尔排序的时间复杂度为<code>O(n^(3/2))</code><br>空间复杂度：不需要额外的内存空间，<code>o(n)</code>储存数组，<code>O(1)</code>储存辅助元素。<br>希尔排序没有快速排序算法快<code>O(n(logn))</code>，因此中等大小规模表现良好，对规模非常大的数据排序不是最优选择。但是比O(n^2)复杂度的算法快得多。并且希尔排序非常容易实现，算法代码短而简单。 此外，希尔算法在最坏的情况下和平均情况下执行效率相差不是很多，与此同时快速排序在最坏的情况下执行的效率会非常差。</p>
+<h2 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h2><p>堆排序是一种选择排序，它利用了<strong>完全二叉树</strong>中双亲节点和孩子节点之间的内在关系。堆是什么？<br>堆是一棵<strong>顺序存储</strong>的<strong>完全二叉树</strong>。<br>其中每个结点的关键字都不大于其孩子结点的关键字，这样的堆称为<strong>小顶堆</strong>。<br>其中每个结点的关键字都不小于其孩子结点的关键字，这样的堆称为<strong>大顶堆</strong>。</p>
+<p>  (1) R[i] &lt;= R[2i+1] 且 R[i] &lt;= R[2i+2] (小顶堆)<br>  (2) R[i] &gt;= R[2i+1] 且 R[i] &gt;= R[2i+2] (大顶堆)</p>
+<p>其中，R[2i+1]和R[2i+2]分别是R[i]的左右孩子。</p>
+<p>具体过程：<br>首先，按堆的定义将数组R[0..n]调整为堆（这个过程称为创建初始堆），交换R[0]和R[n]；<br>然后，将R[0..n-1]调整为堆，交换R[0]和R[n-1]；<br>如此反复，直到交换了R[0]和R[1]为止。</p>
+<p>以上思想可归纳为两个操作：<br>（1）根据初始数组去构造初始堆（以大顶堆为例）。<br>（2）每次交换第一个和最后一个元素，输出最后一个元素（最大值），然后把剩下元素重新调整为大顶堆。<br>当输出完最后一个元素后，这个数组已经是按照从小到大的顺序排列了。</p>
+<p> 代码如下： </p>
+<pre><code>void heap_adjust(Item a[], int s, int e) {
+    int parent = s , child = 2*s+1 ; // s是当前需要调整的节点，e是此时堆中需要排序的最后一个节点.
+    Item tmp = a[parent] ; //  存储双亲 
+    while ( child &lt;= e ){
+        if ( child &lt; e &amp;&amp; less(a[child],a[child+1])) 
+            child++ ; // 此时child节点是左右孩子中的较大节点
+        if ( tmp &gt;= a[child] )  // 双亲大于大孩子，直接退出循环 
+            break ; 
+        a[parent] = a[child] ;   // 双亲小于大孩子，双亲和大孩子交换 
+        parent = child ;         // 把大孩子赋给双亲 
+        child = child*2 + 1 ;    // 选取大孩子的左孩子，继续查找 
+    }
+    a[parent] = tmp ; 
+}
+
+void heap_sort(Item a[], int n){
+    for (int i = n/2-1 ; i &gt;=0 ; i-- ) // 此循环初始化一个大顶堆
+        heap_adjust(a,i,n-1) ; 
+    for ( int i = n-1 ; i &gt; 0 ; i-- ){    // 不断从堆顶获得最大值，构造新堆
+        exch(a[0],a[i]) ;                 // 交换堆顶元素（最大值）和最后一个元素
+        heap_adjust(a,0,i-1) ;            // 调整堆顶元素，构造新堆，获得当前最大值
+    }
+}
+</code></pre><p>堆排序是一种不稳定的排序方法。(需要不断的调整堆不是相邻节点的交换，堆排序属于选择排序，选择排序不稳定)<br>时间复杂度： <code>O(n*log(n))</code><br>空间复杂度： <code>O(1)</code>储存辅助元素</p>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>归并是建立在归并操作上的一种有效的排序算法,该算法是采用分治法的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。<br>归并排序有两种实现方法，<strong>递归法</strong>和<strong>迭代法</strong> </p>
 <h3 id="递归法"><a href="#递归法" class="headerlink" title="递归法"></a>递归法</h3><p>归并法工作原理如下（假设序列共有n个元素）：<br>1）将序列每相邻两个数字进行归并操作（merge)，形成f=(n/2)个子序列，排序后每个序列包含两个元素<br>2）将上述序列再次归并，形成(n/4)个序列，每个序列包含四个元素<br>3）重复步骤2，直到所有元素排序完毕</p>
 <p> 代码如下： </p>
 <pre><code> void merge(vector&lt;int&gt; &amp;arr, int l , int m , int r , vector&lt;int&gt; temp ){
@@ -702,7 +750,7 @@ int GetNum(struct node  *p , int pos ) ; // 返回p节点的data中的第pos位�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本排序"><span class="nav-number">1.</span> <span class="nav-text">基本排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#冒泡排序"><span class="nav-number">1.1.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择排序"><span class="nav-number">1.2.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入排序"><span class="nav-number">1.3.</span> <span class="nav-text">插入排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效排序"><span class="nav-number">2.</span> <span class="nav-text">高效排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#归并排序"><span class="nav-number">2.1.</span> <span class="nav-text">归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#递归法"><span class="nav-number">2.1.1.</span> <span class="nav-text">递归法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代法"><span class="nav-number">2.1.2.</span> <span class="nav-text">迭代法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序"><span class="nav-number">2.2.</span> <span class="nav-text">快速排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非比较排序"><span class="nav-number">3.</span> <span class="nav-text">非比较排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基数排序"><span class="nav-number">3.1.</span> <span class="nav-text">基数排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#低位排序"><span class="nav-number">3.1.1.</span> <span class="nav-text">低位排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高位排序"><span class="nav-number">3.1.2.</span> <span class="nav-text">高位排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计数排序"><span class="nav-number">3.2.</span> <span class="nav-text">计数排序</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本排序"><span class="nav-number">1.</span> <span class="nav-text">基本排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#冒泡排序"><span class="nav-number">1.1.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择排序"><span class="nav-number">1.2.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插入排序"><span class="nav-number">1.3.</span> <span class="nav-text">插入排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效排序"><span class="nav-number">2.</span> <span class="nav-text">高效排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#希尔排序"><span class="nav-number">2.1.</span> <span class="nav-text">希尔排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#堆排序"><span class="nav-number">2.2.</span> <span class="nav-text">堆排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#归并排序"><span class="nav-number">2.3.</span> <span class="nav-text">归并排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#递归法"><span class="nav-number">2.3.1.</span> <span class="nav-text">递归法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#迭代法"><span class="nav-number">2.3.2.</span> <span class="nav-text">迭代法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序"><span class="nav-number">2.4.</span> <span class="nav-text">快速排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#非比较排序"><span class="nav-number">3.</span> <span class="nav-text">非比较排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基数排序"><span class="nav-number">3.1.</span> <span class="nav-text">基数排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#低位排序"><span class="nav-number">3.1.1.</span> <span class="nav-text">低位排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高位排序"><span class="nav-number">3.1.2.</span> <span class="nav-text">高位排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计数排序"><span class="nav-number">3.2.</span> <span class="nav-text">计数排序</span></a></li></ol></li></ol></div>
             
 
           </div>
