@@ -94,20 +94,20 @@
 
 
 
-<meta name="description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL在在浏览器中输入一个URL（统一资源定位符）如 http://www.balabala.com/dir/file.html/ (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，">
+<meta name="description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL先解释URL和URI，URN：URI: uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。URL: uniform resource locator, 统一资源定位符，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何定位这个资源。URN:">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How do  Networks Work?   ——网络是如何连接的 (一)">
+<meta property="og:title" content="How do  Networks Work?   ——网络是如何连接的">
 <meta property="og:url" content="http://yoursite.com/2017/08/22/network-work1/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
-<meta property="og:description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL在在浏览器中输入一个URL（统一资源定位符）如 http://www.balabala.com/dir/file.html/ (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，">
+<meta property="og:description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL先解释URL和URI，URN：URI: uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。URL: uniform resource locator, 统一资源定位符，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何定位这个资源。URN:">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/05232335-fb19fc7527e944d4845ef40831da4ec2-2.png">
 <meta property="og:image" content="http://yoursite.com/uploads/2012111621050639.jpg">
 <meta property="og:image" content="http://yoursite.com/uploads/05234946-b80841921eae4d2ab983f26ed9023768.png">
-<meta property="og:updated_time" content="2017-08-24T06:06:52.000Z">
+<meta property="og:updated_time" content="2017-11-01T15:44:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="How do  Networks Work?   ——网络是如何连接的 (一)">
-<meta name="twitter:description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL在在浏览器中输入一个URL（统一资源定位符）如 http://www.balabala.com/dir/file.html/ (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，">
+<meta name="twitter:title" content="How do  Networks Work?   ——网络是如何连接的">
+<meta name="twitter:description" content="从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？ 浏览器生成消息解析URL先解释URL和URI，URN：URI: uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。URL: uniform resource locator, 统一资源定位符，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何定位这个资源。URN:">
 <meta name="twitter:image" content="http://yoursite.com/uploads/05232335-fb19fc7527e944d4845ef40831da4ec2-2.png">
 
 
@@ -143,7 +143,7 @@
 
 
 
-  <title>How do  Networks Work?   ——网络是如何连接的 (一) | YYL's blog</title>
+  <title>How do  Networks Work?   ——网络是如何连接的 | YYL's blog</title>
   
 
 
@@ -273,7 +273,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">How do  Networks Work?   ——网络是如何连接的 (一)</h1>
+          <h1 class="post-title" itemprop="name headline">How do  Networks Work?   ——网络是如何连接的</h1>
         
 
         <div class="post-meta">
@@ -324,7 +324,9 @@
 
       
         <p>从在浏览器上输入网址，到屏幕上出现网页的内容，这期间发生了什么呢？？</p>
-<h1 id="浏览器生成消息"><a href="#浏览器生成消息" class="headerlink" title="浏览器生成消息"></a>浏览器生成消息</h1><h2 id="解析URL"><a href="#解析URL" class="headerlink" title="解析URL"></a>解析URL</h2><p>在在浏览器中输入一个URL（统一资源定位符）如 <a href="http://www.balabala.com/dir/file.html/" target="_blank" rel="external">http://www.balabala.com/dir/file.html/</a> (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，// 后面的www.balabala.com表示服务器域名，dir表示文件目录，file.html表示所求文件名。这样就能准确定位一个资源。<br>有些URL，比如<a href="http://www.baidu.com" target="_blank" rel="external">http://www.baidu.com</a>  ，可以看到并没有文件目录和文件名，说明它们是可以省略的，省略时，访问的是服务器根目录上事先设置好的默认文件。<br>URL有不同的写法，但是URL开头的文字一般表示浏览器当前使用的协议（其实叫访问方法更为合适，因为file: 没用使用协议），包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http:  （HTTP）HyperText Transfer Protocol , 超文本传输协议，应用最为广泛。  </div><div class="line">file:  访问时不需要网络，访问本机文件，所以它不是协议。</div><div class="line">mailto:  Mailto Protocol, 电子邮件协议， 用于发送电子邮件 </div><div class="line">ftp:  (FTP) File Transfer Protocol ，文件传输协议，一般用于文件的上传和下载</div></pre></td></tr></table></figure></p>
+<h1 id="浏览器生成消息"><a href="#浏览器生成消息" class="headerlink" title="浏览器生成消息"></a>浏览器生成消息</h1><h2 id="解析URL"><a href="#解析URL" class="headerlink" title="解析URL"></a>解析URL</h2><p>先解释<strong>URL</strong>和<strong>URI</strong>，<strong>URN</strong>：<br><strong>URI</strong>: uniform resource identifier，统一资源标识符，用来唯一的标识一个资源。<br><strong>URL</strong>: uniform resource locator, 统一资源定位符，它是一种具体的URI，即URL可以用来标识一个资源，而且还指明了如何定位这个资源。<br><strong>URN</strong>: uniform resource name, 统一资源命名副，是通过名字来标识资源。</p>
+<p><strong>URL</strong>是<strong>URI</strong>的子集，以人为例，每个人的身份证号码是独一无二的，能唯一的确定一个人，就是这个人的<strong>URI</strong>，比如这个人是中国/湖北省/武汉市/XX大学/东区X栋/XXX寝室/4号床位/XXX／ ，以这种<strong>定位</strong>的方式也能唯一确定一个人，这是<strong>URL</strong>。<br>所以不论是用定位的方式还是用编号的方式，我们都可以唯一确定一个人，都是<strong>URI</strong>的一种实现，而<strong>URL</strong>就是用定位的方式实现的<strong>URI</strong>。<br><strong>URI</strong>是以一种抽象的，高层次概念定义统一资源标识，而<strong>URL</strong>和<strong>URN</strong>则是具体的资源标识的方式。<strong>URL</strong>和<strong>URN</strong>都是一种<strong>URI</strong>。</p>
+<p>在在浏览器中输入一个URL（统一资源定位符）如 <a href="http://www.balabala.com/dir/file.html/" target="_blank" rel="external">http://www.balabala.com/dir/file.html/</a> (这个网址不存在，是我随便编的) 浏览器首先要解析URL，各式各样的URL差不多都可以分为这几种元素： 协议，服务器域名，文件目录，文件名。 比如，在这个网址中，http就是协议，// 后面的www.balabala.com表示服务器域名，dir表示文件目录，file.html表示所求文件名。这样就能准确定位一个资源。<br>有些URL，比如<a href="http://www.baidu.com" target="_blank" rel="external">http://www.baidu.com</a>  ，可以看到并没有文件目录和文件名，说明它们是可以省略的，省略时，访问的是服务器根目录上事先设置好的默认文件。<br>URL有不同的写法，但是URL开头的文字一般表示浏览器当前使用的协议（其实叫访问方法更为合适，因为file: 没用使用协议），包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">http:  （HTTP）HyperText Transfer Protocol , 超文本传输协议，应用最为广泛。  </div><div class="line">file:  访问时不需要网络，访问本机文件，所以它不是协议。</div><div class="line">mailto:  Mailto Protocol, 电子邮件协议， 用于发送电子邮件 </div><div class="line">ftp:  (FTP) File Transfer Protocol ，文件传输协议，一般用于文件的上传和下载</div></pre></td></tr></table></figure></p>
 <p>通过解析URL之后，浏览器获得了想要获取的服务器名和文件名。</p>
 <h2 id="生成HTTP请求消息"><a href="#生成HTTP请求消息" class="headerlink" title="生成HTTP请求消息"></a>生成HTTP请求消息</h2><p>以HTTP为例，浏览器将根据规定生成请求消息，消息分为消息头，消息行，消息体。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;方法&gt;&lt;空格&gt;&lt;URI&gt;&lt;空格&gt;&lt;HTTP版本&gt;</div><div class="line">&lt;字段名&gt;：&lt;字段值&gt; </div><div class="line">  .</div><div class="line">  .</div><div class="line">  .</div><div class="line">&lt;空行&gt;</div><div class="line">&lt;消息体&gt;</div></pre></td></tr></table></figure></p>
 <p>请求消息的一行是消息头。<br>方法有GET，POST，PUT，DELETE，HEAD，OPTIONS等，但是一般情况下GET和POST就够用了。GET意为获取服务器端数据，POST意为想服务端发送数据。<br>URI（Uniform Resource Identifier) 统一资源标识符，一般来说，是一个存放网页数据的文件名（如前文的 ／dir/file.html ) 或一个存放CGI程序的文件名（浏览器可以调用该CGI程序）<br>HTTP版本号现在一般是 1.1  </p>
