@@ -103,7 +103,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/66ec4d66g9fd2fe610145&690.jpeg">
 <meta property="og:image" content="http://yoursite.com/uploads/66ec4d66g9fd48f8ec3ed&690.jpeg">
-<meta property="og:updated_time" content="2017-11-24T10:52:36.000Z">
+<meta property="og:updated_time" content="2017-11-24T11:05:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="C-share">
 <meta name="twitter:description" content="机器语言–&amp;gt;汇编语言–&amp;gt;高级语言。12mov    %esp,%ebp  sub    $0x18,%esp C语言是一门编译型的，面向过程的高级语言，相应的python是一门解释型的，面向对象的高级语言。计算机是不能够识别高级语言的，所以运行一个高级语言程序的时候，就需要一个“翻译机”来从事把高级语言转变成计算机能读懂的机器语言的过程。这个过程分成两类，第一种是编译，第二种是解释。编">
@@ -324,7 +324,9 @@
       
         <p>机器语言–&gt;汇编语言–&gt;高级语言。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mov    %esp,%ebp  </div><div class="line">sub    $0x18,%esp</div></pre></td></tr></table></figure></p>
 <p>C语言是一门编译型的，面向过程的高级语言，相应的python是一门解释型的，面向对象的高级语言。<br>计算机是不能够识别高级语言的，所以运行一个高级语言程序的时候，就需要一个“翻译机”来从事把高级语言转变成计算机能读懂的机器语言的过程。这个过程分成两类，第一种是<strong>编译</strong>，第二种是<strong>解释</strong>。<br>编译型语言在程序执行之前，先会通过编译器对程序执行一个编译的过程，把程序转变成机器语言。运行时就不需要翻译，而直接执行就可以了。<br>解释型语言就没有这个编译的过程，而是在程序运行的时候，通过解释器对程序逐行作出解释，然后直接运行。</p>
-<h1 id="编写C语言的基本步骤"><a href="#编写C语言的基本步骤" class="headerlink" title="编写C语言的基本步骤"></a>编写C语言的基本步骤</h1><p>1） 编辑程序。  此时的程序称为<strong>源程序</strong>，C语言源程序以<code>.c</code> 或<code>.cpp</code> 为后缀。<br>2） 编译程序。  将源程序翻译成二进程代码的过程，检查错误，翻译成<strong>目标文件</strong>,<code>.obj</code>。  （#define 定义的宏是在编译的时候被替换）<br>3） 链接程序。  将目标程序和系统提供的标准库函数“合成”在一起，生成可执行文件。 <code>a.out</code>或<code>.exe</code>，Linux中，使用<code>gcc</code>或<code>g++</code>，获得可执行文件<code>.out</code><br>4)  运行程序。  </p>
+<h1 id="编写C语言的基本步骤"><a href="#编写C语言的基本步骤" class="headerlink" title="编写C语言的基本步骤"></a>编写C语言的基本步骤</h1><p>1） 编辑程序。  此时的程序称为<strong>源程序</strong>，C语言源程序以<code>.c</code> 或<code>.cpp</code> 为后缀。<br>2） 编译程序。  将源程序翻译成二进程代码的过程，检查错误，翻译成<strong>目标文件</strong>,<code>.obj</code>。  （#define 定义的宏是在编译的时候被替换）<br>宏定义：一个标识符来表示一个字符串，有参数的和无参数的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">typedef int Item ; </div><div class="line">#define key(A) (A) </div><div class="line">#define less(A,B) (key(A) &lt; key(B))  </div><div class="line">#define exch(A,B) &#123; Item t = A ; A = B ; B = t ; &#125; </div><div class="line">#define compexch(A,B) if (less(B,A)) exch(A,B)</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#define key(a,b)  a + b ;</div></pre></td></tr></table></figure>
+<p>3） 链接程序。  将目标程序和系统提供的标准库函数“合成”在一起，生成可执行文件。 <code>a.out</code>或<code>.exe</code>，Linux中，使用<code>gcc</code>或<code>g++</code>，获得可执行文件<code>.out</code><br>4)  运行程序。  </p>
 <h1 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h1><p>1)  地址：内存区的每一个字节有一个编号，这就是地址。<br>2)  指针：将地址形象化的称为“指针”。意思就是通过她能找到以他为地址的内存单元。 在使用一个指针时，一个程序既可以直接使用这个指针所存储的内存地址，又可以使用这个地址里存储的函数值。<br>两个运算符需牢记：<br>    （1）&amp;：取地址运算符。<br>    （2）＊：指针运算符（或称“间接访问”运算符），           </p>
 <p>指针和指针变量是不同的两个概念：指针是一个地址，而指针变量是存放地址的变量。</p>
 <p>地址传递和值传递<br><img src="/uploads/66ec4d66g9fd2fe610145&amp;690.jpeg" alt=""><br><img src="/uploads/66ec4d66g9fd48f8ec3ed&amp;690.jpeg" alt=""></p>
