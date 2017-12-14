@@ -96,16 +96,16 @@
 
 <meta name="description" content="一些常用的Docker命令docker help +[command]  这个命令可以查看所有docker的命令和它的参数，非常实用  关于容器管理的命令docker rundocker run [OPTIONS] IMAGE [COMMAND] [ARG...] 这个命令会启动一个docker容器(Run a command in a new container) ，如果本地没有这个镜像，会从D">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker in action读书笔记">
+<meta property="og:title" content="Docker in action">
 <meta property="og:url" content="http://yoursite.com/2017/08/31/note-for-docker/index.html">
 <meta property="og:site_name" content="YYL&#39;s blog">
 <meta property="og:description" content="一些常用的Docker命令docker help +[command]  这个命令可以查看所有docker的命令和它的参数，非常实用  关于容器管理的命令docker rundocker run [OPTIONS] IMAGE [COMMAND] [ARG...] 这个命令会启动一个docker容器(Run a command in a new container) ，如果本地没有这个镜像，会从D">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/uploads/屏幕快照%202017-11-20%2017.33.57.png">
 <meta property="og:image" content="https://coolshell.cn/wp-content/uploads/2015/04/docker-filesystems-multilayer.png">
-<meta property="og:updated_time" content="2017-11-20T15:43:19.000Z">
+<meta property="og:updated_time" content="2017-11-29T07:55:46.941Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker in action读书笔记">
+<meta name="twitter:title" content="Docker in action">
 <meta name="twitter:description" content="一些常用的Docker命令docker help +[command]  这个命令可以查看所有docker的命令和它的参数，非常实用  关于容器管理的命令docker rundocker run [OPTIONS] IMAGE [COMMAND] [ARG...] 这个命令会启动一个docker容器(Run a command in a new container) ，如果本地没有这个镜像，会从D">
 <meta name="twitter:image" content="http://yoursite.com/uploads/屏幕快照%202017-11-20%2017.33.57.png">
 
@@ -142,7 +142,7 @@
 
 
 
-  <title>Docker in action读书笔记 | YYL's blog</title>
+  <title>Docker in action | YYL's blog</title>
   
 
 
@@ -272,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Docker in action读书笔记</h1>
+          <h1 class="post-title" itemprop="name headline">Docker in action</h1>
         
 
         <div class="post-meta">
@@ -356,7 +356,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
 <h3 id="docker-search"><a href="#docker-search" class="headerlink" title="docker search"></a>docker search</h3><pre><code>docker search [OPTIONS] TERM 
 </code></pre><p> 在Dokcerhub中寻找镜像（Search the Docker Hub for images），常用 ：<br> <code>--automated</code> ， 只找自动build的镜像<br> <code>--stars</code>或<code>-s</code>，镜像仓库至少要几星<br> <code>--limit</code>  最大查找数量<br> <code>docker search</code>非常实用，可以直接在命令行中查找镜像，查看镜像的信息 </p>
 <h3 id="docker-pull"><a href="#docker-pull" class="headerlink" title="docker pull"></a>docker pull</h3><pre><code>docker pull [OPTIONS] NAME[:TAG|@DIGEST] 
-</code></pre><p>从镜像仓库中拉取镜像,(Pull an image or a repository from a registry)不一定是Dockerhub,但是默认为Dokcerhub,可以更换为其它的镜像仓库地址。<br><code>`--all-tags</code>或<code>-a</code>，拉取所有这个仓库里所有标记了的镜像，一般是不需要的，所以在拉取的时候最好写好tag </p>
+</code></pre><p>从镜像仓库中拉取镜像,(Pull an image or a repository from a registry)不一定是Dockerhub,但是默认为Dokcerhub,可以更换为其它的镜像仓库地址。<br><code>--all-tags</code>或<code>-a</code>，拉取所有这个仓库里所有标记了的镜像，一般是不需要的，所以在拉取的时候最好写好tag </p>
 <h3 id="dokcer-build"><a href="#dokcer-build" class="headerlink" title="dokcer build"></a>dokcer build</h3><pre><code>docker build [OPTIONS] PATH | URL | - 
 </code></pre><p>根据Dockerfile创建镜像(Build an image from a Dockerfile)<br>编写Dockerfile可以使用Dockerhub中的基础镜像，制作自定义的镜像。首先Dockerfile很小（只是一个文本文件），容易传播，可以根据自己的需要定制镜像（比如本机环境不同），但是Dockerfile的编写又是一门学问了2333。<br>也可以根据GitHub上的Dockerfilebuild镜像，比如：</p>
 <pre><code>docker build &lt;仓库地址&gt;#&lt;branch&gt;:&lt;directory&gt; 
@@ -380,7 +380,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
 <h3 id="mount-namespaces"><a href="#mount-namespaces" class="headerlink" title="mount namespaces"></a>mount namespaces</h3><p>挂载的隔离，进程创建新的mount namespace时，会把当前文件结构复制给新的namespace，新的namespace中的所有mount操作都只影响自身的文件系统，不会对外界产生影响。<br>挂载分为以下几种：<br>1）共享挂载（share）传播事件的挂载对象<br>2）从属挂载（slave）接收传播事件的挂载对象<br>3) 共享／从属挂载（share／slave）兼有前两者<br>4）私有挂载（private）不传播也不接收传播事件的挂载对象<br>5）不可绑定挂载（unbindable）与私有挂载相似，且不允许执行绑定挂载</p>
 <p>如图：<br><img src="/uploads/屏幕快照 2017-11-20 17.33.57.png" alt=""><br>默认情况下，所有挂载都是私有的。mount namespace生效之后，子进程中所有的挂载和卸载操作都只在这个mount namespace中进行。</p>
 <h3 id="network-namespace"><a href="#network-namespace" class="headerlink" title="network namespace"></a>network namespace</h3><p>network namespace主要用于网路资源的隔离，包括网络设备，IPv4盒IPv6协议栈，IP路由表，防火墙，／proc／net目录，套接字（socket）。<br>network namespace是把网络独立出来，给外部用户一个透明的感觉，仿佛在与一个独立的网络实体进行通信。为了实现这个目的，容器的做法是创建一个新的veth path，一段放置新的network namespace，通常命名为eth0，一段放置原先的network namespace中链接的网络设备，再通过多个设备接入网桥或进行路由转发，来实现通信目的。</p>
-<h3 id="user-namespace"><a href="#user-namespace" class="headerlink" title="user namespace"></a>user namespace</h3><p>user namespace隔离了安全相关的标识符，和属性，包括用户ID，用户组ID，root目录，key（密钥）。<br>一个普通用户的进程通过clone（）创建的新的user namespace中，可以拥有不同的用户和用户组，这意味着一个没有特权的普通用户，在它创建的容器进程中，却是拥有全部权限的超级用户。（拥有所有权限的超级用户的user ID是0）</p>
+<h3 id="user-namespace"><a href="#user-namespace" class="headerlink" title="user namespace"></a>user namespace</h3><p>user namespace隔离了安全相关的标识符，和属性，包括用户ID，用户组ID，root目录，key（密钥）。<br>一个普通用户的进程通过clone（）创建的新的user namespace中，可以拥有不同的用户和用户组，这意味着一个没有特权的普通用户，在它创建的容器进程中，却是拥有全部权限的超级用户。（拥有所有权限的超级用户的user ID是0）<br>user namespace被创建之后，第一个进程被赋予了所有权限，这样该init进程就可以完成所有必要的初始化操作。 新的namespace中的用户可能在这个namespace中存在，但是在父namespace中没有权限</p>
 <h2 id="cgroup"><a href="#cgroup" class="headerlink" title="cgroup"></a>cgroup</h2><p>Linux CGroup全称Linux Control Group， 是Linux内核的一个功能，用来限制，控制与分离一个进程组群的资源（如CPU、内存、磁盘输入输出等）。 namespace解决了环境隔离的问题，cgruop解决资源隔离的问题。<br>其实我觉得就是通过对共享资源进行隔离、限制分配到容器的资源，比如CPU限制，内存使用限制等。</p>
 <h2 id="UnionFS"><a href="#UnionFS" class="headerlink" title="UnionFS"></a>UnionFS</h2><p>Union File System联合文件系统，它支持对文件系统的修改作为一次提交来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。<br>UnionFS是 Docker分层镜像的基础。镜像可以通过分层来进行继承，基于基础镜像，可以制作各种具体的应用镜像。<br>Docker镜像是由多个文件系统（只读层）叠加而成。启动一个容器的时候，Docker会加载只读镜像层并在其上添加一个读写层。如果运行中的容器修改了现有的一个已经存在的文件，那该文件将会从读写层下面的只读层复制到读写层，该文件的只读版本仍然存在，只是已经被读写层中该文件的副本所隐藏。当删除容器，并通过该镜像重新启动时，之前的更改将会丢失。<br>–&gt;这是一张图：<br><img src="https://coolshell.cn/wp-content/uploads/2015/04/docker-filesystems-multilayer.png" alt=""></p>
 <h1 id="关于volume"><a href="#关于volume" class="headerlink" title="关于volume"></a>关于volume</h1><p>volume是为了保存（持久化）数据以及共享容器间的数据。简单来说，volume就是目录或者文件，它可以绕过默认的UnionFS，而以正常的文件或者目录的形式存在于宿主机上。<br>volume可以将容器以及容器产生的数据分离开来，这样，当你使用<code>docker rm &lt;container&gt;</code>删除容器时，不会影响相关的数据。<br>volume可以使用以下两种方式创建：<br>1.在Dockerfile中指定<code>VOLUME /some/dir</code><br>2.执行<code>docker run -v /some/dir</code>命令来指定<br>它们都做了同样的事，在主机上创建一个目录（默认是/var/lib/docker下），将其挂载到容器中的指定目录（如果没有，该目录会自动创建），当该容器被删除时，volume本身不会被影响。<br>那么，Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录有什么区别？<br>Dockerfile中使用VOLUME指令挂载目录和docker run时通过-v参数指定挂载目录的区别在于，run的-v可以指定挂载到宿主机的哪个目录，而Dockerfile的VOLUME不能，其挂载目录由docker随机生成。</p>
@@ -389,7 +389,21 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
 <h2 id="docker-volume"><a href="#docker-volume" class="headerlink" title="docker volume"></a>docker volume</h2><p>Docker 1.9新增了docker volume命令,这样使用volume就比较方便，文档是这样写的：<br><code>docker volume create</code>    Create a volume<br><code>docker volume inspect</code>    Display detailed information on one or more volumes<br><code>docker volume ls</code>    List volumes<br><code>docker volume prune</code>    Remove all unused volumes<br><code>docker volume rm</code>    Remove one or more volumes</p>
 <p>可是使用这个命令删除无用的volume(volume没有被任何容器挂载) : </p>
 <pre><code>docker volume rm $(docker volume ls -qf dangling=true) 
-</code></pre><p>总之，通过volume,可以绕过docker的Union File System，从而直接对宿主机的目录进行直接读写，实现了容器内数据的持久化和共享化。</p>
+</code></pre><p>总之，通过volume,可以绕过docker的Union File System，从而直接对宿主机的目录进行直接读写，实现了容器内数据的持久化和共享化。 </p>
+<p>#s docker deamon和 docker client<br>docker命令有两种模式deamon模式和client模式，属于<code>docker deamon</code>子命令的属于<strong>deamon</strong>模式，其余都是client模式。<br>docker采用传统的<strong>client-server</strong>模式，用户通过docker client和docker deamon进行沟通，并将请求发送给后者，<br>docker deamon是docker在后台的守护进程，它负责相应docker client的请求。提供了API server来接收来自docker client的请求，然后根据请求的不同，将请求分发给docker deamon的不同模块来执行相应的工作。<br>docker client是一个泛称，用来向docker deamon来发起请求，既可以是命令行工具docker，也可以是任何遵循了docker API的客户端（包括C#，java，Go，ruby等）</p>
+<p>1) docker client<br>docker client 会创建一个client实例，来发起向守护进程的请求。流程如下： </p>
+<ul>
+<li>解析传入参数，并对参数进行配置处理</li>
+<li>获取与docker deamon通信所需的认证配置信息</li>
+<li>根据命令业务类型，给docker deamon发送POST，或GET请求。</li>
+<li>读取来自docker deamon的返回结果。 </li>
+</ul>
+<p>2）docker deamon<br>deamon同一个server模块来接收来自client的请求，然后根据请求的类型去具体执行。所以：</p>
+<ul>
+<li>首先启动接收命令的API server </li>
+<li>初始化一个deamon对象来处理接收来的请求。</li>
+</ul>
+<p>以上，仅仅是对docker client和docker deamon的感性认识，实际情况复杂很多。<br>总结如下：<br>1） <code>docker/docker.go</code>是所有命令的起始，它创建出来的client和<code>/api/client/cli.go</code>对应<br>2） <code>api/</code>目录下是所有的有关于<code>client</code>发送请求和<code>server</code>相应请求的文件<br>3） <code>api/server/xxx.go</code>文件中定义的<strong>CmdXXX</strong>函数，其中调用<code>cli/client.xxx</code>函数指明了该命令如何发起请求。<br>4） <code>api/server/router</code>中按照不同请求的具体类型定义了相应请求的方法。<br>5） 每个请求的处理函数都在<code>deamon/</code>中有一个<code>xxx.go</code>定义了相应的处理函数。<br>6） deamon对象是由<code>deamon/deamon.go</code>创建的。 </p>
 
       
     </div>
@@ -503,7 +517,7 @@ docker stop [OPTIONS] CONTAINER [CONTAINER...]
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
