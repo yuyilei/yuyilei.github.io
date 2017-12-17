@@ -101,12 +101,13 @@
 <meta property="og:site_name" content="YYL&#39;s blog">
 <meta property="og:description" content="主要任务Proxy web server是csapp第十二章的实验，写一个能缓存的并发的代理服务器。 –&amp;gt; 完成的代码–&amp;gt; 题目要求主要分为三个要求：  Proxy：实现代理功能，接收客户端发送的http请求（只能实现GET方法），转发到目标服务器，从目标服务器获得响应，返回给客户端。 Concurrent： 实现并发功能，能同时接收多个客户端的请求，并转发到目标服务器。题目中明确提示">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/uploads/img_0121.jpg">
 <meta property="og:image" content="http://yoursite.com/uploads/1337859321_3597.png">
-<meta property="og:updated_time" content="2017-12-14T15:45:04.746Z">
+<meta property="og:updated_time" content="2017-12-17T10:03:42.652Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Proxy-Web-Server">
 <meta name="twitter:description" content="主要任务Proxy web server是csapp第十二章的实验，写一个能缓存的并发的代理服务器。 –&amp;gt; 完成的代码–&amp;gt; 题目要求主要分为三个要求：  Proxy：实现代理功能，接收客户端发送的http请求（只能实现GET方法），转发到目标服务器，从目标服务器获得响应，返回给客户端。 Concurrent： 实现并发功能，能同时接收多个客户端的请求，并转发到目标服务器。题目中明确提示">
-<meta name="twitter:image" content="http://yoursite.com/uploads/1337859321_3597.png">
+<meta name="twitter:image" content="http://yoursite.com/uploads/img_0121.jpg">
 
 
 
@@ -350,10 +351,11 @@
 <ul>
 <li><p><code>进程</code>， 每个逻辑控制流都是一个进程，进程由内核调度（我的理解，内核调度的意思是不用自己写在各个逻辑流中的转化，不用自己调度），每个进程都有虚拟内存空间，要显式地调用<strong>进程间通信</strong>才能和其他进程通信。多个进程共享状态信息（比如文件表），但是不共享用户地址空间。用多个进程来实现并发。</p>
 </li>
-<li><p><code>I／0 多路复用</code> ，事件驱动，程序在一个进程中<strong>显式</strong>地调用各自的逻辑流，共用虚拟内存空间。每个逻辑流被模型化为状态机。状态机被抽象为几个状态–事件和转移，     </p>
+<li><p><code>I／0 多路复用</code> ，事件驱动，程序在一个进程中<strong>显式</strong>地调用各自的逻辑流，共用虚拟内存空间。每个逻辑流被模型化为状态机。状态机被抽象为–状态，输入事件和转移：</p>
 <ul>
-<li>事件：文件描述符准备好可以做某件事。</li>
-<li>转移：该文件描述符完成这件事，进入准备状态。准备状态之后又可以进入准备好的状态（所以这其实是个自循环。</li>
+<li>状态：当前文件描述符的状态</li>
+<li>输入事件：文件描述符准备好可以做某件事（如：可读）。</li>
+<li>转移：转移是将<strong>输入事件</strong>和<strong>状态</strong>映射到<strong>转移</strong>。该文件描述符的<strong>输入事件</strong>完成–&gt; 进入到<strong>准备</strong>状态 –&gt; 准备好  –&gt; 开始下一次输入事件  （所以这是一个自循环）<br>下图是一个状态机：<br><img src="/uploads/img_0121.jpg" alt=""></li>
 <li>使用<code>select</code>函数：等待一组文件描述符中的一个准备好可读，就返回，从这个文件描述符中执行读操作。<code>select</code>函数是阻塞的，所以<code>select</code>函数阻塞的时候，内核挂起该进程，知道准备好可读，挂起的时候，CPU就可以执行其他，以此实现并发。 </li>
 </ul>
 </li>
