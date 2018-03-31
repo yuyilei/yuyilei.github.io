@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="了解SQLSQL(Structured Query Language)，结构化查询语言。是一种数据库语言。笔者看了《SQL必知必会》，总结了一部分SQL语言的用法。  先说下一些基本知识。SQL是维护关系型数据库中数据的一种标准计算机语言，非关系型数据库没有SQL的说法。主键和外键：主键：1）主键不是必须的，但是每个表最好都有主键。2）任意两行的主键值不同，主键值不能为null。主键唯一标示每一行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL Note">
+<meta property="og:url" content="http://yoursite.com/2018/03/31/sql/index.html">
+<meta property="og:site_name" content="YYL&#39;s blog">
+<meta property="og:description" content="了解SQLSQL(Structured Query Language)，结构化查询语言。是一种数据库语言。笔者看了《SQL必知必会》，总结了一部分SQL语言的用法。  先说下一些基本知识。SQL是维护关系型数据库中数据的一种标准计算机语言，非关系型数据库没有SQL的说法。主键和外键：主键：1）主键不是必须的，但是每个表最好都有主键。2）任意两行的主键值不同，主键值不能为null。主键唯一标示每一行">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-31T15:32:59.936Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL Note">
+<meta name="twitter:description" content="了解SQLSQL(Structured Query Language)，结构化查询语言。是一种数据库语言。笔者看了《SQL必知必会》，总结了一部分SQL语言的用法。  先说下一些基本知识。SQL是维护关系型数据库中数据的一种标准计算机语言，非关系型数据库没有SQL的说法。主键和外键：主键：1）主键不是必须的，但是每个表最好都有主键。2）任意两行的主键值不同，主键值不能为null。主键唯一标示每一行">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/31/sql/"/>
+
+
+
+
+
+  <title>SQL Note | YYL's blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">YYL's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/31/sql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yuyilei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="YYL's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SQL Note</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-31T16:12:14+08:00">
+                2018-03-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="了解SQL"><a href="#了解SQL" class="headerlink" title="了解SQL"></a>了解SQL</h2><p>SQL(Structured Query Language)，结构化查询语言。是一种数据库语言。<br>笔者看了《SQL必知必会》，总结了一部分SQL语言的用法。 </p>
+<p>先说下一些基本知识。<br>SQL是维护关系型数据库中数据的一种标准计算机语言，非关系型数据库没有SQL的说法。<br>主键和外键：<br>主键：<br>1）主键不是必须的，但是每个表最好都有主键。<br>2）任意两行的主键值不同，主键值不能为null。主键唯一标示每一行<br>3）主键不能修改或更新。<br>4）主键不能复用，一个已经被使用过的主键，即使这一行被删除，这个主键也不能被使用。<br>5）  每个表的主键只能有一个。主键可以是一列，也可以是一组列(此时，使用主键标识时，需要将一组列都使用上)。</p>
+<p>外键：<br>1）表的外键上是另一个表的主键(或者说表的外键的值必须在另一个表的主键中)。<br>2）外键用于和其他表建立联系。<br>3）保证引用完整性。建立外键后，不允许删除尚有关联的行，防止意外删除数据，但是有的DSMS也允许联级删除。<br>4） 一个表可以有多个外键。</p>
+<p>SQL中的关键字：<br>和别的语言一样，SQL语言有保留的关键字，这些关键字不能作为表或列的名字。</p>
+<p>SQL语句的格式：<br>1）多条SQL语句之间用<code>;</code>分割，单条SQL语句之后可以不用<code>;</code>分隔，但是最好都加上。<br>2）SQL语句不区分大小写。（个人比较喜欢小写，但是专业人士好像都喜欢大写SQL关键字，表名和列名小写）<br>3）SQL语句中的所有空格和换行都被忽略。将SQL语句写成多行且有缩进的形式会比较好读。</p>
+<p>SQL语句的注释：<br>1）行内注释：<code>--</code>和<code>#</code>，后一种比较少用。<br>2）行间注释：<code>/*</code>和<code>*/</code>的组合。</p>
+<h2 id="查询语句"><a href="#查询语句" class="headerlink" title="查询语句"></a>查询语句</h2><p>SQL语言中很大一部分是查询语句，差不多是用的最多的。</p>
+<h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>检索单个列： </p>
+<pre><code>select column1 from table1 ; 
+</code></pre><p>检索多个列：<br>列与列之间用逗号分隔，最后一个列后面不用逗号。</p>
+<pre><code>select column1, column2, column3 from table1 ; 
+</code></pre><p>检索所有列：<br>使用通配符 * ，可以用于查找未知列。</p>
+<pre><code>select * from table1 ; 
+</code></pre><p>检索不同的值：<br>select默认检索处所有的值，如果想要去除重复的值，可以使用distinct。<br>distinct作用于后面所有的列，比如 distinct column1, column2，必须column1和column2的值都相同，才会认为相同，然后被剔除。 </p>
+<pre><code>select distinct column1 from table1 ; 
+</code></pre><p>限定检索条数：<br>select语句默认检索出所有的值，使用limit和offset可以指定返回特定的记录。<br>limit后面的是限定的条数（如果没有这么多条，也不会报错），offset是指定从哪开始（index从0开始）。 </p>
+<pre><code>select column1 from table1 limit 1 offset 2 ; 
+</code></pre><p>另一种格式：</p>
+<pre><code>select column1 from table1 limit 2, 1 ;     
+</code></pre><p> 单独的select语句只能用于简单的查找，与别的子句一起使用，功能会更强大。 </p>
+<h3 id="order-by"><a href="#order-by" class="headerlink" title="order by"></a>order by</h3><p>使用 order by子句对检索出来的记录进行排序。<br>要注意的是，即使没有排序，检索出来的记录也不是随机的，可能和当初存入数据库的先后有关，经过删除之类的操作，顺序可能会被改变。<br>order by子句应该在where子句之后。</p>
+<p>单列排序：<br>order by 默认是升序排序，如果要降序排序，要指定desc。</p>
+<pre><code>select column1, column2 from table1 order by column1 desc ; 
+</code></pre><p>多列排序：<br>当第一列的值相同时，根据第二列的值排序，当第二列的值相同时，根据第三列的值排序，以此类推。<br>desc 只对它前面的列起作用。 </p>
+<pre><code>select column1, column2 from table1 order by column1, column2 desc ; 
+</code></pre><h3 id="where"><a href="#where" class="headerlink" title="where"></a>where</h3><p>select语句中使用where语句过滤条件，过滤条件也称搜索条件。 where子句一般在from子之后。 </p>
+<p>where子句的操作符： </p>
+<pre><code>等于     = 
+不等于   !=, &lt;&gt; 
+大于等于  &gt;=, !&lt;
+小于等于  &lt;=, !&gt; 
+小于     &lt;
+大于     &gt; 
+两值之间  between ... and ...  （是闭区间，包括开始值和结束值） 
+为空值   is null 
+</code></pre><p>where 子句可以单独使用，也可以组合使用。<br>where子句可以用 <code>and</code>和<code>or</code>连接。（逻辑操作符连接）and 的 优先级比 or 高 。 还是建议使用括号。</p>
+<pre><code>select column1 from table1 where column1 is null and column2 = &apos;ahha&apos; ; 
+</code></pre><p>注意是一个where之后有多个条件。 </p>
+<p>可以使用in：</p>
+<pre><code>select column1 from table1 where column2 in (val1, val2, val3) ; 
+</code></pre><p>in 的功能可以用 or实现，但是对于制定值的筛选，in比or更直观 。 而且 in 可以包括其他 select语句（子查询），更动态的建立where子句。</p>
+<p>可以使用not：<br>not否定其后面的条件，not用于否定其后条件的关键字。 </p>
+<h3 id="like"><a href="#like" class="headerlink" title="like"></a>like</h3><p>like子句用于对未知值的过滤。<br>like一般和通配符一起使用（通配符只能用于字符串匹配）<br>通配符： </p>
+<pre><code>%      任何字符出现任何次数（0次，1次，或多次）但不能匹配null
+_      单个字符 
+[]     指定字符集 
+[^]    指定字符集的否定
+</code></pre><p>不要过度使用通配符，会减慢速度。尽量不要把通配符放到模式搜索的开始出，会减慢速度。</p>
+<h3 id="创建计算字段"><a href="#创建计算字段" class="headerlink" title="创建计算字段"></a>创建计算字段</h3><p>个人理解计算字段就是把数据库中的记录转化为应用程序所需要的格式。</p>
+<p>拼接计算字段：</p>
+<pre><code>拼接字段          + 或 || 
+去除左空格        ltrim() 
+去除右空格        rtrim()
+去除两边空格      trim() 
+</code></pre><p>对于计算字段可是使用列别名：</p>
+<pre><code>select &apos;(&apos; + column1 + &apos;)&apos; as othername from table1 ; 
+</code></pre><p>执行计算字段</p>
+<pre><code>加              + 
+减              -
+乘              * 
+初              /
+</code></pre><p>同样也可以使用列别名</p>
+<pre><code>select column1*column2 as othername from table1 ; 
+</code></pre><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><p>只有少数的几个函数被主要的DBMS同等的支持。所以使用函数的时候，最好去相应的DBMS的文档查询。 </p>
+<p>文本处理函数：</p>
+<pre><code>返回左边的字符                 left()
+返回右边的字符                 right()
+返回字符串的长度               length()
+转化为小写                    lower()
+转化为大写                    upper() 
+去除左边空格                  ltrim()
+去除右边空格                  rtrim()
+去除两边的空格                trim()
+返回字符串的soundex值         soundex()       soundex是字符串的语音表述的字母数字算法
+</code></pre><p>数据处理函数(在各个DBMS中最为一致)</p>
+<pre><code>绝对值                       abs()
+余弦值                       cos()
+正弦值                       sin()
+指数值                       exp()
+圆周率                       pi()
+平方根                       sqrt() 
+正切                         tan() 
+</code></pre><h3 id="聚集函数"><a href="#聚集函数" class="headerlink" title="聚集函数"></a>聚集函数</h3><p>聚集函数用于汇总表中数据，有些数据不需要从表中检索出来，只用于汇总。<br>聚集函数的执行效率比在客户端应用程序计算的快得多。</p>
+<pre><code>某列平均值                     avg() 
+某列行数                     count()
+某列最大值                    max() 
+某列最小值                    min() 
+某列总和                     sum() 
+</code></pre><p>avg()忽略为null的行。<br>count(* ） 包括为null的值(不指定列）， count(column)忽略为null的值（指定列）。<br>max()和min()忽略为null的值，对于文本数据，max()返回最后的行，min()返回最前的行。<br>sum() 忽略为null的行。</p>
+<pre><code>执行所有计算                 all (默认就是all)
+只包含不同的值               distinct (后面必须使用列名，不能是计算或表达式)
+</code></pre><p>如：    </p>
+<pre><code>select avg(distinct column1) as othername from table1 ; 
+</code></pre><h3 id="分组数据"><a href="#分组数据" class="headerlink" title="分组数据"></a>分组数据</h3><p>分组数据用于汇总子集数据，涉及 group by和 having。 </p>
+<p>用一个例子解释分组</p>
+<pre><code>select v_id, count(*) 
+from table1 
+group by v_id 
+</code></pre><p>上面这个例子中 count(* ) 不是对所有的行进行计数，而是先进行对v_id进行分组，count 计算的是 每个v_id相同的子集中的行数。这就是分组的作用。 </p>
+<p>group by使用的要点：</p>
+<p>1）group by子句可以包括多个列，嵌套多个分组<br>2）如果group by嵌套了多个列，是对所有的列一起分组，不能从中拉取某一列的分组。 比如 group by x, y 就是 所有x和y一样都分在一组里面。<br>3）group by的每个参数，都必须是检索列或者有效的表达式。 如果在select语句中有表达式，必须在group by语句中有相同的表达式，不能是别名。 如：select a+b as othername, from table1 group by a+b<br>4) 除聚集运算语句外，select后的每一列都必须在group by后给出 （对于这里我有疑问）  ？？？？<br>5）对于分组中值为null的行，会把这些行分为一组。<br>6）group by语句必须在where语句之后，order by语句之前。<br>7）group by给出的顺序可能不是分组的顺序，不能用group by代替order by。  </p>
+<p>having和where很相似，如果having不指定group by，大多数的DBMS会把它当作where。 但是一般having都是和指定的group by一起用的。<br>having 用于过滤分组，where用于过滤行。<br>where在数据分组前进行过滤，where排除的行不包括在分组中，having在数据分组之后进行过滤。<br>having支持where的操作符。 </p>
+<p>最后 select语句及其顺序 </p>
+<pre><code>子句                        说明                         是否必需
+select                     返回列或表达式                 是
+from                       从中检索数据的表               仅从表中获取数据时必须
+where                      行级过滤                      否
+group by                   分组说明                      仅在分组聚集时使用
+having                     组级过滤                      否
+order by                   排序                          否
+</code></pre><h3 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h3><p>子查询是嵌套在查询中的查询。<br>子查询对嵌套的层数没有限制，但是最好不要太多层的嵌套。 子查询是从内到外的查询。<br>子查询只能查询单个列，返回单个列，不然会报错。</p>
+<p>where子句后使用子查询，</p>
+<pre><code>select column1 
+from table1 
+where column1 in (  select column1 
+                    from table2 
+                    where table2.column1 = table1.column1 ) ; 
+</code></pre><p>注意这里使用了完全限定列名， 格式为 表名.列名 因为 table1和table2中列名一样，如果不使用完全限定列名，会混淆。 </p>
+<p>子查询还可以作为计算字段使用：</p>
+<pre><code>select column1, 
+       ( select count(*) 
+            from table2
+            where table2.column2 = table1.column1 )
+from table1 ; 
+</code></pre><h3 id="联结表"><a href="#联结表" class="headerlink" title="联结表"></a>联结表</h3><p>如果要查询的数据在多个表中，就要联结表。<br>联结表时，要指定联结条件，如：</p>
+<pre><code>select column1, column2, column3 
+from table1, table2 
+where table1.column1 = table2.column3
+</code></pre><p>其中column1，column2在table1中，column3在table2中。<br>where后面的就是联结条件，如果不指定联结条件，默认的联结是笛卡尔积，所以一般都是要指定联结条件的，因为笛卡尔积不是我们想要的。 </p>
+<p>基于两个表之间相等测试叫等值联结，也叫内联结。 也可以写成以下格式：</p>
+<pre><code>select column1, column2, column3 
+from table1 inner join table2 on table1.column1 = table2. column3 
+</code></pre><p>on后面的就是联结条件。 </p>
+<p>也可以进行多个表的联结，from后面列出所有要联结的表，然后定义表与表之间的联结条件。<br>注意不要联结太多表，会消耗资源，降低效率。 </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/14/proxy-web-server/" rel="next" title="Proxy-Web-Server">
+                <i class="fa fa-chevron-left"></i> Proxy-Web-Server
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/20150405H3042_aGvCj.thumb.700_0.jpeg"
+               alt="yuyilei" />
+          <p class="site-author-name" itemprop="name">yuyilei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/yuyilei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#了解SQL"><span class="nav-number">1.</span> <span class="nav-text">了解SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询语句"><span class="nav-number">2.</span> <span class="nav-text">查询语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#select"><span class="nav-number">2.1.</span> <span class="nav-text">select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#order-by"><span class="nav-number">2.2.</span> <span class="nav-text">order by</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#where"><span class="nav-number">2.3.</span> <span class="nav-text">where</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#like"><span class="nav-number">2.4.</span> <span class="nav-text">like</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建计算字段"><span class="nav-number">2.5.</span> <span class="nav-text">创建计算字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">2.6.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚集函数"><span class="nav-number">2.7.</span> <span class="nav-text">聚集函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分组数据"><span class="nav-number">2.8.</span> <span class="nav-text">分组数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子查询"><span class="nav-number">2.9.</span> <span class="nav-text">子查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#联结表"><span class="nav-number">2.10.</span> <span class="nav-text">联结表</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yuyilei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
